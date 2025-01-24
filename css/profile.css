@@ -1,0 +1,263 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #5A627A;
+    margin: 0;
+    padding: 0;
+}
+
+.profile-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+}
+
+.profile-sidebar {
+    width: 25%;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.profile-icon {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background-color: #ddd;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow: hidden;
+    cursor: pointer;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.profile-icon i {
+    color: white;
+    font-size: 40px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+}
+
+.profile-icon::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 0;
+}
+
+.profile-name {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    position: relative;
+    padding: 15px;
+}
+
+.profile-name button {
+    position: absolute;
+    top: 0;
+    right: -25px;
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: #007bff;
+}
+
+/* Buttons Below Name */
+.profile-buttons {
+    margin-top: 20px;
+}
+
+.profile-buttons button {
+    background-color:  #db5299;
+    color: white;
+    border: none;
+    padding: 12px 30px; /* More padding for larger buttons */
+    margin: 10px 0; /* Space between buttons */
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    width: 100%; /* Makes buttons take up the full width of the container */
+    transition: background-color 0.3s;
+}
+
+.profile-buttons button:hover {
+    background-color: #0056b3;
+}
+
+.profile-details {
+    width: 70%;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+}
+
+.profile-item {
+    margin-bottom: 20px;
+}
+
+.profile-item label {
+    display: block;
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+.profile-item input {
+    width: 100%;
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.save-container {
+    text-align: right;
+}
+
+.save-container button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.save-container button:hover {
+    background-color: #45a049;
+}
+
+/* Media Query for Larger Screens (Desktop) */
+@media (min-width: 1200px) {
+    .profile-container {
+        padding: 40px;
+    }
+
+    .profile-sidebar {
+        width: 25%;
+    }
+
+    .profile-details {
+        width: 70%;
+    }
+
+    .profile-icon {
+        width: 150px;
+        height: 150px;
+    }
+
+    .profile-name {
+        font-size: 30px;
+    }
+
+    .profile-buttons button {
+        font-size: 18px;
+    }
+}
+
+/* Media Query for Medium Screens (Tablet) */
+@media (max-width: 1199px) and (min-width: 768px) {
+    .profile-container {
+        padding: 20px;
+    }
+
+    .profile-sidebar {
+        width: 30%;
+    }
+
+    .profile-details {
+        width: 65%;
+    }
+
+    .profile-icon {
+        width: 130px;
+        height: 130px;
+    }
+
+    .profile-name {
+        font-size: 26px;
+    }
+
+    .profile-buttons button {
+        font-size: 17px;
+    }
+}
+
+/* Media Query for Smaller Screens (Tablet Portrait and Mobile) */
+@media (max-width: 768px) {
+    .profile-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .profile-sidebar {
+        width: 80%;
+        margin-bottom: 20px;
+    }
+
+    .profile-details {
+        width: 80%;
+    }
+
+    .profile-icon {
+        width: 120px;
+        height: 120px;
+    }
+
+    .profile-name {
+        font-size: 22px;
+    }
+
+    .profile-buttons button {
+        font-size: 16px;
+    }
+}
+
+/* Very Small Screens (Mobile) */
+@media (max-width: 480px) {
+    .profile-container {
+        padding: 10px;
+    }
+
+    .profile-icon {
+        width: 100px;
+        height: 100px;
+    }
+
+    .profile-name {
+        font-size: 20px;
+    }
+
+    .profile-details {
+        width: 90%;
+    }
+
+    .profile-buttons button {
+        font-size: 14px;
+    }
+
+    .save-container button {
+        font-size: 14px;
+    }
+}
