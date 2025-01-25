@@ -3,16 +3,11 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="google-translate-customization" content="9f841e7780177523-3214ceb76f765f38-gc38c6fe6f9d06436-c">
-    </meta>
-     <link rel="shortcut icon" type="x-icon" href="img/icon.jpg">
+    <link rel="shortcut icon" type="x-icon" href="img/SHW logo design.jpeg">
     <title>Raise-My-Voice</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
-
-    <!-- Favicon -->
-    <link href="img/im" rel="icon">
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -34,7 +29,6 @@
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
-   
 </head>
 
 <body>
@@ -47,34 +41,30 @@
     </div>
     <!-- Spinner End -->
 
-
     <!-- Navbar Start -->
     <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
         <a href="index.html" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
-            <img src="img/icon.jpg" width="50px" height="50px" alt="logo" 
+            <img src="img/SHW logo design.jpeg" width="50px" height="50px" alt="logo" 
             style="border-radius: 50%; box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3); padding: 5px; background-color: white;">
-            
-            <p class="m-0 fw-bold" style="font-size: 35px; padding-left: 5px;"> Raise My<span
+            <p class="m-0 fw-bold" style="font-size: 35px; padding-left: 5px;">Raise My<span
                     style="color: #db5299 ;"> Voice</span></p>
         </a>
         <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id ="navbarCollapse">
+        <div class="collapse navbar-collapse" id="navbarCollapse">
             <div class="navbar-nav ms-auto p-4 p-lg-0">
                 <a href="index.html" class="nav-item nav-link active">Home</a>
                 <a href="about.html" class="nav-item nav-link">About Us</a>
                 <a href="laws.html" class="nav-item nav-link">Laws And Regulations</a>
                 <a href="contact.html" class="nav-item nav-link">Contact Us</a>
                 <div class="nav-item dropdown">
-                <a href="signup.html" class="nav-item nav-link"><i class="fa fa-user"></i>
-                   </a>
+                    <a href="#" class="nav-item nav-link"><i class="fa fa-user"></i></a>
                 </div>
             </div>
         </div>
     </nav>
     <!-- Navbar End -->
-
 
     <!-- Carousel Start -->
     <div class="container-fluid p-0 mb-4">
@@ -86,33 +76,18 @@
                     <div class="container">
                         <div class="row justify-content-start">
                             <div class="col-sm-10 col-lg-8">
-                                <h1 class=" text-uppercase mb-3 display-7 animated slideInDown" style="color: #db5299 ;">
+                                <h1 class="text-uppercase mb-3 display-7 animated slideInDown" style="color: #db5299 ;">
                                     IF YOU ARE FACING SEXUAL HARASSMENT AT WORKPLACE</h1>
-                                <p class=" text-white mb-4 pb-2">Raise My Voice is an effort of GoI to provide a single window access to every woman, irrespective of her work status, whether working in 
+                                <p class="text-white mb-4 pb-2">Raise My Voice is an effort of GoI to provide a single window access to every woman, irrespective of her work status, whether working in 
                                     organised or unorganised, private or public sector, to 
                                     facilitate the registration of complaint related to 
                                     sexual harassment. Any woman facing sexual harassment at 
                                     workplace can register their complaint through this portal.</p>
                                 <div class="d-flex justify-content-start flex-wrap">
-                                    
-                                    <a href="#" class="btn btn-primary py-3 px-4 py-md-3 px-md-5 me-md-3 mb-3 mb-md-0 animated slideInLeft #db5299" 
-                                    onclick="confirmNavigation()" >
+                                    <a href="#" class="btn btn-primary py-3 px-4 py-md-3 px-md-5 me-md-3 mb-3 mb-md-0 animated slideInLeft" 
+                                    data-bs-toggle="modal" data-bs-target="#registerModal">
                                     Register Your Complaint
                                     </a>
-<script>
-    function confirmNavigation() {
-        // Show confirmation box
-        const userConfirmed = confirm("Are you sure you want to register your complaint?");
-
-        // Navigate if confirmed
-        if (userConfirmed) {
-            window.location.href = "login.html";
-        }
-    }
-</script>
-
-                                   
-                                        
 
                                     <a href="#" class="btn btn-light py-3 px-4 py-md-3 px-md-5 me-md-3 mb-3 mb-md-0 animated slideInLeft">
                                         Workplace/Nodal Officer Registration
@@ -126,10 +101,32 @@
                     </div>
                 </div>
             </div>
-            </div>
         </div>
     </div>
     <!-- Carousel End -->
+
+<!-- Modal Start -->
+<div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="registerModalLabel">Confirm Registration</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to register your complaint?
+            </div>
+            <div class="modal-footer">
+                <!-- Removed data-bs-dismiss here and added onclick to handle redirection -->
+                <button type="button" class="btn btn-secondary" onclick="handleOk()">Yes</button> 
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal End -->
+
+
 
 
     <!-- Service Start -->
@@ -251,6 +248,17 @@
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
+    <script>
+        function handleOk() {
+            // Close the modal manually
+            var modal = bootstrap.Modal.getInstance(document.getElementById('registerModal')); 
+            modal.hide();
+    
+            // Redirect to the "Complaint login.html" page
+            window.location.href = "complaintlogin.html";
+        }
+    </script>
+    
     
 </body>
 
