@@ -48,11 +48,10 @@
     text-align: center;
   }
 
+ 
   .form-group {
+    position: relative;
     margin-bottom: 15px;
-    width: 85%;
-    display: flex;
-    flex-direction: column;
   }
 
   .form-group label {
@@ -60,16 +59,22 @@
     color: #555;
   }
 
-  .form-group input {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+  .form-group input,
+  .form-group select {
+    padding: 12px;
     font-size: 1rem;
+    border: none;
+    border-radius: 12px;
+    width: 85%;
+    background: #f8f9fa;
+    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.1), inset -2px -2px 5px rgba(255, 255, 255, 0.7);
+    outline: none;
+    transition: all 0.3s ease;
   }
 
-  .form-group input:focus {
-    outline: none;
-    border-color: #007bff;
+  .form-group input:focus,
+  .form-group select:focus {
+    box-shadow: 2px 2px 8px rgba(219, 82, 153, 0.5), -2px -2px 8px rgba(255, 255, 255, 0.7);
   }
 
   .btn {
@@ -168,7 +173,7 @@
 
   .captcha input {
     margin-top: 5px;
-    width: 100%;
+    width: 85%;
     padding: 10px;
   }
   .captcha-refresh:hover {

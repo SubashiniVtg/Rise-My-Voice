@@ -59,7 +59,7 @@
                 <a href="laws.html" class="nav-item nav-link">Laws And Regulations</a>
                 <a href="contact.html" class="nav-item nav-link">Contact Us</a>
                 <div class="nav-item dropdown">
-                    <a href="#" class="nav-item nav-link"><i class="fa fa-user"></i></a>
+                    <a href="login.html" class="nav-item nav-link"><i class="fa fa-user"></i></a>
                 </div>
             </div>
         </div>
@@ -78,11 +78,12 @@
                             <div class="col-sm-10 col-lg-8">
                                 <h1 class="text-uppercase mb-3 display-7 animated slideInDown" style="color: #db5299 ;">
                                     IF YOU ARE FACING SEXUAL HARASSMENT AT WORKPLACE</h1>
-                                <p class="text-white mb-4 pb-2">Raise My Voice is an effort of GoI to provide a single window access to every woman, irrespective of her work status, whether working in 
-                                    organised or unorganised, private or public sector, to 
-                                    facilitate the registration of complaint related to 
-                                    sexual harassment. Any woman facing sexual harassment at 
-                                    workplace can register their complaint through this portal.</p>
+                                <p class="text-white mb-4 pb-2">
+                                    Raise My Voice is an initiative by the Government of India to provide a single 
+                                    window for women, regardless of their work status, to register complaints related to sexual harassment 
+                                    at the workplace. However, to file a complaint, users must first log in or register on the portal.
+                                    This platform is available for all women, whether employed in the 
+                                    organised or unorganised, private or public sectors.</p>
                                 <div class="d-flex justify-content-start flex-wrap">
                                     <a href="#" class="btn btn-primary py-3 px-4 py-md-3 px-md-5 me-md-3 mb-3 mb-md-0 animated slideInLeft" 
                                     data-bs-toggle="modal" data-bs-target="#registerModal">
@@ -114,7 +115,17 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                Are you sure you want to register your complaint?
+                 Kindly review the following disclaimer before continuing:
+                 <br>
+                 Raise My Voice is an initiative by the Government of India to provide 
+                 a single window for women, regardless of their work status, to register 
+                 complaints related to sexual harassment at the workplace. 
+                 However, to file a complaint, users must first log in or register 
+                 on the portal. This platform is available for all women, whether
+                 employed in the organised or unorganised, private or public sectors.
+                 <br>
+                 <br>
+                 Are you certain you want to submit your complaint?
             </div>
             <div class="modal-footer">
                 <!-- Removed data-bs-dismiss here and added onclick to handle redirection -->
@@ -125,10 +136,6 @@
     </div>
 </div>
 <!-- Modal End -->
-
-
-
-
     <!-- Service Start -->
     <div class="container-xxl py-5">
         <div class="container">
@@ -254,8 +261,8 @@
             var modal = bootstrap.Modal.getInstance(document.getElementById('registerModal')); 
             modal.hide();
     
-            // Redirect to the "Complaint login.html" page
-            window.location.href = "complaint/complaintlogin.html";
+            
+            window.location.href = "signup.html";
         }
     </script>
     
