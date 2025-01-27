@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="x-icon" href="{{ url_for('static', filename='img/icon.jpg') }}">
+    <title>Raise-My-Voice</title>
+    <link href="{{ url_for('static', filename='css/signup.css') }}" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="left-panel">
+            <img src="{{ url_for('static', filename='img/banner.jpg') }}" width="350" height="700">
+        </div>
+
+        <div class="right-panel">
+            <h1>Create an account</h1>
+            <form id="signupForm">
+                <div class="form-group">
+                    <label for="fullName">Full Name <span>*</span></label>
+                    <input type="text" id="fullName" placeholder="Preethi" name="name" required />
+                    <div class="error-message" id="fullNameError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email <span>*</span></label>
+                    <input type="email" id="email" placeholder="preethi@gmail.com" name="email" required />
+                    <div class="error-message" id="emailError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="verification">OTP verification <span>*</span></label>
+                    <input type="text" id="verification" required />
+                    <div class="error-message" id="OTPError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password <span>*</span></label>
+                    <div class="password-container">
+                        <input id="password" placeholder="Preethi@1" name="password" required />
+                        <span class="toggle-password" onclick="togglePasswordVisibility('password', this)">
+                            <i class="fas fa-eye-slash"></i>
+                        </span>
+                    </div>
+                    <div class="error-message" id="passwordError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="retypePassword">Retype Password <span>*</span></label>
+                    <div class="retypepassword-container">
+                        <input  id="retypePassword" required />
+                        <span class="toggle-password" onclick="togglePasswordVisibility('retypePassword', this)">
+                            <i class="fas fa-eye-slash"></i>
+                        </span>
+                    </div>
+                    <div class="error-message" id="retypePasswordError"></div>
+                </div>
+
+                <div class="form-group captcha">
+                    <span class="captcha-code" id="captchaCode"></span>
+                    <input type="text" id="captchaInput" placeholder="Enter CAPTCHA" required />
+                    <span class="captcha-refresh" id="refreshCaptcha">&#x21bb;</span>
+                </div>
+
+                <button type="submit" class="btn">Sign Up</button>
+                <button type="button" class="google-btn">Sign Up with Google</button>
+                <div class="login-link">
+                    <p>Already have an account? <a href="login.html">Login</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Generate CAPTCHA code
+        function generateCaptcha() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let captcha = '';
+            for (let i = 0; i < 6; i++) {
+                captcha += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return captcha;
+        }
+
+        // Load CAPTCHA on page load
+        const captchaCodeElement = document.getElementById('captchaCode');
+        const captchaInputElement = document.getElementById('captchaInput');
+        const refreshCaptchaButton = document.getElementById('refreshCaptcha');
+
+        function loadCaptcha() {
+            const captcha = generateCaptcha();
+            captchaCodeElement.textContent = captcha;
+            captchaInputElement.value = '';
+        }
+
+        loadCaptcha();
+
+        // Refresh CAPTCHA on icon click
+        refreshCaptchaButton.addEventListener('click', loadCaptcha);
+
+        document.getElementById('signupForm').addEventListener('submit', async function (e) {
+            e.preventDefault(); // Prevent the default form submission
+
+            const name = document.getElementById('fullName').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const retypePassword = document.getElementById('retypePassword').value;
+
+            // Validate email format
+            if (!email.endsWith('@gmail.com')) {
+                alert('Email must be a valid @gmail.com address.');
+                return;
+            }
+
+            // Password regex for at least one uppercase, one lowercase, one number, and one symbol, and exactly 8 characters
+            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%?&]{8}$/;
+
+            if (!passwordRegex.test(password)) {
+                alert('Password must be exactly 8 characters long, and include at least one letter, one number, and one symbol.');
+                return;
+            }
+
+            if (password !== retypePassword) {
+                alert('Passwords do not match. Please ensure both passwords are the same.');
+                return;
+            }
+
+            const data = { name, email, password };
+
+            try {
+                const response = await fetch('/post', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+
+                const result = await response.json(); // Fix for undefined 'result'
+
+                // CAPTCHA validation
+                const userInput = document.getElementById('captchaInput').value;
+                if (userInput === document.getElementById('captchaCode').textContent && response.ok) {
+                    alert(result.message); // Display success message from the server
+                    window.location.href = "/home"; // Redirect to home page or dashboard
+                } else {
+                    alert('Incorrect CAPTCHA. Please try again.');
+                    loadCaptcha(); // Reload CAPTCHA if incorrect
+                    alert(result.error); // Display error message from the server
+                }
+            } catch (error) {
+                alert('Error signing up: ' + error.message);
+            }
+        });
+
+        // Toggle password visibility
+        function togglePasswordVisibility(fieldId, toggleElement) {
+            const field = document.getElementById(fieldId);
+            const icon = toggleElement.querySelector('i');
+            if (field.type === 'password') {
+                field.type = 'text';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            } else {
+                field.type = 'password';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            }
+        }
+    </script>
+</body>
+</html>

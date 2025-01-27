@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" type="x-icon" href="img/icon.jpg">
+  <title>Raise-My-Voice</title>
+  <link rel="stylesheet" type="text/css" href="/css/login.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="login-heading">Login</div>
+  <div class="container">
+    <div class="left-panel">
+        <img src="img/banner.jpg" width="330" height="800">
+    </div>
+    <div class="right-panel">
+      <h1 style="padding-bottom: 10px;">Login</h1>
+      <form id="loginForm">
+        <!-- Email/Username Field -->
+        <div class="form-group">
+          <input type="text" id="emailOrUsername" placeholder="Email or Username" name="email" required />
+        </div>
+
+        <!-- Password Field -->
+        <div class="form-group">
+          <div class="password-container">
+            <input type="password" id="password" placeholder="Password"  name="password" required  />
+            <span class="toggle-password" onclick="togglePasswordVisibility('password', this)">
+              <i class="fas fa-eye-slash"></i>
+            </span>
+          </div>
+        </div>
+
+        <!-- CAPTCHA Field -->
+        <div class="form-group captcha">
+          <span class="captcha-code" id="captchaCode"></span>
+          <span class="captcha-refresh" id="refreshCaptcha">&#x21bb;</span>
+          <input type="text" id="captchaInput" placeholder="Enter CAPTCHA" required />
+          
+        </div>
+
+        <!-- Login Button -->
+        <button type="submit" class="btn" onclick="navigateToHome()">Login</button>
+        <script>
+          function navigateToHome() {
+          window.location.href = 'home.html';  // This will redirect to the 'home.html' page
+          }
+         </script>
+        <button type="button" class="google-btn">Login with Google</button>
+
+        <!-- Link to Signup -->
+        <div class="login-link">
+          <p>Don't have an account? <a href="signup.html">Sign Up</a></p>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Generate CAPTCHA code
+    function generateCaptcha() {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let captcha = '';
+      for (let i = 0; i < 6; i++) {
+        captcha += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return captcha;
+    }
+
+    // Load CAPTCHA on page load
+    const captchaCodeElement = document.getElementById('captchaCode');
+    const captchaInputElement = document.getElementById('captchaInput');
+    const refreshCaptchaButton = document.getElementById('refreshCaptcha');
+
+    function loadCaptcha() {
+      const captcha = generateCaptcha();
+      captchaCodeElement.textContent = captcha;
+      captchaInputElement.value = '';
+    }
+
+    loadCaptcha();
+
+    // Refresh CAPTCHA on icon click
+    refreshCaptchaButton.addEventListener('click', loadCaptcha);
+
+    // Toggle password visibility
+    function togglePasswordVisibility(fieldId, toggleElement) {
+      const field = document.getElementById(fieldId);
+      const icon = toggleElement.querySelector('i');
+      if (field.type === 'password') {
+        field.type = 'text';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+      } else {
+        field.type = 'password';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+      }
+    }
+
+    // Validate email and password
+    function validateEmail(email) {
+      const regex = /^[a-zA-Z0-9._-]+@gmail\.com$/;
+      return regex.test(email);
+    }
+
+    function validatePassword(password) {
+      const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+      return regex.test(password);
+    }
+
+    // Handle form submission
+    document.getElementById('loginForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const emailOrUsername = document.getElementById('emailOrUsername').value;
+      const password = document.getElementById('password').value;
+      const captchaInput = document.getElementById('captchaInput').value;
+
+      // Basic validation
+      if (!emailOrUsername || !password || !captchaInput) {
+        alert('All fields are required.');
+        return;
+      }
+
+      // Validate Email
+      if (!validateEmail(emailOrUsername)) {
+        alert('Please enter a valid Gmail address.');
+        return;
+      }
+
+      // Validate Password
+      if (!validatePassword(password)) {
+        alert('Password must be at least 8 characters long and contain one uppercase letter, one lowercase letter, one number, and one special character.');
+        return;
+      }
+
+      // Validate CAPTCHA
+      if (captchaInput !== captchaCodeElement.textContent) {
+        alert('Incorrect CAPTCHA. Please try again.');
+        loadCaptcha(); // Reload CAPTCHA if incorrect
+        return;
+      }
+
+      // If login details are correct (simulation for now)
+      alert('Login successful');
+      window.location.href = 'index.html'; // Redirect to dashboard or home page
+    });
+  </script>
+</body>
+</html>

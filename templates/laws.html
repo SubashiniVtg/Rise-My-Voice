@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laws and Regulations</title>
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="lib/animate/animate.min.css" rel="stylesheet">
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Add your styles here */
+        body {
+            margin: 0;
+            font-family: 'Nunito', sans-serif;
+            background-color: #f4f4f9;
+            
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #fff;
+            padding: 10px 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-bottom: 3px solid #e0e0e0;
+        }
+
+        header .logo {
+            font-size: 1.5em;
+            font-weight: 800;
+            color: #000;
+            display: flex;
+            align-items: center;
+        }
+
+        header .logo img {
+            height: 40px;
+            width: 40px;
+            margin-right: 10px;
+            border-radius: 50%;
+        }
+        header nav {
+            margin-left: auto;
+        }
+
+        header nav ul {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    gap: 30px; /* Maintain spacing between items */
+}
+
+
+        header nav ul li {
+            margin: 0;
+        }
+
+        header nav ul li a {
+            text-decoration: none;
+            color: #ff5f8f;
+            font-weight: bold;
+            font-size: 1em;
+            transition: color 0.3s;
+        }
+
+        header nav ul li a.active {
+            color: #5A627A;
+        }
+
+        header nav ul li a:hover {
+            color: #e54d7d;
+        }
+
+        header .user {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        header .user a {
+            color: #ff5f8f;
+            font-size: 1.5em;
+            transition: color 0.3s;
+        }
+
+        header .user a:hover {
+            color: #e54d7d;
+        }
+
+        /* Position the dropdown menu relative to its parent container */
+header .dropdown {
+    position: relative;
+}
+
+/* Style for the dropdown menu */
+header .dropdown-menu {
+    position: absolute;
+    top: 100%; /* Position it just below the dropdown button */
+    right: 0; /* Align it to the right of the parent container */
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    display: none; /* Hidden by default */
+    z-index: 1000;
+    min-width: 200px; /* Ensures the dropdown has a defined width */
+}
+
+/* When the dropdown is active, show the menu */
+header .dropdown-menu.active {
+    display: block;
+}
+
+/* Style for individual links inside the dropdown */
+header .dropdown-menu a {
+    text-decoration: none;
+    display: block;
+    padding: 10px 20px;
+    color: #ff5f8f;
+    font-size: 1.1em;
+    transition: background 0.3s, color 0.3s;
+}
+
+/* Hover effect for the dropdown links */
+header .dropdown-menu a:hover {
+    
+    color: #5A627A;
+}
+
+/* Optional: Add a slight shadow to make the dropdown appear more elevated */
+header .dropdown-menu {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Optional: Close dropdown when clicking outside */
+header .dropdown-menu.active {
+    display: block;
+}
+
+/* Optional: Additional styles for the dropdown button */
+header .dropdown-button {
+    font-size: 1.2em;
+    color: #ff5f8f;
+    cursor: pointer;
+    padding: 10px;
+    border: none;
+    background: none;
+    transition: color 0.3s;
+}
+
+header .dropdown-button:hover {
+    color: #5A627A;
+}
+/* Style for the word "Voice" in the logo */
+header .logo .highlighted {
+    color: #ff5f8f; /* Pink color */
+    font-weight: bold;
+}
+
+
+        .container {
+            padding: 20px;
+            background-color: #fff;
+            margin: 20px auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 1200px;
+            text-align: center;
+            flex: 1;
+        }
+
+        .container h1 {
+            color: #ff5f8f;
+            text-align: center;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .tabs button {
+            background-color: #ff5f8f;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 5px;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+
+        .tabs button.active {
+            background-color: #5A627A;
+        }
+
+        .tabs button:hover {
+            background-color: #5a6688;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        table th, table td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        table th {
+            background-color: #ff5f8f;
+            color: white;
+        }
+
+        table td a {
+            text-decoration: none;
+            color: #5A627A;
+            font-weight: bold;
+        }
+
+        table td a:hover {
+            text-decoration: underline;
+            color: #5a6688;
+        }
+        html, body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column; /* Stack content vertically */
+}
+
+        footer {
+    background-color: #fff;
+    padding: 10px 20px;
+    text-align: center;
+    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: auto; /* Push footer to the bottom */
+    width: 100%; /* Full width */
+}
+
+        footer p {
+            margin: 0;
+            color: #000;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="logo-placeholder.png" alt="Logo">
+            Raise My <span class="highlighted">Voice</span>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">About Us</a></li>
+                <li><a href="#" class="active">Laws and Regulations</a></li>
+                <li><a href="#">Contact Us </a></li>
+            </ul>
+        </nav>
+        <div class="user">
+            <a href="#" id="userIcon"><i class="fas fa-user-circle"></i></a>
+            <div class="dropdown-menu" id="userDropdown">
+                <a href="profile.html">Edit Profile</a>
+                <a href="#">Inbox</a>
+                <a href="#">Help & Support</a>
+                <a href="#">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1>Laws and Regulations</h1>
+        <div class="tabs">
+            <button class="active" data-tab="1">Acts and Rules</button>
+            <button data-tab="2">Guidelines and Notifications</button>
+            <button data-tab="3">Books and Manuals</button>
+            <button data-tab="4">FAQs</button>
+        </div>
+        <div class="table-container" id="table-content">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Title</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>SH Rules, 2013</td>
+                        <td><a href="../documents/SH_Rules_2013.pdf" download>Download</a></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Sexual Harassment at Workplace Act - English</td>
+                        <td><a href="../documents/Sexual-Harassment-at-Workplace-Act-_English1" download>Download</a></td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Sexual Harassment at Workplace Act - Hindi</td>
+                        <td><a href="../documents/Sexual-Harassment-at-Workplace-Act-_Hindi1.pdf" download>Download</a></td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>2016 Amendment</td>
+                        <td><a href="../documents/2016_Amendment.pdf" download>Download</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Raise My Voice. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        // Dropdown menu toggle
+        document.getElementById('userIcon').addEventListener('click', function (e) {
+            e.preventDefault();
+            document.getElementById('userDropdown').classList.toggle('active');
+        });
+
+       
+        
+    // Tab switching functionality with dynamic table updates
+    const tabs = document.querySelectorAll('.tabs button');
+    const tableContent = document.getElementById('table-content');
+
+    const tableData = {
+        1: `
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Title</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>SH Rules, 2013</td>
+                        <td><a href="#">Download</a></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Sexual Harassment at Workplace Act - English</td>
+                        <td><a href="#">Download</a></td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Sexual Harassment at Workplace Act - Hindi</td>
+                        <td><a href="#">Download</a></td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>2016 Amendment</td>
+                        <td><a href="#">Download</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        `,
+        2: `
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Title</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>AICTE circular - 2023</td>
+                        <td><a href="../documents/AICTE_circular-_2023.pdf" download>Download</a></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>DOPT Notification regarding Alignment of Service Rules with SH-Act</td>
+                        <td><a href="../documents/DOPT_Notification_regarding_Alignment_of_Service_Rules_with_SH_Act1.pdf" download>Download</a></td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>DOPT Notification regarding Appeal process</td>
+                        <td><a href="../documents/DoPT_Notification_regarding_Appeal_process1.pdf" download>Download</a></td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>DOPT Notification regarding completion of Inquiry within 30 days</td>
+                        <td><a href="../documents/DoPT_Notification_regarding_completion_of_Inquiry_within_30_days11.pdf" download>Download</a></td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>DoPT Notification regarding Inquiry</td>
+                        <td><a href="../documents/DoPT_Notification_regarding_Inquiry1.pdf" download>Download</a></td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>	
+DoPT Notification regarding Seniority of Chairperson of IC</td>
+                        <td><a href="../documents/DoPT_Notification_regarding_Seniority_of_Chairperson_of_ICC1.pdf" download>Download</a></td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td>DoPT Notification regarding Special Leave during SH Inquiry</td>
+                        <td><a href="../documents/DoPT_Notification_regarding_Special_Leave_during_SH_Inquiry11.pdf" download>Download</a></td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td>DoPT Notification SHe-Box</td>
+                        <td><a href="../documents/DoPT_Notification_SHe-Box1.pdf" download>Download</a></td>
+                    </tr>
+                    <tr>
+                        <td>9</td>
+                        <td>UGC Advisory 2022 Sexual Harrasment</td>
+                        <td><a href="../documents/UGC_Advisory_2022-sexual-harrasment.pdf" download>Download</a></td>
+                    </tr>
+
+                </tbody>
+            </table>
+        `,
+        3: `
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Title</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>HANDBOOK ON POSH</td>
+                        <td><a href="../documents/TRAINING_MODULE-_POSH.pdf" download>Download</a></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>TRAINING MODULE- POSH</td>
+                        <td><a href="../documents/HANDBOOK_ON_POSH1.pdf" download>Download</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        `,
+        4: `
+            <div>
+                <p>FAQs content will be added here. Please check back later!</p>
+            </div>
+        `
+    };
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function () {
+            tabs.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+
+            // Update table content based on the selected tab
+            const tabIndex = this.getAttribute('data-tab');
+            tableContent.innerHTML = tableData[tabIndex];
+        });
+    });
+</script>
+
+    </script>
+</body>
+</html>
