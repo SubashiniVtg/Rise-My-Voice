@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="shortcut icon" type="x-icon" href="../img/icon.jpg">
-  <title>Raise-My-Voice</title>
-  <style>
-    body {
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="x-icon" href="{{ url_for('static', filename='img/icon.jpg') }}">
+    <title>Raise-My-Voice</title>
+    <style>
+        body {
       font-family: 'Poppins', sans-serif;
       margin: 0;
       padding: 0;
@@ -174,103 +173,130 @@
     .proceed-button button.active:hover {
       background: #b04182;
     }
-  </style>
+    </style>
 </head>
-
 <body>
-  <div class="container">
-    <div class="header">Register Complaint</div>
-    <form id="complaintForm">
-      <div class="form-group">
-        <label for="name">Name<span>*</span></label>
-        <input type="text" id="name" placeholder="Complainant Name" required>
-      </div>
-      <div class="form-group">
-        <label for="mobile">Mobile No<span>*</span></label>
-        <input type="text" id="mobile" placeholder="Mobile No." required>
-        <div class="error-message" id="mobileError"></div>
-      </div>
-      <div class="form-group">
-        <label for="secure-code">Secure Code<span>*</span></label>
-        <div class="captcha">
-          <div class="captcha-code" id="captchaCode"></div>
-          <input type="text" id="captchaInput" placeholder="Enter code" required>
-          <button type="button" id="refreshCaptcha" class="captcha-refresh">⟳</button>
+    <div class="container">
+        <div class="header">Register Complaint</div>
+        <form id="complaintForm">
+            <div class="form-group">
+                <label for="name">Name<span>*</span></label>
+                <input type="text" id="name" placeholder="Complainant Name" required>
+            </div>
+            <div class="form-group">
+                <label for="mobile">Mobile No<span>*</span></label>
+                <input type="text" id="mobile" placeholder="Mobile No." required>
+            </div>
+            <div class="form-group">
+                <label for="secure-code">Secure Code<span>*</span></label>
+                <div class="captcha">
+                    <div class="captcha-code" id="captchaCode"></div>
+                    <input type="text" id="captchaInput" placeholder="Enter code" required>
+                    <button type="button" id="refreshCaptcha" class="captcha-refresh">⟳</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="otp">Enter OTP<span>*</span></label>
+                <input type="text" id="otp" placeholder="Enter OTP">
+            </div>
+            <div class="buttons">
+                <button type="submit" class="send-otp">Send OTP</button>
+                <button type="button" id="verifyOtp" class="send-otp">Verify OTP</button>
+                <button type="reset" class="clear">Clear</button>
+            </div>
+        </form>
+        <div class="points">
+            <p>✔ Use this form to register your complaints.</p>
+            <p>✔ False complaints are subject to prosecution under IPC.</p>
+            <p>✔ Fields in <span>Red Color</span> are Mandatory.</p>
         </div>
-      </div>
-      <div class="form-group">
-        <label for="otp">Enter OTP<span>*</span></label>
-        <input type="text" id="otp" placeholder="Enter OTP">
-      </div>
-      <div class="buttons">
-        <button type="submit" class="send-otp">Send OTP</button>
-        <button type="button" id="verifyOtp" class="send-otp">Verify OTP</button>
-        <button type="reset" class="clear">Clear</button>
-      </div>
-    </form>
-    <div class="points">
-      <p>✔ Use this form to register your complaints.</p>
-      <p>✔ False complaints are subject to prosecution under IPC.</p>
-      <p>✔ Fields in <span>Red Color</span> are Mandatory.</p>
+        <div class="proceed-button">
+            <button id="proceedButton" disabled>Proceed</button>
+        </div>
     </div>
-    <div class="proceed-button">
-      <button id="proceedBtn" disabled>Proceed</button>
-    </div>
-  </div>
 
-  <script>
-    // Generate CAPTCHA code
-    function generateCaptcha() {
-      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-      let captcha = '';
-      for (let i = 0; i < 6; i++) {
-        captcha += chars.charAt(Math.floor(Math.random() * chars.length));
-      }
-      return captcha;
-    }
+    <script>
+        // Generate CAPTCHA code
+        function generateCaptcha() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let captcha = '';
+            for (let i = 0; i < 6; i++) {
+                captcha += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return captcha;
+        }
 
-    // Load CAPTCHA on page load
-    const captchaCodeElement = document.getElementById('captchaCode');
-    const captchaInputElement = document.getElementById('captchaInput');
-    const refreshCaptchaButton = document.getElementById('refreshCaptcha');
+        // Load CAPTCHA on page load
+        const captchaCodeElement = document.getElementById('captchaCode');
+        const captchaInputElement = document.getElementById('captchaInput');
+        const refreshCaptchaButton = document.getElementById('refreshCaptcha');
 
-    function loadCaptcha() {
-      const captcha = generateCaptcha();
-      captchaCodeElement.textContent = captcha;
-      captchaInputElement.value = '';
-    }
+        function loadCaptcha() {
+            const captcha = generateCaptcha();
+            captchaCodeElement.textContent = captcha;
+            captchaInputElement.value = ''; // Reset CAPTCHA input field
+        }
 
-    loadCaptcha();
+        loadCaptcha();
 
-    // Refresh CAPTCHA on icon click
-    refreshCaptchaButton.addEventListener('click', loadCaptcha);
+        // Refresh CAPTCHA on icon click
+        refreshCaptchaButton.addEventListener('click', loadCaptcha);
 
-    // Validate mobile number input
-    const mobileInput = document.getElementById('mobile');
-    const mobileError = document.getElementById('mobileError');
+        // Enable Proceed button after OTP verification
+        const verifyOtpButton = document.getElementById('verifyOtp');
+        const proceedButton = document.getElementById('proceedButton');
 
-    mobileInput.addEventListener('input', () => {
-      mobileInput.value = mobileInput.value.replace(/\D/g, '');
-      mobileError.style.display = mobileInput.value.length < 10 ? 'block' : 'none';
-    });
+        verifyOtpButton.addEventListener('click', () => {
+            alert('Your OTP is verified successfully!');
+            proceedButton.disabled = false;
+            proceedButton.classList.add('active');
+        });
 
-    // Verify OTP and enable Proceed button
-    const verifyOtpButton = document.getElementById('verifyOtp');
-    const proceedButton = document.getElementById('proceedBtn');
+        // Proceed to complaint details page and store complaint data in MongoDB
+        document.getElementById('proceedButton').addEventListener('click', function () {
+            if (!proceedButton.disabled) {
+                // Capture the form data
+                const name = document.getElementById('name').value;
+                const mobile = document.getElementById('mobile').value;
+                const captcha = document.getElementById('captchaCode').textContent;
+                const otp = document.getElementById('otp').value;
 
-    verifyOtpButton.addEventListener('click', () => {
-      alert('Your OTP is verified successfully!');
-      proceedButton.disabled = false;
-      proceedButton.classList.add('active');
-    });
+                // Prepare the data to be sent
+                const complaintData = {
+                    name: name,
+                    mobile: mobile,
+                    captcha: captcha,
+                    otp: otp
+                };
 
-    // Navigate to the complainant details page
-    proceedButton.addEventListener('click', () => {
-      if (!proceedButton.disabled) {
-        window.location.href = 'complaint/complaintdetails.html'; // Replace with your actual page
-      }
-    });
-  </script>
+                // Send the data to the backend
+                fetch('/complaint/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(complaintData)
+                })
+                .then(response => response.json())
+                .then(result => {
+                    console.log(result);  // Log the response from the backend
+                    alert(result.message);  // Show success message
+
+                    // If complaint is registered successfully, navigate to the complaint details page
+                    if (result.message === "Complaint registered successfully!") {
+                      window.location.href = "/complaintdetails"; 
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert("An error occurred while submitting your complaint!");
+                });
+            }
+        });
+
+    </script>
 </body>
-
 </html>
+
+
+

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="shortcut icon" type="x-icon" href="../img/icon.jpg">
+  <link rel="shortcut icon" type="x-icon" href="{{ url_for('static', filename='img/icon.jpg') }}">
   <title>Raise-My-Voice</title>
   <style>
     /* Reset and general styles */
@@ -420,9 +420,8 @@ function logout() {
     }
     function handleSubmit(event) {
   event.preventDefault();  // Prevents the form from submitting normally.
-  window.location.href = "complaint/submission.html";  // Redirect to submission.html page after form submission.
+  window.location.href = "/complaintsubmission";  // Redirect to submission.html page after form submission.
 }
-
   </script>
 
 </body>
