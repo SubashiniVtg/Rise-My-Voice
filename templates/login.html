@@ -1,28 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" type="x-icon" href="{{ url_for('static', filename='img/icon.jpg') }}">
-    <title>Raise-My-Voice</title>
-    <link href="{{ url_for('static', filename='css/login.css') }}" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" type="x-icon" href="{{ url_for('static', filename='img/icon.jpg') }}">
+  <title>Raise-My-Voice</title>
+  <link href="{{ url_for('static', filename='css/login.css') }}" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-  <div class="login-heading">Login</div>
   <div class="container">
     <div class="left-panel">
-        <img src="{{ url_for('static', filename='img/banner.jpg') }}" width="330" height="800">
+        <img src="{{ url_for('static', filename='img/banner.jpg') }}" width="330" height="800" alt="Banner Image">
     </div>
     <div class="right-panel">
-      <h1 style="padding-bottom: 10px;">Login</h1>
+      <h1>Login</h1>
       <form id="loginForm">
-        <!-- Email/Username Field -->
         <div class="form-group">
           <input type="text" id="emailOrUsername" placeholder="Email or Username" name="email" required />
+          <button type="button" id="sendOtpButton" class="btn">Send OTP</button>
         </div>
-
-        <!-- Password Field -->
+        <div class="form-group">
+          <label for="verification">OTP verification <span>*</span></label>
+          <input type="text" id="otpInput" required />
+          <div class="error-message" id="OTPError"></div>
+        </div>
         <div class="form-group">
           <div class="password-container">
             <input type="password" id="password" placeholder="Password" name="password" required />
@@ -31,20 +33,13 @@
             </span>
           </div>
         </div>
-
-        <!-- CAPTCHA Field -->
         <div class="form-group captcha">
           <span class="captcha-code" id="captchaCode"></span>
           <span class="captcha-refresh" id="refreshCaptcha">&#x21bb;</span>
           <input type="text" id="captchaInput" placeholder="Enter CAPTCHA" required />
         </div>
-
-        <!-- Login Button -->
         <button type="submit" class="btn">Login</button>
-
         <button type="button" class="google-btn">Login with Google</button>
-
-        <!-- Link to Signup -->
         <div class="login-link">
           <p>Don't have an account? <a href="{{ url_for('signup') }}">Sign Up</a></p>
         </div>
@@ -94,16 +89,48 @@
       }
     }
 
-    // Handle form submission
-    document.getElementById('loginForm').addEventListener('submit', function (e) {
+    // Handle sending OTP
+    document.getElementById('sendOtpButton').addEventListener('click', function() {
+      const email = document.getElementById('emailOrUsername').value;
+
+      if (!email) {
+        alert('Please enter your email.');
+        return;
+      }
+
+      // Send OTP request to backend
+      fetch('/send-otp-login', {  // Updated route for login OTP
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: email }),
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.error) {
+          alert(data.error);  // Show error message if OTP sending fails
+        } else {
+          alert('OTP sent to your email!');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+      });
+    });
+
+    // Handle form submission for login (including OTP verification and CAPTCHA)
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
       e.preventDefault();
 
       const emailOrUsername = document.getElementById('emailOrUsername').value;
       const password = document.getElementById('password').value;
+      const otp = document.getElementById('otpInput').value;
       const captchaInput = document.getElementById('captchaInput').value;
 
       // Basic validation
-      if (!emailOrUsername || !password || !captchaInput) {
+      if (!emailOrUsername || !password || !otp || !captchaInput) {
         alert('All fields are required.');
         return;
       }
@@ -115,13 +142,13 @@
         return;
       }
 
-      // Submit login request to backend
+      // Send login request to backend
       fetch('/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email: emailOrUsername, password }),
+        body: JSON.stringify({ email: emailOrUsername, password, otp }),
       })
       .then(response => response.json())
       .then(data => {

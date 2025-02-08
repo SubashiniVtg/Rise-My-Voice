@@ -24,8 +24,8 @@
     <!-- Customized Bootstrap Stylesheet -->
     <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
 
-     <!-- Template Stylesheet -->
-     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <!-- Template Stylesheet -->
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
 
     <style>
         .container {
@@ -101,20 +101,113 @@
             color: #5a6688;
         }
 
-        /* Custom footer styling */
-        .footer {
-            background-color: #333; /* Dark gray color */
-            color: #fff; /* White text color */
-        }
+   
+/*** Footer ***/
+.footer {
+    background-color: #181d38 !important;
+    color: #F0FBFC !important;
+    padding-top: 3rem !important;
+    margin-top: 3rem !important;
+}
 
-        .footer a {
-            color: #ff5f8f; /* Link color in footer */
-        }
+.footer .btn-social {
+    margin-right: 5px;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #F0FBFC;
+    font-weight: normal;
+    border: 1px solid #FFFFFF;
+    border-radius: 35px;
+    transition: .3s;
+}
 
-        .footer a:hover {
-            text-decoration: underline;
-            color: #ff4d7f; /* Hover color for links */
-        }
+.footer .btn-social:hover {
+    color: #ec6daf; /* Hover color */
+}
+
+.footer .btn-social i {
+    font-size: 18px;
+}
+
+.footer .btn-link {
+    display: block;
+    margin-bottom: 5px;
+    padding: 0;
+    text-align: left;
+    color: #FFFFFF;
+    font-size: 15px;
+    font-weight: normal;
+    text-transform: capitalize;
+    transition: .3s;
+}
+
+.footer .btn-link::before {
+    position: relative;
+    content: "\f105"; /* Font Awesome icon */
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    margin-right: 10px;
+}
+
+.footer .btn-link:hover {
+    letter-spacing: 1px;
+    box-shadow: none;
+}
+
+.footer .copyright {
+    padding: 25px 0;
+    font-size: 15px;
+    border-top: 1px solid rgba(256, 256, 256, .1);
+}
+
+.footer .copyright a {
+    color: #F0FBFC;
+    text-decoration: none;
+}
+
+.footer .copyright a:hover {
+    text-decoration: underline;
+}
+
+.footer .footer-menu a {
+    margin-right: 15px;
+    padding-right: 15px;
+    border-right: 1px solid #ec6daf;
+    color: #F0FBFC;
+    text-decoration: none;
+}
+
+.footer .footer-menu a:last-child {
+    margin-right: 0;
+    padding-right: 0;
+    border-right: none;
+}
+
+.footer .footer-menu a:hover {
+    letter-spacing: 1px;
+    color: #ec6daf;
+}
+
+/* Responsive Design for Footer */
+@media (max-width: 768px) {
+    .footer .footer-menu {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    
+    .footer .btn-link {
+        display: inline-block;
+        margin: 5px 0;
+    }
+    
+    .footer .btn-social {
+        margin-right: 10px;
+    }
+}
+
     </style>
 </head>
 <body>  
@@ -130,7 +223,7 @@
     <!-- Navbar Start -->
     <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
         <a href="index.html" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
-            <img src="{{ url_for('static', filename='img/icon.jpg') }}" width="50px" height="50px" alt="logo" 
+            <img src="{{ url_for('static', filename='img/icon.jpeg') }}" width="50px" height="50px" alt="logo" 
             style="border-radius: 50%; box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3); padding: 5px; background-color: white;">
             <p class="m-0 fw-bold" style="font-size: 35px; padding-left: 5px;">Raise My<span
                     style="color: #db5299 ;"> Voice</span></p>
@@ -173,41 +266,59 @@
                     <tr>
                         <td>1</td>
                         <td>SH Rules, 2013</td>
-                        <td><a href="../documents/SH_Rules_2013.pdf" download>Download</a></td>
+                        <td><a href="{{ url_for('static', filename='documents/SH_Rules_2013.pdf') }}" download>Download</a></td>
                     </tr>
                     <tr>
                         <td>2</td>
                         <td>Sexual Harassment at Workplace Act - English</td>
-                        <td><a href="../documents/Sexual-Harassment-at-Workplace-Act-_English1" download>Download</a></td>
+                        <td><a href="{{ url_for('static', filename='documents/Sexual-Harassment-at-Workplace-Act-_English1.pdf') }}" download>Download</a></td>
                     </tr>
                     <tr>
                         <td>3</td>
                         <td>Sexual Harassment at Workplace Act - Hindi</td>
-                        <td><a href="../documents/Sexual-Harassment-at-Workplace-Act-_Hindi1.pdf" download>Download</a></td>
+                        <td><a href="{{ url_for('static', filename='documents/Sexual-Harassment-at-Workplace-Act-_Hindi1.pdf') }}" download>Download</a></td>
                     </tr>
                     <tr>
                         <td>4</td>
                         <td>2016 Amendment</td>
-                        <td><a href="../documents/2016_Amendment.pdf" download>Download</a></td>
+                        <td><a href="{{ url_for('static', filename='documents/2016_Amendment.pdf') }}" download>Download</a></td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
-
-    <!-- Footer Start -->
-    <div class="container-fluid footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
-        <div class="container">
-            <div class="copyright">
-                <div class="row">
-                    <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                        &copy; <a class="border-bottom" href="{ {url_for('index') }}">Raise My Voice</a>, All Right Reserved.
-                    </div>
+<!-- Footer Start -->
+<div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
+    <div class="container">
+        <!-- <div class="row">
+             Footer Menu Section 
+            <div class="col-md-6 footer-menu">
+                <a href="{{ url_for('index') }}" class="btn btn-link">Home</a>
+                <a href="{{ url_for('about') }}" class="btn btn-link">About Us</a>
+                <a href="{{ url_for('laws') }}" class="btn btn-link">Laws & Regulations</a>
+                <a href="{{ url_for('contact') }}" class="btn btn-link">Contact Us</a>
+            </div>
+            Social Media Icons Section 
+            <div class="col-md-6 text-center text-md-end">
+                <a href="#" class="btn btn-social btn-facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="btn btn-social btn-twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="btn btn-social btn-linkedin"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" class="btn btn-social btn-instagram"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div> --> 
+        <div class="copyright">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    &copy; <a class="border-bottom" href="{{ url_for('index') }}">Raise My Voice</a>, All Rights Reserved.
                 </div>
             </div>
         </div>
     </div>
-    <!-- Footer End -->
+</div>
+<!-- Footer End -->
+
+
+
 
     <script>
         window.addEventListener('load', function() {
@@ -233,22 +344,22 @@
                         <tr>
                             <td>1</td>
                             <td>SH Rules, 2013</td>
-                            <td><a href="#">Download</a></td>
+                            <td><a href="{{ url_for('static', filename='documents/SH_Rules_2013.pdf') }}" download>Download</a></td>
                         </tr>
                         <tr>
                             <td>2</td>
                             <td>Sexual Harassment at Workplace Act - English</td>
-                            <td><a href="#">Download</a></td>
+                            <td><a href="{{ url_for('static', filename='documents/Sexual-Harassment-at-Workplace-Act-_English1.pdf') }}" download>Download</a></td>
                         </tr>
                         <tr>
                             <td>3</td>
                             <td>Sexual Harassment at Workplace Act - Hindi</td>
-                            <td><a href="#">Download</a></td>
+                            <td><a href="{{ url_for('static', filename='documents/Sexual-Harassment-at-Workplace-Act-_Hindi1.pdf') }}" download>Download</a></td>
                         </tr>
                         <tr>
                             <td>4</td>
                             <td>2016 Amendment</td>
-                            <td><a href="#">Download</a></td>
+                            <td><a href="{{ url_for('static', filename='documents/2016_Amendment.pdf') }}" download>Download</a></td>
                         </tr>
                     </tbody>
                 </table>
@@ -266,17 +377,17 @@
                         <tr>
                             <td>1</td>
                             <td>AICTE circular - 2023</td>
-                            <td><a href="../documents/AICTE_circular-_2023.pdf" download>Download</a></td>
+                            <td><a href="{{ url_for('static', filename='documents/AICTE_circular-_2023.pdf') }}" download>Download</a></td>
                         </tr>
                         <tr>
                             <td>2</td>
                             <td>DOPT Notification regarding Alignment of Service Rules with SH-Act</td>
-                            <td><a href="../documents/DOPT_Notification_regarding_Alignment_of_Service_Rules_with_SH_Act1.pdf" download>Download</a></td>
+                            <td><a href="{{ url_for('static', filename='documents/DOPT_Notification_regarding_Alignment_of_Service_Rules_with_SH_Act1.pdf') }}" download>Download</a></td>
                         </tr>
                         <tr>
                             <td>3</td>
                             <td>DOPT Notification regarding Appeal process</td>
-                            <td><a href="../documents/DoPT_Notification_regarding_Appeal_process1.pdf" download>Download</a></td>
+                            <td><a href="{{ url_for('static', filename='documents/DoPT_Notification_regarding_Appeal_process1.pdf') }}" download>Download</a></td>
                         </tr>
                     </tbody>
                 </table>
@@ -294,12 +405,12 @@
                         <tr>
                             <td>1</td>
                             <td>HANDBOOK ON POSH</td>
-                            <td><a href="../documents/TRAINING_MODULE-_POSH.pdf" download>Download</a></td>
+                            <td><a href="{{ url_for('static', filename='documents/TRAINING_MODULE-_POSH.pdf') }}" download>Download</a></td>
                         </tr>
                         <tr>
                             <td>2</td>
                             <td>TRAINING MODULE- POSH</td>
-                            <td><a href="../documents/HANDBOOK_ON_POSH1.pdf" download>Download</a></td>
+                            <td><a href="{{ url_for('static', filename='documents/HANDBOOK_ON_POSH1.pdf') }}" download>Download</a></td>
                         </tr>
                     </tbody>
                 </table>

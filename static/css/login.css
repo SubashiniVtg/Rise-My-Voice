@@ -2,182 +2,216 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-  }
+}
 
-  body {
+body {
     font-family: Arial, sans-serif;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    background: #333;
+    min-height: 100vh;
+    background: #5e5c5c;
     margin: 0;
-  }
+}
 
-  .container {
+.container {
     display: flex;
     width: 90%;
-    height: 85%;
-    max-width: 700px;
+    max-width: 800px;
     background: #fff;
     border-radius: 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     overflow: hidden;
-  }
-
-  .left-panel {
-    flex: 1;
-    background: url('https://via.placeholder.com/600x800') no-repeat center center/cover;
+    flex-direction: row;
+    padding: 20px;
+    margin-top: 30px;  /* Optional: for spacing from the top */
+    height: auto;
+}
+.left-panel {
     display: flex;
-  }
-
-  .right-panel {
+    align-items: center;
+    justify-content: center;
     flex: 1;
-    padding: 5px;
+    height: 100%;  /* Ensure the left panel takes full height of its container */
+}
+
+.left-panel img {
+    width: 100%;
+    height: 100%;  /* Make sure the image covers the entire height */
+    object-fit: cover;  /* Ensure the image scales correctly without stretching */
+}
+
+
+.right-panel {
+    flex: 1;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     justify-content: center;
-  }
+}
 
-  .login-heading {
-    font-size: 2rem;
+.right-panel h1 {
+    font-size: 1.8rem;
     color: #333;
-    font-weight: bold;
-    margin-bottom: 20px;
+    font-weight: 600;
     text-align: center;
-  }
+    margin-bottom: 20px;
+}
 
- 
-  .form-group {
+.form-group {
     position: relative;
     margin-bottom: 15px;
-  }
+    width: 100%;
+}
 
-  .form-group label {
-    margin-bottom: 5px;
-    color: #555;
-  }
+.form-group label {
+    font-size: 1rem;
+    color: #db5299;
+    margin-bottom: 8px;
+    display: block;
+}
 
-  .form-group input,
-  .form-group select {
+.form-group input {
     padding: 12px;
     font-size: 1rem;
     border: none;
     border-radius: 12px;
-    width: 85%;
+    width: 100%;
     background: #f8f9fa;
     box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.1), inset -2px -2px 5px rgba(255, 255, 255, 0.7);
     outline: none;
     transition: all 0.3s ease;
-  }
+}
 
-  .form-group input:focus,
-  .form-group select:focus {
+.form-group input:focus {
     box-shadow: 2px 2px 8px rgba(219, 82, 153, 0.5), -2px -2px 8px rgba(255, 255, 255, 0.7);
-  }
+}
 
-  .btn {
-    width: 85%;
-    padding: 10px;
-    font-size: 1rem;
-    background: #e45ab2;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 20px;
-  }
+.error-message {
+    color: red;
+    font-size: 0.9rem;
+}
 
-  .btn:hover {
-    background: #0056b3;
-  }
-
-  .login-link {
-    text-align: center;
-    margin-top: 15px;
-  }
-
-  .login-link a {
-    color: #007bff;
-    text-decoration: none;
-  }
-
-  .login-link a:hover {
-    text-decoration: underline;
-  }
-
-  .password-container {
-    position: relative;
-    width: 85%;
-  }
-
-  .password-container input {
-    width: 100%;
-    padding: 10px;
-    padding-right: 35px;
-  }
-
-  .toggle-password {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-  }
-
-  .google-btn {
-    width: 85%;
-    padding: 10px;
-    font-size: 1rem;
-    background: #e45ab2;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 10px;
-  }
-
-  .google-btn:hover {
-    background: #357ae8;
-  }
-
-  .captcha {
+.captcha {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    margin-top: 15px;
-  }
+    align-items: center;
+    justify-content: space-between;
+}
 
-  .captcha-code {
+.captcha-code {
     font-weight: bold;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     color: #050708;
     padding: 5px 15px;
     border: 1px solid #ddd;
     border-radius: 5px;
     user-select: none;
-    margin-bottom: 10px;
-  }
+}
 
-  .captcha-refresh {
-    margin-top: 10px;
+.captcha input {
+    margin-left: 15px;
+    flex: 1;
+}
+
+.captcha-refresh {
+    margin-left: 10px;
     cursor: pointer;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     color: #111213;
-    padding: 5px 15px;
-    border: 2px solid #e45ab2;
-    border-radius: 5px;
-    transition: 0.3s ease;
-  }
+}
 
-  .captcha input {
-    margin-top: 5px;
-    width: 85%;
-    padding: 10px;
-  }
-  .captcha-refresh:hover {
-    background-color: #e45ab2;
+.captcha-refresh:hover {
+    color: #0b0d0e;
+}
+
+.btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    background: #db5299;
     color: white;
-    transform: scale(1.1);
-  }
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background 0.3s ease;
+}
+
+.btn:hover {
+    background: #e45ab2;
+}
+
+.google-btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    background: #4285F4;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.3s ease;
+}
+
+.google-btn:hover {
+    background: #357ae8;
+}
+
+.login-link {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.login-link a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.login-link a:hover {
+    text-decoration: underline;
+}
+
+.password-container {
+    position: relative;
+    width: 100%;
+}
+
+.password-container input {
+    padding-right: 35px;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        padding: 20px;
+        margin-top: 10px;
+    }
+
+    .left-panel {
+        display: none;
+    }
+
+    .right-panel {
+        padding: 15px;
+    }
+
+    .form-group input {
+        font-size: 0.9rem;
+        padding: 10px;
+    }
+
+    .btn, .google-btn {
+        font-size: 1.1rem;
+        padding: 12px;
+    }
+}

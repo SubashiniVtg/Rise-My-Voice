@@ -1,151 +1,181 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" type="x-icon" href="{{ url_for('static', filename='img/icon.jpg') }}">
-    <title>Admin Dashboard - Raise-My-Voice</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/admindash.css') }}">
-    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
-</head>
-<body>  
-    <nav>
-        <div class="logo-name">
-            <div class="logo-image">
-                <img src="{{ url_for('static', filename='img/icon.jpg') }}" alt="">
-            </div>
-            <span class="logo_name">Rise My Voice</span>
-        </div>
 
-        <div class="menu-items">
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+     <meta charset="UTF-8">
+     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <link rel="shortcut icon" type="x-icon" href="{{ url_for('static', filename='img/icon.jpg') }}">
+     <title>Admin Dashboard - Raise-My-Voice</title>
+     <link rel="stylesheet" href="{{ url_for('static', filename='css/admindash.css') }}">
+     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+ </head>
+ <body>  
+     <nav>
+         <div class="logo-name">
+             <div class="logo-image">
+                 <img src="{{ url_for('static', filename='img/icon.jpeg') }}" alt="">
+             </div>
+             <span class="logo_name">Rise My Voice</span>
+         </div>
+         <div class="menu-items">
             <ul class="nav-links">
-                <li><a href="#">
+                <li><a href="{{ url_for('dashboard', status='all') }}" id="total-cases">
                     <i class="uil uil-estate"></i>
-                    <span class="link-name">Dashboard</span>
+                    <span class="link-name">Total Cases</span>
                 </a></li>
-                <li><a href="#">
-                    <i class="uil uil-chart"></i>
-                    <span class="link-name">Analytics</span>
-                </a></li>
-                <li><a href="#">
-                    <i class="uil uil-books"></i>
-                    <span class="link-name">Cases</span>
-                </a></li>
-                <li><a href="#">
+                <li><a href="{{ url_for('dashboard', status='resolved') }}" id="resolved">
                     <i class="uil uil-check-circle"></i>
                     <span class="link-name">Resolved</span>
                 </a></li>
-                <li><a href="#">
+                <li><a href="{{ url_for('dashboard', status='pending') }}" id="pending">
                     <i class="uil uil-clipboard-alt"></i>
                     <span class="link-name">Pending</span>
                 </a></li>
+                
             </ul>
             
-            <ul class="logout-mode">
-                <li><a href="#">
-                    <i class="uil uil-signout"></i>
-                    <span class="link-name">Logout</span>
-                </a></li>
-
-                <li class="mode">
-                    <a href="#">
-                        <i class="uil uil-moon"></i>
-                    <span class="link-name">Dark Mode</span>
-                    </a>
-
-                    <div class="mode-toggle">
-                        <span class="switch"></span>
-                    </div>
-                </li>
-            </ul>
-        </div>
-    </nav>
+             <ul class="logout-mode">
+                 <li><a href="#">
+                     <i class="uil uil-signout"></i>
+                     <span class="link-name">Logout</span>
+                 </a></li>
+                 <li class="mode">
+                     <a href="#">
+                         <i class="uil uil-moon"></i>
+                     <span class="link-name">Dark Mode</span>
+                     </a>
+                     <div class="mode-toggle">
+                         <span class="switch"></span>
+                     </div>
+                 </li>
+             </ul>
+         </div>
+     </nav>
  
- <section class="dashboard">
-    <div class="top">
-        <div class="search-box">
-            <i class="uil uil-search"></i>
-            <form action="{{ url_for('dashboard') }}" method="get">
-                <input type="text" name="search_query" placeholder="Search by Name, Mobile, or Join Date..." value="{{ search_query }}">
-            </form>
-        </div>
-    </div>
+     <section class="dashboard">
+         <div class="top">
+             <div class="search-box">
+                 <i class="uil uil-search"></i>
+                 <form action="{{ url_for('dashboard') }}" method="get">
+                     <input type="text" name="search_query" placeholder="Search by Name, Email, or Join Date..." value="{{ search_query }}">
+                 </form>
+             </div>
+         </div>
+ 
+         <div class="dash-content">
+             <div class="overview">
+                 <div class="title">
+                     <i class="uil uil-tachometer-fast-alt"></i>
+                     <span class="text">Dashboard</span>
+                 </div>
+ 
+                 <div class="boxes">
+                     <div class="box box1">
+                         <i class="uil uil-books"></i>
+                         <span class="text">Total Cases</span>
+                         <span class="number">{{ total_cases }}</span>
+                     </div>
+                     <div class="box box2">
+                         <i class="uil uil-check-circle"></i>
+                         <span class="text">Total Resolved</span>
+                         <span class="number">{{ total_resolved }}</span>
+                     </div>
+                     <div class="box box3">
+                         <i class="uil uil-clipboard-alt"></i>
+                         <span class="text">Total Pending</span>
+                         <span class="number">{{ total_pending }}</span>
+                     </div>
+                 </div>
+             </div>
+ 
+             <div class="activity">
+                 <div class="title">
+                     <i class="uil uil-clock-three"></i>
+                     <span class="text">Recent Activity</span>
+                 </div>
+ 
+                 <div class="activity-data">
+                     <table class="status-table">
+                         <thead>
+                             <tr>
+                                 <th>Name</th>
+                                 <th>Email</th>
+                                 <th>Joined</th>
+                                 <th>Status</th>
+                             </tr>
+                         </thead>
+                         <tbody>
+                             {% for complainant in recent_complaints %}
+                             <tr>
+                                 <td>{{ complainant.name }}</td>
+                                 <td>{{ complainant.email }}</td>
+                                 <td>{{ complainant.joined }}</td>
+                                 <td>
+                                     <button class="btn-active" onclick="viewComplaint('{{ complainant._id }}')">View</button>
+                                     {% if complainant.status != 'resolved' %}
+                                     <button class="btn-inactive" onclick="markResolved('{{ complainant._id }}', this)">Mark as Resolved</button>
+                                     {% else %}
+                                     <button class="btn-inactive" disabled>Resolved</button>
+                                     {% endif %}
+                                 </td>
+                             </tr>
+                             {% endfor %}
+                         </tbody>  
+                     </table>
+                 </div>
+             </div>
+         </div>
+ 
+        
+         <div class="pagination">
+             {% if page > 1 %}
+                 <a href="{{ url_for('dashboard', page=page-1, search_query=search_query, status=status_filter) }}">Previous</a>
+             {% endif %}
+             <span>Page {{ page }}</span>
+             {% if recent_complaints|length == per_page %}
+                 <a href="{{ url_for('dashboard', page=page+1, search_query=search_query, status=status_filter) }}">Next</a>
+             {% endif %}
+         </div>
+     </section>
+ 
+     <script src="{{ url_for('static', filename='js/admindash.js') }}"></script>
+     <script>
+     // Function to handle the View button click (redirect to trackcomplaint.html)
+     function viewComplaint(complaintId) {
+         window.location.href = `/trackcomplaint/${complaintId}`;
+     }
+ 
+     // Function to mark a complaint as resolved
+function markResolved(complaintId, button) {
+    fetch(`/update_status/${complaintId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            status: 'resolved'
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Update the dynamic count for resolved and pending
+            let resolvedCount = document.querySelector('.box2 .number');
+            resolvedCount.innerText = data.total_resolved;
+            let pendingCount = document.querySelector('.box3 .number');
+            pendingCount.innerText = data.total_pending;
 
-    <div class="dash-content">
-        <div class="overview">
-            <div class="title">
-                <i class="uil uil-tachometer-fast-alt"></i>
-                <span class="text">Dashboard</span>
-            </div>
+            // Disable the button and change the text to "Resolved"
+            button.innerText = 'Resolved';
+            button.disabled = true;
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
 
-            <div class="boxes">
-                <div class="box box1">
-                    <i class="uil uil-books"></i>
-                    <span class="text">Total Cases</span>
-                    <span class="number">{{ total_cases }}</span>
-                </div>
-                <div class="box box2">
-                    <i class="uil uil-check-circle"></i>
-                    <span class="text">Total Resolved</span>
-                    <span class="number">{{ total_resolved }}</span> <!-- Dynamically calculated -->
-                </div>
-                <div class="box box3">
-                    <i class="uil uil-clipboard-alt"></i>
-                    <span class="text">Total Pending</span>
-                    <span class="number">{{ total_pending }}</span> <!-- Dynamically calculated -->
-                </div>
-            </div>
-        </div>
-
-        <div class="activity">
-            <div class="title">
-                <i class="uil uil-clock-three"></i>
-                <span class="text">Recent Activity</span>
-            </div>
-
-            <div class="activity-data">
-                <table class="status-table">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Mobile</th>
-                            <th>Joined</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for complainant in recent_complaints %}
-                        <tr>
-                            <td data-label="Name">{{ complainant.name }}</td>
-                            <td data-label="Mobile">{{ complainant.mobile }}</td>
-                            <td data-label="Joined">{{ complainant.joined }}</td>
-                            <td data-label="Status">
-                                <button class="btn-active">View</button>
-                                <button class="btn-inactive">Inactive</button>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <!-- Pagination Links -->
-    <div class="pagination">
-        {% if page > 1 %}
-            <a href="{{ url_for('dashboard', page=page-1, search_query=search_query) }}">Previous</a>
-        {% endif %}
-
-        <span>Page {{ page }}</span>
-
-        {% if recent_complaints|length == per_page %}
-            <a href="{{ url_for('dashboard', page=page+1, search_query=search_query) }}">Next</a>
-        {% endif %}
-    </div>
-</section>
-
-<script src="{{ url_for('static', filename='js/admindash.js') }}"></script>
-</body>
-</html>
+     </script>
+ </body>
+ </html>
+  
+  

@@ -3,46 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Page</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/profile.css') }}" rel="stylesheet">
-    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
-    <link rel="shortcut icon" type="x-icon" href="{{ url_for('static', filename='img/icon.jpg') }}">
-    <title>Raise-My-Voice</title>
 </head>
 <body>
 
     <div class="profile-container">
         <div class="profile-sidebar">
+            <!-- Profile Image -->
             <div class="profile-icon" onclick="triggerFileInput()">
-                <i class="fas fa-user-circle" id="profileIcon" style="background-image: url('{{ user['profile_image'] or url_for('static', filename='img/default-profile.jpg') }}');"></i>
+                <i class="fas fa-user-circle" id="profileIcon" style="background-image: url('{{ user['profile_image'] or url_for('static', filename='img/icon.jpg') }}')"></i>
                 <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="updateProfileImage(event)">
             </div>
+            <!-- User Info -->
             <div class="profile-name">
-                <span id="userName" contenteditable="true">{{ user['name'] }}</span>
-                <button id="editNameBtn" onclick="saveName()">Save</button>
+                <span>{{ user['first_name'] }} {{ user['last_name'] }}</span>
             </div>
-    
-            <div class="profile-buttons">
-                <button class="profile-button" id="homeBtn"><i class="uil uil-estate"></i> Home</button>
-                <button class="profile-button" id="trackBtn"><i class="uil uil-chart-bar"></i> Track My Complaint</button>
-                <button class="profile-button" id="contactBtn"><i class="uil uil-user-circle"></i> Contact Us</button>
-                <button class="profile-button" id="logoutBtn"><i class="uil uil-signout"></i> Log Out</button>
-            </div>        
-        </div>
-    
-        <div class="profile-details">
-            <form method="POST" action="/profile">
+
+            <!-- Profile Update Form -->
+            <form method="POST" enctype="multipart/form-data">
                 <div class="profile-item">
                     <label for="first_name">First Name</label>
-                    <input type="text" id="first_name" name="first_name" value="{{ user['first_name'] or '' }}">
+                    <input type="text" id="first_name" name="first_name" value="{{ user['first_name'] }}">
                 </div>
                 <div class="profile-item">
                     <label for="last_name">Last Name</label>
-                    <input type="text" id="last_name" name="last_name" value="{{ user['last_name'] or '' }}">
+                    <input type="text" id="last_name" name="last_name" value="{{ user['last_name'] }}">
                 </div>
                 <div class="profile-item">
                     <label for="phone">Phone Number</label>
-                    <input type="text" id="phone" name="phone" value="{{ user['phone'] or '' }}">
+                    <input type="text" id="phone" name="phone" value="{{ user['phone'] }}">
                 </div>
                 <div class="profile-item">
                     <label for="email">Email</label>
@@ -50,42 +41,28 @@
                 </div>
                 <div class="profile-item">
                     <label for="gender">Gender</label>
-                    <input type="text" id="gender" name="gender" value="{{ user['gender'] or '' }}">
+                    <input type="text" id="gender" name="gender" value="{{ user['gender'] }}">
                 </div>
                 <div class="profile-item">
                     <label for="dob">Date of Birth</label>
-                    <input type="date" id="dob" name="dob" value="{{ user['dob'] or '' }}">
-                </div>
-                <div class="profile-item">
-                    <label for="age">Age</label>
-                    <input type="text" id="age" name="age" value="{{ user['age'] or '' }}">
+                    <input type="date" id="dob" name="dob" value="{{ user['dob'] }}">
                 </div>
                 <div class="profile-item">
                     <label for="address">Address</label>
-                    <input type="text" id="address" name="address" value="{{ user['address'] or '' }}">
+                    <input type="text" id="address" name="address" value="{{ user['address'] }}">
+                </div>
+                <div class="profile-item">
+                    <label for="profile_image">Profile Image</label>
+                    <input type="file" id="profile_image" name="profile_image">
                 </div>
                 <div class="save-container">
-                    <button type="submit" id="saveBtn">Save</button>
+                    <button type="submit">Save Changes</button>
                 </div>
             </form>
         </div>
     </div>
-    
-    <script>
-        // Handle navigation
-        document.getElementById('homeBtn').addEventListener('click', function() {
-            window.location.href = "{{ url_for('home') }}";
-        });
-        document.getElementById('trackBtn').addEventListener('click', function() {
-            window.location.href = "{{ url_for('track') }}";
-        });
-        document.getElementById('contactBtn').addEventListener('click', function() {
-            window.location.href = "{{ url_for('contact') }}";
-        });
-        document.getElementById('logoutBtn').addEventListener('click', function() {
-            window.location.href = "{{ url_for('logout') }}";
-        });
 
+    <script>
         // Handle profile image upload
         function triggerFileInput() {
             document.getElementById('fileInput').click();
@@ -93,18 +70,21 @@
 
         function updateProfileImage(event) {
             var file = event.target.files[0];
-            var formData = new FormData();
-            formData.append('profile_image', file);
+            if (file) {
+                var formData = new FormData();
+                formData.append('profile_image', file);
 
-            fetch('/upload_profile_image', {
-                method: 'POST',
-                body: formData,
-            }).then(response => {
-                if (response.ok) {
-                    location.reload();
-                }
-            });
+                fetch('/upload_profile_image', {
+                    method: 'POST',
+                    body: formData,
+                }).then(response => {
+                    if (response.ok) {
+                        location.reload();  // Reload the page after updating the image
+                    }
+                });
+            }
         }
     </script>
+
 </body>
 </html>
