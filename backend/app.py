@@ -61,9 +61,9 @@ nodal_collection = db['nodal_officers']
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'  
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'shini.vtg622026@gmail.com'  
-app.config['MAIL_PASSWORD'] = 'nufq meqd hdog qeuz'  
-app.config['MAIL_DEFAULT_SENDER'] = 'shini.vtg622026@gmail.com'
+app.config['MAIL_USERNAME'] = 'gmail'  
+app.config['MAIL_PASSWORD'] = 'app key'  
+app.config['MAIL_DEFAULT_SENDER'] = 'gmail'
 mail = Mail(app)
 
 # Google OAuth Configuration
@@ -78,8 +78,8 @@ def google_login():
         flow = Flow.from_client_secrets_file(
             GOOGLE_CLIENT_SECRETS_FILE,
             scopes=[
-                'https://www.googleapis.com/auth/userinfo.profile',
-                'https://www.googleapis.com/auth/userinfo.email'
+                'outh website',
+                'replace your google outh'
             ],
             redirect_uri=url_for('callback', _external=True)
         )
@@ -108,8 +108,8 @@ def callback():
         flow = Flow.from_client_secrets_file(
             GOOGLE_CLIENT_SECRETS_FILE,
             scopes=[
-                'https://www.googleapis.com/auth/userinfo.profile',
-                'https://www.googleapis.com/auth/userinfo.email'
+                'outh website',
+                'google outh'
             ],
             state=state
         )
@@ -170,8 +170,8 @@ def is_valid_email(email):
     return re.match(regex, email) is not None
 # Function to send OTP email
 def send_otp_email(recipient_email, otp_code):
-    sender_email = "shini.vtg622026@gmail.com"  # Replace with your Gmail address
-    sender_password = "nufq meqd hdog qeuz"  # Replace with your Gmail app password
+    sender_email = ""  # Replace with your Gmail address
+    sender_password = ""  # Replace with your Gmail app password
     smtp_server = "smtp.gmail.com"
     smtp_port = 587
     subject = "Your OTP Code"
@@ -443,7 +443,7 @@ def adminlogin():
             password = request.form.get('password')
             
             # Check credentials
-            if email == 'admin123@gmail.com' and password == 'admin123':
+            if email == 'admin mail' and password == 'admin password':
                 session['admin'] = True
                 session['admin_email'] = email
                 session['admin_name'] = 'System Administrator'  # Add admin name
