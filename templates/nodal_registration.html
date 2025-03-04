@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nodal Officer Registration</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #db5299;
+            --secondary-color: #764ba2;
+            --text-color: #2d3436;
+            --border-radius: 12px;
+            --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            background: #f5f6fa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .nav-buttons {
+            width: 100%;
+            padding: 20px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            border-radius: var(--border-radius);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(219, 82, 153, 0.3);
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            margin: 100px auto 40px;
+            padding: 40px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: var(--box-shadow);
+        }
+
+        h1 {
+            color: var(--text-color);
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            border-radius: 2px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-color);
+            font-weight: 500;
+            font-size: 0.95em;
+        }
+
+        .input-container {
+            position: relative;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e1e1;
+            border-radius: var(--border-radius);
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+            color: var(--text-color);
+            box-sizing: border-box;
+        }
+
+        input:focus {
+            border-color: var(--primary-color);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(219, 82, 153, 0.1);
+            outline: none;
+        }
+
+        input::placeholder {
+            color: #a0a0a0;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #666;
+            padding: 5px;
+            z-index: 1;
+        }
+
+        .submit-btn {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(219, 82, 153, 0.2);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(219, 82, 153, 0.3);
+        }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: var(--border-radius);
+            background: #fff5f5;
+            color: #e53e3e;
+            border-left: 4px solid #e53e3e;
+            font-size: 0.95em;
+        }
+
+        /* Animation */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-group {
+            animation: slideIn 0.5s ease-out forwards;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .container {
+                width: 95%;
+                padding: 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .container {
+                margin: 80px auto 30px;
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            input {
+                padding: 12px;
+            }
+
+            .nav-buttons {
+                padding: 15px;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                width: 100%;
+                margin: 60px auto 20px;
+                padding: 20px;
+                border-radius: 0;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .nav-buttons {
+                flex-direction: row;
+                padding: 10px;
+            }
+
+            .nav-btn {
+                padding: 8px 15px;
+                font-size: 0.9em;
+            }
+        }
+
+        /* Form validation styles */
+        input:invalid {
+            border-color: #e53e3e;
+        }
+
+        input:invalid:focus {
+            border-color: #e53e3e;
+            box-shadow: 0 0 0 4px rgba(229, 62, 62, 0.1);
+        }
+
+        /* Success state */
+        input:valid {
+            border-color: #38a169;
+        }
+
+        /* Hover effects */
+        input:hover {
+            border-color: var(--primary-color);
+        }
+        select {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid #e1e1e1;
+    border-radius: var(--border-radius);
+    font-size: 1em;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+    color: var(--text-color);
+    box-sizing: border-box;
+    appearance: none; /* Removes default arrow */
+    background-image: url('https://cdn-icons-png.flaticon.com/512/25/25623.png'); /* Custom dropdown arrow */
+    background-size: 15px;
+    background-position: right 15px center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+
+select:focus {
+    border-color: var(--primary-color);
+    background: white;
+    box-shadow: 0 0 0 4px rgba(219, 82, 153, 0.1);
+    outline: none;
+}
+
+select:hover {
+    border-color: var(--primary-color);
+}
+
+    </style>
+</head>
+
+<body>
+    <!-- Add navigation buttons -->
+    <div class="nav-buttons">
+        <a href="{{ url_for('nodal_login') }}" class="nav-btn">
+            <i class="fas fa-sign-in-alt"></i> Login
+        </a>
+        <a href="{{ url_for('index') }}" class="nav-btn">
+            <i class="fas fa-home"></i> Home
+        </a>
+    </div>
+
+    <div class="container">
+        <h1>Nodal Officer Registration</h1>
+
+        <!-- Add Flash Messages -->
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <form id="nodalRegistrationForm" method="POST" action="{{ url_for('nodal_registration') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <div class="input-container">
+                        <input type="text" id="name" name="name" required placeholder="Enter your full name"
+                            pattern="[A-Za-z\s]+" title="Please enter a valid name (letters only)">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="email">Official Email</label>
+                    <div class="input-container">
+                        <input type="email" id="email" name="email" required placeholder="Enter your official email">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="organization">Organization Category<span style="color: red;">*</span></label>
+                    <div class="input-container">
+                        <select id="organization" name="organization" required>
+                            <option value="">--Select Organization Category--</option>
+                            <option value="Education">Education</option>
+                            <option value="Healthcare">Healthcare</option>
+                            <option value="Business & Finance">Business & Finance</option>
+                            <option value="Technology & IT">Technology & IT</option>
+                            <option value="Engineering">Engineering</option>
+                            <option value="Science & Research">Science & Research</option>
+                            <option value="Creative & Media">Creative & Media</option>
+                            <option value="Law & Justice">Law & Justice</option>
+                            <option value="Public Service & Administration">Public Service & Administration</option>
+                            <option value="Retail & Sales">Retail & Sales</option>
+                            <option value="Agriculture & Farming">Agriculture & Farming</option>
+                            <option value="Manufacturing & Labor">Manufacturing & Labor</option>
+                            <option value="Hospitality & Tourism">Hospitality & Tourism</option>
+                            <option value="Sports & Fitness">Sports & Fitness</option>
+                            <option value="Household & Domestic Work">Household & Domestic Work</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="designation">Designation</label>
+                    <div class="input-container">
+                        <input type="text" id="designation" name="designation" required
+                            placeholder="Enter your designation">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Contact Number</label>
+                <div class="input-container">
+                    <input type="tel" id="phone" name="phone" required placeholder="Enter contact number"
+                        pattern="[0-9]{10}" title="Please enter a valid 10-digit phone number">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="password">Create Password</label>
+                    <div class="input-container">
+                        <input type="password" id="password" name="password" required placeholder="Enter password"
+                            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                            title="Must contain at least one number, one uppercase and lowercase letter, and at least 8 characters">
+                        <span class="password-toggle" onclick="togglePassword('password')">
+                            <i class="fas fa-eye"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="confirm_password">Confirm Password</label>
+                    <div class="input-container">
+                        <input type="password" id="confirm_password" name="confirm_password" required
+                            placeholder="Confirm password">
+                        <span class="password-toggle" onclick="togglePassword('confirm_password')">
+                            <i class="fas fa-eye"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">Register as Nodal Officer</button>
+        </form>
+    </div>
+
+    <script>
+        function togglePassword(fieldId) {
+            const field = document.getElementById(fieldId);
+            const icon = event.currentTarget.querySelector('i');
+
+            if (field.type === 'password') {
+                field.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                field.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        document.getElementById('nodalRegistrationForm').addEventListener('submit', function (e) {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm_password').value;
+
+            if (password !== confirmPassword) {
+                e.preventDefault();
+                alert('Passwords do not match!');
+                return;
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +8,321 @@
     <title>Raise-My-Voice</title>
     <link href="{{ url_for('static', filename='css/signup.css') }}" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <meta name="google-signin-client_id"
+        content="551987201810-t6ieb9re5u0cc4s5rq8jt1vacfh90a9a.apps.googleusercontent.com">
+    <script src="https://accounts.google.com/gsi/client" async></script>
+    <style>
+        :root {
+            --primary-color: #4285f4;
+            --secondary-color: #34a853;
+            --error-color: #ea4335;
+            --background-color: #f5f5f5;
+            --box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: var(--background-color);
+        }
+
+        .container {
+            width: 85%;
+            max-width: 900px;
+            min-height: 550px;
+            display: flex;
+            gap: 0;
+            margin: 2rem auto;
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+            overflow: hidden;
+        }
+
+        .left-panel {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+        }
+
+        .left-panel img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .left-panel::after {
+            display: none;
+        }
+
+        .right-panel {
+            flex: 1;
+            padding: 25px 30px;
+            background: white;
+            max-width: none;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            font-size: 2.2em;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e1e1;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.2);
+            outline: none;
+        }
+
+        .btn {
+            background: #ff4b2b;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn:hover {
+            background: #ff3916;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .captcha {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            margin: 20px 0;
+            background: #f8f9fa;
+            border: 1px solid #eee;
+            border-radius: 8px;
+        }
+
+        .captcha-code {
+            font-size: 24px;
+            padding: 5px 15px;
+            background: white;
+            border-radius: 6px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .captcha input {
+            flex: 1;
+            min-width: 180px;
+            padding: 12px 15px;
+            font-size: 15px;
+            border: 2px solid #e1e1e1;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .captcha input:focus {
+            border-color: #764ba2;
+            box-shadow: 0 0 0 3px rgba(118, 75, 162, 0.1);
+        }
+
+        .captcha-refresh {
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            background: linear-gradient(45deg, #764ba2, #db5299);
+            color: white;
+            border-radius: 50%;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .captcha-refresh i {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        .captcha-refresh:hover {
+            transform: rotate(180deg) scale(1.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #666;
+        }
+
+        .google-signin-container {
+            margin: 15px 0;
+            position: relative;
+        }
+
+        .google-signin-container::before,
+        .google-signin-container::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: calc(50% - 70px);
+            height: 1px;
+            background: #e1e1e1;
+        }
+
+        .google-signin-container::before {
+            left: 0;
+        }
+
+        .google-signin-container::after {
+            right: 0;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 15px;
+            color: #666;
+        }
+
+        .login-link a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: var(--error-color);
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 968px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .left-panel {
+                display: none;
+            }
+
+            .right-panel {
+                padding: 30px 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .captcha {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .captcha input {
+                min-width: 150px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            .btn {
+                padding: 12px 20px;
+            }
+
+            .captcha {
+                flex-direction: column;
+                align-items: center;
+                padding: 12px;
+            }
+
+            .captcha input {
+                width: 100%;
+            }
+
+            .captcha-refresh {
+                margin-top: 10px;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-group {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        .form-group:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        .form-group:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+
+        .form-group:nth-child(4) {
+            animation-delay: 0.3s;
+        }
+
+        .captcha > * {
+            margin: 0;
+        }
+    </style>
 </head>
+
 <body>
     <div class="container">
         <div class="left-panel">
@@ -65,174 +380,245 @@
                 </div>
 
                 <button type="submit" class="btn" id="signupButton">Sign Up</button>
-                <button type="button" class="google-btn">Login with Google</button>
+                <div class="google-signin-container">
+                    <div id="g_id_onload"
+                        data-client_id="551987201810-t6ieb9re5u0cc4s5rq8jt1vacfh90a9a.apps.googleusercontent.com"
+                        data-context="signup" data-ux_mode="redirect" data-login_uri="http://localhost:5000/google-auth"
+                        data-auto_prompt="false" data-itp_support="true">
+                    </div>
+                    <div class="g_id_signin" data-type="standard" data-shape="rectangular" data-theme="outline"
+                        data-text="signup_with" data-size="large" data-logo_alignment="left">
+                    </div>
+                </div>
                 <div class="login-link">
                     <p>Already have an account? <a href="{{ url_for('login') }}">Login</a></p>
                 </div>
             </form>
         </div>
     </div>
-<script>
-    // CAPTCHA generation logic
-    function generateCaptcha() {
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        let captcha = '';
-        for (let i = 0; i < 6; i++) {
-            captcha += chars.charAt(Math.floor(Math.random() * chars.length));
+    <script>
+        // CAPTCHA generation logic
+        function generateCaptcha() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let captcha = '';
+            for (let i = 0; i < 6; i++) {
+                captcha += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return captcha;
         }
-        return captcha;
-    }
 
-    // Load CAPTCHA on page load
-    const captchaCodeElement = document.getElementById('captchaCode');
-    const captchaInputElement = document.getElementById('captchaInput');
-    const refreshCaptchaButton = document.getElementById('refreshCaptcha');
+        // Load CAPTCHA on page load
+        const captchaCodeElement = document.getElementById('captchaCode');
+        const captchaInputElement = document.getElementById('captchaInput');
+        const refreshCaptchaButton = document.getElementById('refreshCaptcha');
 
-    function loadCaptcha() {
-        const captcha = generateCaptcha();
-        captchaCodeElement.textContent = captcha;
-        captchaInputElement.value = '';
-    }
+        function loadCaptcha() {
+            const captcha = generateCaptcha();
+            captchaCodeElement.textContent = captcha;
+            captchaInputElement.value = '';
+        }
 
-    loadCaptcha();
+        loadCaptcha();
 
-    // Refresh CAPTCHA on icon click
-    refreshCaptchaButton.addEventListener('click', loadCaptcha);
-    document.getElementById('sendOtpButton').addEventListener('click', async function () {
-    const email = document.getElementById('email').value;
+        // Refresh CAPTCHA on icon click
+        refreshCaptchaButton.addEventListener('click', loadCaptcha);
 
-    // Validate email
-    if (!email) {
-        alert("Please enter a valid email.");
-        return;
-    }
+        // Handle sending OTP
+        document.getElementById('sendOtpButton').addEventListener('click', async function() {
+            const email = document.getElementById('email').value;
 
-    try {
-        const response = await fetch('/signup', {  // Updated endpoint to '/send-otp'
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json' 
-            },
-            body: JSON.stringify({ email: email })
+            if (!email) {
+                alert('Please enter your email first.');
+                return;
+            }
+
+            // Validate email format
+            if (!email.endsWith('@gmail.com')) {
+                alert('Please enter a valid Gmail address.');
+                return;
+            }
+
+            try {
+                const button = document.getElementById('sendOtpButton');
+                button.disabled = true;
+                button.textContent = 'Sending...';
+
+                const response = await fetch('/send-otp-signup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        email: email
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to send OTP');
+                }
+
+                alert('OTP sent successfully! Please check your email.');
+
+                // Start countdown timer
+                let timeLeft = 60;
+                const timer = setInterval(() => {
+                    if (timeLeft <= 0) {
+                        clearInterval(timer);
+                        button.disabled = false;
+                        button.textContent = 'Send OTP';
+                    } else {
+                        button.textContent = `Resend OTP in ${timeLeft}s`;
+                        timeLeft--;
+                    }
+                }, 1000);
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert(error.message);
+                const button = document.getElementById('sendOtpButton');
+                button.disabled = false;
+                button.textContent = 'Send OTP';
+            }
         });
 
-        if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`HTTP Error: ${response.status} - ${errorText}`);
-        }
+        // Form submission logic
+        document.getElementById('signupForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
 
-        const data = await response.json();
+            const name = document.getElementById('fullName').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const retypePassword = document.getElementById('retypePassword').value;
+            const otp = document.getElementById('otpInput').value;
+            const captchaInput = document.getElementById('captchaInput').value;
 
-        if (data.message === "OTP sent successfully!") {
-            alert("OTP sent to your email!");
-        } else {
-            alert(data.error || "An error occurred");
-        }
+            // Validate CAPTCHA
+            if (captchaInput !== captchaCodeElement.textContent) {
+                alert('Incorrect CAPTCHA. Please try again.');
+                loadCaptcha();
+                return;
+            }
 
-    } catch (error) {
-        console.error("Error:", error);
-        alert("An error occurred: " + error.message);
-    }
-});
+            try {
+                const response = await fetch('/verify-otp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        name: name,
+                        email: email,
+                        password: password,
+                        otp: otp
+                    })
+                });
 
-// Form submission logic
-document.getElementById('signupForm').addEventListener('submit', async function (e) {
-    e.preventDefault(); // Prevent the default form submission
+                const data = await response.json();
 
-    const name = document.getElementById('fullName').value;
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    const retypePassword = document.getElementById('retypePassword').value;
-    const otp = document.getElementById('otpInput').value; // Assuming OTP input field exists
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to sign up');
+                }
 
-    // Debugging - check if fields are populated
-    console.log("Email:", email);
-    console.log("OTP:", otp);
-    console.log("Password:", password);
+                alert('Signup successful! Redirecting to home page...');
+                window.location.href = '/home';  // Redirect to home page
 
-    // Validate if required fields are filled
-    if (!email || !otp || !password || !name) {
-        alert("All fields are required (Name, Email, OTP, and Password)!");
-        return;
-    }
-
-    // Validate Email format
-    if (!email.endsWith('@gmail.com')) {
-        alert('Email must be a valid @gmail.com address.');
-        return;
-    }
-
-    // Validate password strength
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%?&]{8}$/;
-    if (!passwordRegex.test(password)) {
-        alert('Password must be at least 8 characters long and include one uppercase letter, one lowercase letter, one number, and one symbol.');
-        return;
-    }
-
-    // Ensure the passwords match
-    if (password !== retypePassword) {
-        alert('Passwords do not match. Please ensure both passwords are the same.');
-        return;
-    }
-
-    // Validate OTP
-    if (!otp) {
-        alert("Please enter the OTP sent to your email.");
-        return;
-    }
-
-    // Validate CAPTCHA
-    const userInput = document.getElementById('captchaInput').value;
-    if (userInput !== document.getElementById('captchaCode').textContent) {
-        alert('Incorrect CAPTCHA. Please try again.');
-        loadCaptcha(); // Reload CAPTCHA if incorrect
-        return;
-    }
-
-    // Create an object to send as JSON
-    const data = {
-        name,        // Include name in the data
-        email,
-        password,
-        otp
-    };
-
-    // Send data to backend (ensure you're using the correct endpoint)
-    try {
-        const response = await fetch('/verify-otp', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
+            } catch (error) {
+                console.error('Error:', error);
+                alert(error.message);
+            }
         });
 
-        const result = await response.json();
-
-        if (response.ok) {
-            alert(result.message);
-            window.location.href = "/home";  // Redirect after successful signup
-        } else {
-            alert(result.error || 'An unexpected error occurred.');
+        function togglePasswordVisibility(fieldId, toggleElement) {
+            const field = document.getElementById(fieldId);
+            const icon = toggleElement.querySelector('i');
+            if (field.type === 'password') {
+                field.type = 'text';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            } else {
+                field.type = 'password';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            }
         }
-    } catch (error) {
-        alert('Error signing up: ' + error.message);
-    }
-});
-function togglePasswordVisibility(fieldId, toggleElement) {
-      const field = document.getElementById(fieldId);
-      const icon = toggleElement.querySelector('i');
-      if (field.type === 'password') {
-        field.type = 'text';
-        icon.classList.remove('fa-eye-slash');
-        icon.classList.add('fa-eye');
-      } else {
-        field.type = 'password';
-        icon.classList.remove('fa-eye');
-        icon.classList.add('fa-eye-slash');
-      }
-    }
-</script>    
+
+        function handleCredentialResponse(response) {
+            console.log("Google Sign-In Response:", response);  // For debugging
+
+            fetch('/google-auth', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    credential: response.credential
+                })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    console.log("Server Response:", data);  // For debugging
+                    if (data.error) {
+                        alert(data.error);
+                    } else if (data.redirect) {
+                        window.location.href = data.redirect;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred during Google sign-in');
+                });
+        }
+    </script>
+
+    <style>
+        .google-signin-container {
+            margin: 15px 0;
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .g_id_signin {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        #g_id_onload {
+            display: none;
+        }
+
+        #sendOtpButton {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(45deg, #764ba2, #db5299);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        #sendOtpButton:disabled {
+            background: #cccccc !important;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .otp-section {
+            margin: 20px 0;
+        }
+
+        .otp-input {
+            margin-bottom: 10px;
+        }
+    </style>
 </body>
-</html>
 
+</html>

@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" type="x-icon" href="{{ url_for('static', filename='img/icon.jpg') }}">
-    <title>Raise-My-Voice</title>
-    <style>
-         body {
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" type="x-icon" href="{{ url_for('static', filename='img/icon.jpg') }}">
+  <title>Raise-My-Voice</title>
+  <style>
+    body {
       font-family: 'Poppins', sans-serif;
       margin: 0;
       padding: 0;
@@ -173,177 +174,200 @@
     .proceed-button button.active:hover {
       background: #b04182;
     }
-    </style>
+  </style>
 </head>
+
 <body>
-    <div class="container">
-        <div class="header">Register Complaint</div>
-        <form id="complaintForm">
-            <div class="form-group">
-                <label for="name">Name<span>*</span></label>
-                <input type="text" id="name" placeholder="Complainant Name" required>
-            </div>
-            <div class="form-group">
-                <label for="email">Email<span>*</span></label>
-                <input type="email" id="email" placeholder="Email" required>
-            </div>
-            <div class="form-group">
-                <label for="secure-code">Secure Code<span>*</span></label>
-                <div class="captcha">
-                    <div class="captcha-code" id="captchaCode"></div>
-                    <input type="text" id="captchaInput" placeholder="Enter code" required>
-                    <button type="button" id="refreshCaptcha" class="captcha-refresh">⟳</button>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="otp">Enter OTP<span>*</span></label>
-                <input type="text" id="otp" placeholder="Enter OTP">
-            </div>
-            <div class="buttons">
-                <button type="button" id="sendOtpButton" class="send-otp">Send OTP</button>
-                <button type="button" id="verifyOtp" class="send-otp">Verify OTP</button>
-                <button type="reset" class="clear">Clear</button>
-            </div>
-        </form>
-        <div class="points">
-            <p>✔ Use this form to register your complaints.</p>
-            <p>✔ False complaints are subject to prosecution under IPC.</p>
-            <p>✔ Fields in <span>Red Color</span> are Mandatory.</p>
+  <div class="container">
+    <div class="header">Register Complaint</div>
+    <form id="complaintForm">
+      <div class="form-group">
+        <label for="name">Name<span>*</span></label>
+        <input type="text" id="name" placeholder="Complainant Name" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Email<span>*</span></label>
+        <input type="email" id="email" placeholder="Email" required>
+      </div>
+      <div class="form-group">
+        <label for="secure-code">Secure Code<span>*</span></label>
+        <div class="captcha">
+          <div class="captcha-code" id="captchaCode"></div>
+          <input type="text" id="captchaInput" placeholder="Enter code" required>
+          <button type="button" id="refreshCaptcha" class="captcha-refresh">⟳</button>
         </div>
-        <div class="proceed-button">
-            <button id="proceedButton" disabled>Proceed</button>
-        </div>
+      </div>
+      <div class="form-group">
+        <label for="otp">Enter OTP<span>*</span></label>
+        <input type="text" id="otp" placeholder="Enter OTP">
+      </div>
+      <div class="buttons">
+        <button type="button" id="sendOtpButton" class="send-otp">Send OTP</button>
+        <button type="button" id="verifyOtp" class="send-otp">Verify OTP</button>
+        <button type="reset" class="clear">Clear</button>
+      </div>
+    </form>
+    <div class="points">
+      <p>✔ Use this form to register your complaints.</p>
+      <p>✔ False complaints are subject to prosecution under IPC.</p>
+      <p>✔ Fields in <span>Red Color</span> are Mandatory.</p>
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Generate CAPTCHA code
-            function generateCaptcha() {
-                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-                let captcha = '';
-                for (let i = 0; i < 6; i++) {
-                    captcha += chars.charAt(Math.floor(Math.random() * chars.length));
-                }
-                return captcha;
-            }
+    <div class="proceed-button">
+      <button id="proceedButton" disabled>Proceed</button>
+    </div>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Generate CAPTCHA code
+      function generateCaptcha() {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let captcha = '';
+        for (let i = 0; i < 6; i++) {
+          captcha += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return captcha;
+      }
 
-            // Load CAPTCHA on page load
-            const captchaCodeElement = document.getElementById('captchaCode');
-            const captchaInputElement = document.getElementById('captchaInput');
-            const refreshCaptchaButton = document.getElementById('refreshCaptcha');
+      // Load CAPTCHA on page load
+      const captchaCodeElement = document.getElementById('captchaCode');
+      const captchaInputElement = document.getElementById('captchaInput');
+      const refreshCaptchaButton = document.getElementById('refreshCaptcha');
 
-            function loadCaptcha() {
-                const captcha = generateCaptcha();
-                captchaCodeElement.textContent = captcha;
-                captchaInputElement.value = ''; // Reset CAPTCHA input field
-            }
+      function loadCaptcha() {
+        const captcha = generateCaptcha();
+        captchaCodeElement.textContent = captcha;
+        captchaInputElement.value = ''; // Reset CAPTCHA input field
+      }
 
-            loadCaptcha();
+      loadCaptcha();
 
-            // Refresh CAPTCHA on icon click
-            if (refreshCaptchaButton) {
-                refreshCaptchaButton.addEventListener('click', loadCaptcha);
-            }
+      // Refresh CAPTCHA on icon click
+      if (refreshCaptchaButton) {
+        refreshCaptchaButton.addEventListener('click', loadCaptcha);
+      }
 
-            // Enable Proceed button after OTP verification
-            const verifyOtpButton = document.getElementById('verifyOtp');
-            const proceedButton = document.getElementById('proceedButton');
+      // Enable Proceed button after OTP verification
+      const verifyOtpButton = document.getElementById('verifyOtp');
+      const proceedButton = document.getElementById('proceedButton');
 
-            if (verifyOtpButton) {
-                verifyOtpButton.addEventListener('click', () => {
-                    alert('Your OTP is verified successfully!');
-                    proceedButton.disabled = false;
-                    proceedButton.classList.add('active');
-                });
-            }
-
-            // Proceed to complaint details page and store complaint data in MongoDB
-            if (proceedButton) {
-                proceedButton.addEventListener('click', function () {
-                    if (!proceedButton.disabled) {
-                        // Capture the form data
-                        const name = document.getElementById('name').value;
-                        const email = document.getElementById('email').value;
-                        const captcha = document.getElementById('captchaCode').textContent;
-                        const otp = document.getElementById('otp').value;
-
-                        // Prepare the data to be sent
-                        const complaintData = {
-                            name: name,
-                            email: email,
-                            captcha: captcha,
-                            otp: otp
-                        };
-
-                        // Send the data to the backend
-                        fetch('/complaint/register', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(complaintData)
-                        })
-                        .then(response => response.json())
-                        .then(result => {
-                            console.log(result);  // Log the response from the backend
-                            alert(result.message);  // Show success message
-
-                            // If complaint is registered successfully, navigate to the complaint details page
-                            if (result.message === "Complaint registered successfully!") {
-                                window.location.href = "/complaintdetails";
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            alert("An error occurred while submitting your complaint!");
-                        });
-                    }
-                });
-            }
-
-            // Event listener for 'Send OTP' button
-            const sendOtpButton = document.getElementById('sendOtpButton');
-            if (sendOtpButton) {
-                sendOtpButton.addEventListener('click', async function (e) {
-                    e.preventDefault();  // Prevent the default form submission behavior
-
-                    const email = document.getElementById('email').value;
-
-                    // Validate email
-                    if (!email) {
-                        alert("Please enter a valid email.");
-                        return;
-                    }
-
-                    try {
-                        const response = await fetch('/send-otp-complaint', {  // Corrected endpoint
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({ email: email })
-                        });
-
-                        if (!response.ok) {
-                            const errorText = await response.text();
-                            throw new Error(`HTTP Error: ${response.status} - ${errorText}`);
-                        }
-
-                        const data = await response.json();
-
-                        if (data.message === "OTP sent successfully!") {
-                            alert("OTP sent to your email!");
-                        } else {
-                            alert(data.error || "An error occurred");
-                        }
-
-                    } catch (error) {
-                        console.error("Error:", error);
-                        alert("An error occurred: " + error.message);
-                    }
-                });
-            }
-
+      if (verifyOtpButton) {
+        verifyOtpButton.addEventListener('click', () => {
+          alert('Your OTP is verified successfully!');
+          proceedButton.disabled = false;
+          proceedButton.classList.add('active');
         });
-    </script>
+      }
+
+      // Proceed to complaint details page and store complaint data in MongoDB
+      if (proceedButton) {
+        proceedButton.addEventListener('click', function () {
+          if (!proceedButton.disabled) {
+            // Capture the form data
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const otp = document.getElementById('otp').value;
+
+            // Prepare the data to be sent
+            const complaintData = {
+              name: name,
+              email: email,
+              otp: otp
+            };
+
+            // Send the data to the backend
+            fetch('/complaint/register', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token() }}'
+              },
+              body: JSON.stringify(complaintData)
+            })
+              .then(response => {
+                if (!response.ok) {
+                  return response.json().then(data => {
+                    throw new Error(data.error || 'Failed to register complaint');
+                  });
+                }
+                return response.json();
+              })
+              .then(data => {
+                if (data.message === "Complaint registered successfully!") {
+                  alert('Complaint registered successfully!');
+                  window.location.href = "/complaintdetails";
+                } else {
+                  throw new Error(data.error || 'Failed to register complaint');
+                }
+              })
+              .catch(error => {
+                console.error('Error:', error);
+                alert(error.message);
+              });
+          }
+        });
+      }
+
+      // Event listener for 'Send OTP' button
+      const sendOtpButton = document.getElementById('sendOtpButton');
+      if (sendOtpButton) {
+        sendOtpButton.addEventListener('click', async function (e) {
+          e.preventDefault();
+
+          const email = document.getElementById('email').value;
+
+          // Validate email
+          if (!email) {
+            alert("Please enter your email address.");
+            return;
+          }
+
+          try {
+            const button = document.getElementById('sendOtpButton');
+            button.disabled = true;
+            button.textContent = 'Sending...';
+
+            const response = await fetch('/send-otp-complaint', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token() }}'  // Add CSRF token
+              },
+              body: JSON.stringify({ email: email })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+              throw new Error(data.error || 'Failed to send OTP');
+            }
+
+            alert('OTP sent successfully! Please check your email.');
+
+            // Start countdown timer
+            let timeLeft = 60;
+            const timer = setInterval(() => {
+              if (timeLeft <= 0) {
+                clearInterval(timer);
+                button.disabled = false;
+                button.textContent = 'Send OTP';
+              } else {
+                button.textContent = `Resend OTP in ${timeLeft}s`;
+                timeLeft--;
+              }
+            }, 1000);
+
+          } catch (error) {
+            console.error('Error:', error);
+            alert(error.message);
+            const button = document.getElementById('sendOtpButton');
+            button.disabled = false;
+            button.textContent = 'Send OTP';
+          }
+        });
+      }
+
+    });
+  </script>
 </body>
+
 </html>

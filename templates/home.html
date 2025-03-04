@@ -109,11 +109,11 @@
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="profileDropdown">
                         <li><a class="dropdown-item" href="{{ url_for('profile') }}"><i class="uil uil-user-square"></i> Edit Profile</a></li>
-                        <li><a class="dropdown-item" href="#"><i class="uil uil-envelope-download"></i> Inbox</a></li>
-                        <li><a class="dropdown-item" href="#"><i class="uil uil-question-circle"></i> Help & Support</a>
+                        <!-- <li><a class="dropdown-item" href="#"><i class="uil uil-envelope-download"></i> Inbox</a></li> -->
+                        <li><a class="dropdown-item" href="{{ url_for('contact') }}"><i class="uil uil-question-circle"></i> Help & Support</a>
                         </li>
                         <hr>
-                        <li><a class="dropdown-item" href="#"><i class="uil uil-signout"></i> Logout</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('index') }}"><i class="uil uil-signout"></i> Logout</a></li>
                     </ul>
                 </div>
             </div>
@@ -144,13 +144,6 @@
                                     <a href="#" class="btn btn-primary py-3 px-4 py-md-3 px-md-5 me-md-3 mb-3 mb-md-0 animated slideInLeft" 
                                     data-bs-toggle="modal" data-bs-target="#registerModal">
                                     Register Your Complaint
-                                    </a>
-
-                                    <a href="#" class="btn btn-light py-3 px-4 py-md-3 px-md-5 me-md-3 mb-3 mb-md-0 animated slideInLeft">
-                                        Workplace/Nodal Officer Registration
-                                    </a>
-                                    <a href="#" class="btn btn-light py-3 px-4 py-md-3 px-md-5 mb-3 mb-md-0 mt-1 animated slideInLeft">
-                                        Private Head Office Registration
                                     </a>
                                 </div>
                             </div>
@@ -320,7 +313,7 @@
     modal.hide();
     
     // Redirect to complaintlogin.html
-    window.location.href = "{{ url_for('complaintlogin') }}"; // This will use the Flask route
+    window.location.href = "{{ url_for('complaint_login') }}"; // This will use the Flask route
 }
 
     </script>

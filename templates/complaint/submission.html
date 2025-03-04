@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="shortcut icon" type="x-icon" href="../img/icon.jpg">
+  <link rel="shortcut icon" type="x-icon" href="{{ url_for('static', filename='img/icon.jpg') }}">
   <title>Raise-My-Voice</title>
   <style>
     /* Reset and general styles */
@@ -318,26 +318,52 @@
       window.location.href = "/index"; // Redirect to index.html after logout
     }
 
-    // Cancel Logout
-    function cancelLogout() {
-      const logoutOptions = document.getElementById("logoutOptions");
-      logoutOptions.style.display = "none"; // Hide logout options
+   // Cancel Logout
+function cancelLogout() {
+    document.getElementById("logoutOptions").style.display = "none"; // Hide logout options
+}
+
+// Update the submit event listener
+document.getElementById('complaintForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
+
+    try {
+        const formData = {
+            complainant_name: document.getElementById('complainant-name').value,
+            submission_date: document.getElementById('submission-date').value,
+            on_behalf: document.getElementById('on-behalf').value || "",
+            complaint: document.getElementById('complaint').value
+        };
+
+        // Validate required fields
+        if (!formData.complainant_name || !formData.submission_date || !formData.complaint) {
+            alert('Please fill in all required fields');
+            return;
+        }
+
+        const response = await fetch('/complaintsubmission', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify(formData)
+        });
+
+        if (!response.ok) {
+            const data = await response.json();
+            throw new Error(data.error || 'Failed to submit complaint');
+        }
+
+        alert('Complaint submitted successfully!');
+        window.location.href = '/home';  // Redirect to home page
+
+    } catch (error) {
+        console.error('Error:', error);
+        alert(error.message || 'Failed to submit complaint. Please try again.');
     }
+});
 
-    // Add event listener to form submission
-    document.getElementById('complaintForm').addEventListener('submit', function(event) {
-      event.preventDefault();
-
-      // Simulate form submission by advancing the progress bar
-      document.getElementById('progress-bar').style.width = '100%';
-      document.getElementById('step-2').classList.add('active');
-      document.getElementById('step-1').classList.remove('active');
-
-      // Simulate delay before showing success message
-      setTimeout(() => {
-        alert('Complaint Submitted Successfully!');
-      }, 500); // Simulate some delay before showing success message
-    });
   </script>
 </body>
 </html>

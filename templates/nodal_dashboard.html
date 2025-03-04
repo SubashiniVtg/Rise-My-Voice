@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nodal Officer Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f4f6f9;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: #fff;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .profile-section {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 2px solid #db5299;
+            margin-bottom: 30px;
+        }
+
+        .profile-section h3 {
+            color: #333;
+            margin: 10px 0 5px;
+        }
+
+        .profile-section p {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .sidebar-nav a {
+            padding: 12px 20px;
+            color: #333;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-nav a i {
+            width: 20px;
+        }
+
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
+            background: #db5299;
+            color: white;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 30px;
+        }
+
+        .overview-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .card1 .card-icon {
+            background: rgba(219, 82, 153, 0.1);
+            color: #db5299;
+        }
+
+        .card2 .card-icon {
+            background: rgba(46, 204, 113, 0.1);
+            color: #2ecc71;
+        }
+
+        .card3 .card-icon {
+            background: rgba(231, 76, 60, 0.1);
+            color: #e74c3c;
+        }
+
+        .card h3 {
+            font-size: 1.8em;
+            margin: 10px 0;
+            color: #333;
+        }
+
+        .card p {
+            color: #666;
+            margin: 0;
+        }
+
+        .complaints-list {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .complaints-list h2 {
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #db5299;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            color: #666;
+            font-weight: 600;
+        }
+
+        tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 500;
+        }
+
+        .status-registered {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .status-submitted {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        .status-pending {
+            background: #fce4ec;
+            color: #d81b60;
+        }
+
+        .status-resolved {
+            background: #e8f5e9;
+            color: #2ecc71;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background: #db5299;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover {
+            background: #c4407e;
+            transform: translateY(-2px);
+        }
+
+        .complaint-details {
+            max-width: 300px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .complaints-categories {
+            margin-top: 30px;
+        }
+
+        .complaints-section {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .complaints-section h2 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #db5299;
+        }
+
+        .complaints-section h2 i {
+            color: #db5299;
+        }
+
+        .count {
+            background: #db5299;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            margin-left: auto;
+        }
+
+        .complaints-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .complaint-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .complaint-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .complaint-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .complaint-body h3 {
+            color: #333;
+            margin: 0 0 10px 0;
+            font-size: 1.1em;
+        }
+
+        .complaint-info {
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .complaint-info p {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 5px 0;
+        }
+
+        .complaint-actions {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .analytics-section {
+            display: none;
+        }
+
+        .chart-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .chart-box {
+            width: 45%;
+            max-width: 500px;
+            height: 300px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-box canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .full-width {
+            width: 90%;
+            height: 300px;
+            margin: 20px auto;
+        }
+
+        .complaints-filter {
+            margin-bottom: 20px;
+        }
+
+        .complaints-filter select {
+            padding: 8px 15px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            background: white;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .complainant-info {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .complainant-info .name {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .complainant-info .full-name {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .organization-info {
+            padding: 5px 10px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .contact-info span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .contact-info i {
+            color: #db5299;
+            width: 16px;
+        }
+
+        .date-info {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .date-info i {
+            color: #db5299;
+            margin-right: 5px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .complaint-text {
+            font-size: 0.9em;
+            line-height: 1.4;
+            color: #333;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <div class="sidebar">
+            <div class="profile-section">
+                <h3>{{ nodal_officer.name }}</h3>
+                <p>{{ nodal_officer.organization }}</p>
+                <p>{{ nodal_officer.designation }}</p>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="#" class="active">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" onclick="showAllComplaints()">
+                    <i class="fas fa-list-alt"></i>
+                    <span>All Complaints</span>
+                </a>
+                <a href="#" onclick="showResolvedComplaints()">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Resolved Cases</span>
+                </a>
+                <a href="#">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Reports</span>
+                </a>
+                <a href="#">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+                <a href="{{ url_for('nodal_logout') }}">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </nav>
+        </div>
+
+        <div class="main-content">
+            <div class="overview-cards">
+                <div class="card card1">
+                    <div class="card-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <p>Total Cases in {{ nodal_officer.organization }}</p>
+                    <h3>{{ analytics.total_cases }}</h3>
+                </div>
+                <div class="card card2">
+                    <div class="card-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <p>Resolved Cases</p>
+                    <h3>{{ analytics.total_resolved }}</h3>
+                </div>
+                <div class="card card3">
+                    <div class="card-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <p>Pending Cases</p>
+                    <h3>{{ analytics.total_pending }}</h3>
+                </div>
+                <div class="card card4">
+                    <div class="card-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <p>Resolution Rate</p>
+                    <h3>{{ "%.1f"|format(analytics.resolution_rate) }}%</h3>
+                </div>
+            </div>
+
+            <div class="complaints-list">
+                <h2>Complaints in {{ nodal_officer.organization }}</h2>
+                {% if complaints %}
+                <div class="complaints-filter">
+                    <select id="statusFilter" onchange="filterComplaints()">
+                        <option value="all">All Status</option>
+                        <option value="registered">Registered</option>
+                        <option value="submitted">Submitted</option>
+                        <option value="resolved">Resolved</option>
+                    </select>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Complainant</th>
+                            <th>Organization</th>
+                            <th>Details</th>
+                            <th>Status</th>
+                            <th>Submission Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="complaintsTableBody">
+                        {% for complaint in complaints %}
+                        <tr class="complaint-row" data-status="{{ complaint.status.lower() }}">
+                            <td>#{{ complaint.id[-6:] }}</td>
+                            <td>
+                                <div class="complainant-info">
+                                    {% if complaint.submission and complaint.submission.complainant_name %}
+                                    <span class="name">{{ complaint.submission.complainant_name }}</span>
+                                    {% else %}
+                                    <span class="name">{{ complaint.name }}</span>
+                                    {% endif %}
+                                    {% if complaint.details and complaint.details.personal_info %}
+                                    <span class="full-name">{{ complaint.details.personal_info.full_name }}</span>
+                                    {% endif %}
+                                </div>
+                            </td>
+                            <td>
+                                {% if complaint.details and complaint.details.organization %}
+                                <div class="organization-info">
+                                    <span class="org-name">{{ complaint.details.organization }}</span>
+                                </div>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="complaint-details">
+                                    {% if complaint.submission and complaint.submission.complaint_text %}
+                                    <div class="complaint-text">
+                                        {{ complaint.submission.complaint_text[:100] + '...' if
+                                        complaint.submission.complaint_text|length > 100 else
+                                        complaint.submission.complaint_text }}
+                                    </div>
+                                    {% endif %}
+                                    {% if complaint.details and complaint.details.contact_info %}
+                                    <div class="contact-info">
+                                        <span><i class="fas fa-map-marker-alt"></i> {{
+                                            complaint.details.contact_info.city }}, {{
+                                            complaint.details.contact_info.state }}</span>
+                                        <span><i class="fas fa-envelope"></i> {{ complaint.details.contact_info.email
+                                            }}</span>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </td>
+                            <td>
+                                <span class="status-badge status-{{ complaint.status.lower() }}">
+                                    {{ complaint.status }}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="date-info">
+                                    {% if complaint.submission and complaint.submission.submitted_at %}
+                                    <span class="submission-date">
+                                        <i class="far fa-calendar-check"></i>
+                                        {{ complaint.submission.submitted_at }}
+                                    </span>
+                                    {% else %}
+                                    <span class="registration-date">
+                                        <i class="far fa-calendar-alt"></i>
+                                        {{ complaint.registered_at }}
+                                    </span>
+                                    {% endif %}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-btn view-btn" onclick="viewComplaint('{{ complaint.id }}')">
+                                        <i class="fas fa-eye"></i> View
+                                    </button>
+                                    {% if complaint.status.lower() != 'resolved' %}
+                                    <button class="action-btn resolve-btn"
+                                        onclick="resolveComplaint('{{ complaint.id }}')">
+                                        <i class="fas fa-check"></i> Resolve
+                                    </button>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="no-complaints">
+                    <p>No complaints found for {{ nodal_officer.organization }}</p>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="analytics-section">
+                <h2>Monthly Trends</h2>
+                <div class="chart-container">
+                    <div class="chart-box">
+                        <canvas id="monthlyTrendsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function viewComplaint(id) {
+            window.location.href = `/nodal_view_complaint/${id}`;
+        }
+
+        function showAllComplaints() {
+            const rows = document.querySelectorAll('.complaint-row');
+            rows.forEach(row => {
+                row.style.display = '';
+            });
+            document.getElementById('statusFilter').value = 'all';
+        }
+
+        function showResolvedComplaints() {
+            const rows = document.querySelectorAll('.complaint-row');
+            rows.forEach(row => {
+                const status = row.getAttribute('data-status');
+                if (status === 'resolved') {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+            document.getElementById('statusFilter').value = 'resolved';
+        }
+
+        function resolveComplaint(id) {
+            if (confirm('Are you sure you want to mark this complaint as resolved?')) {
+                fetch(`/resolve_complaint/${id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token() }}'
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Find the complaint row
+                            const row = document.querySelector(`tr[data-status="submitted"]`).closest('tr');
+                            if (row) {
+                                // Update status
+                                row.setAttribute('data-status', 'resolved');
+
+                                // Update status badge
+                                const statusBadge = row.querySelector('.status-badge');
+                                if (statusBadge) {
+                                    statusBadge.className = 'status-badge status-resolved';
+                                    statusBadge.textContent = 'Resolved';
+                                }
+
+                                // Update action buttons
+                                const actionButtons = row.querySelector('.action-buttons');
+                                if (actionButtons) {
+                                    actionButtons.innerHTML = `
+                                    <button class="action-btn view-btn" onclick="viewComplaint('${id}')">
+                                        <i class="fas fa-eye"></i> View
+                                    </button>
+                                `;
+                                }
+
+                                // Update analytics cards
+                                const totalResolved = document.querySelector('.card2 h3');
+                                const totalPending = document.querySelector('.card3 h3');
+                                if (totalResolved && totalPending) {
+                                    totalResolved.textContent = parseInt(totalResolved.textContent) + 1;
+                                    totalPending.textContent = Math.max(0, parseInt(totalPending.textContent) - 1);
+                                }
+
+                                // Update resolution rate
+                                const resolutionRate = document.querySelector('.card4 h3');
+                                if (resolutionRate) {
+                                    const total = parseInt(document.querySelector('.card1 h3').textContent);
+                                    const resolved = parseInt(totalResolved.textContent);
+                                    const rate = ((resolved / total) * 100).toFixed(1);
+                                    resolutionRate.textContent = rate + '%';
+                                }
+
+                                // Show success message
+                                alert('Complaint resolved successfully!');
+
+                                // If in resolved view, update the display
+                                if (document.getElementById('statusFilter').value === 'resolved') {
+                                    filterComplaints();
+                                }
+                            }
+                        } else {
+                            alert('Error resolving complaint: ' + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Error resolving complaint');
+                    });
+            }
+        }
+
+        function toggleAnalytics() {
+            const complaintsSection = document.querySelector('.complaints-list');
+            const analyticsSection = document.querySelector('.analytics-section');
+
+            if (analyticsSection.style.display === 'none') {
+                complaintsSection.style.display = 'none';
+                analyticsSection.style.display = 'block';
+                renderAnalyticsCharts();
+            } else {
+                complaintsSection.style.display = 'block';
+                analyticsSection.style.display = 'none';
+            }
+        }
+
+        function renderAnalyticsCharts() {
+            fetch(`/nodal/analytics?organization=${encodeURIComponent('{{ nodal_officer.organization }}')}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        console.error('Error:', data.error);
+                        return;
+                    }
+
+                    document.querySelector('.box1 .number').textContent = data.total_cases;
+                    document.querySelector('.box2 .number').textContent = data.total_resolved;
+                    document.querySelector('.box3 .number').textContent = data.total_pending;
+
+                    let pieCtx = document.getElementById('pieChart').getContext('2d');
+                    new Chart(pieCtx, {
+                        type: 'pie',
+                        data: {
+                            labels: ['Resolved', 'Pending'],
+                            datasets: [{
+                                data: [data.total_resolved, data.total_pending],
+                                backgroundColor: ['#4CAF50', '#FF9800']
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Case Status Distribution'
+                                }
+                            }
+                        }
+                    });
+
+                    let barCtx = document.getElementById('barChart').getContext('2d');
+                    new Chart(barCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: ['Total Cases', 'Resolved Cases', 'Pending Cases'],
+                            datasets: [{
+                                label: 'Cases Overview',
+                                data: [data.total_cases, data.total_resolved, data.total_pending],
+                                backgroundColor: ['#3498db', '#2ecc71', '#e74c3c']
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Cases Overview'
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+
+                    let lineCtx = document.getElementById('lineChart').getContext('2d');
+                    new Chart(lineCtx, {
+                        type: 'line',
+                        data: {
+                            labels: data.history.dates,
+                            datasets: [
+                                {
+                                    label: 'Resolved Cases',
+                                    data: data.history.resolved_cases,
+                                    borderColor: '#4CAF50',
+                                    backgroundColor: 'rgba(76, 175, 80, 0.2)',
+                                    fill: true
+                                },
+                                {
+                                    label: 'Pending Cases',
+                                    data: data.history.pending_cases,
+                                    borderColor: '#FF9800',
+                                    backgroundColor: 'rgba(255, 152, 0, 0.2)',
+                                    fill: true
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Case Trends Over Time'
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                })
+                .catch(error => console.error('Error fetching analytics:', error));
+        }
+
+        document.querySelector('.sidebar-nav').innerHTML += `
+            <a href="#" onclick="toggleAnalytics()">
+                <i class="fas fa-chart-bar"></i>
+                <span>Analytics</span>
+            </a>
+        `;
+
+        function getStoredComplaints() {
+            const storedComplaints = [];
+            document.querySelectorAll('.stored-complaint').forEach(complaint => {
+                storedComplaints.push({
+                    id: complaint.dataset.id,
+                    name: complaint.dataset.name,
+                    details: complaint.dataset.details,
+                    status: complaint.dataset.status,
+                    date: complaint.dataset.date,
+                    category: complaint.dataset.category,
+                    contact: complaint.dataset.contact,
+                    email: complaint.dataset.email
+                });
+            });
+            return storedComplaints;
+        }
+
+        function updateComplaintStatus(complaintId, newStatus) {
+            const storedComplaint = document.querySelector(`.stored-complaint[data-id="${complaintId}"]`);
+            if (storedComplaint) {
+                storedComplaint.dataset.status = newStatus;
+                refreshComplaintsTable();
+            }
+        }
+
+        function refreshComplaintsTable() {
+            const complaints = getStoredComplaints();
+            const tableBody = document.getElementById('complaints-table-body');
+            tableBody.innerHTML = complaints.map(complaint => `
+                <tr>
+                    <td>#${complaint.id}</td>
+                    <td>${complaint.name}</td>
+                    <td>
+                        <div class="complaint-details" title="${complaint.details}">
+                            ${complaint.details.length > 50 ? complaint.details.substring(0, 50) + '...' : complaint.details}
+                        </div>
+                    </td>
+                    <td>
+                        <span class="status-badge status-${complaint.status.toLowerCase()}">
+                            ${complaint.status}
+                        </span>
+                    </td>
+                    <td>${complaint.date}</td>
+                    <td>
+                        <button class="action-btn view-btn" onclick="viewComplaint('${complaint.id}')">
+                            <i class="fas fa-eye"></i> View
+                        </button>
+                        ${complaint.status.toLowerCase() !== 'resolved' ? `
+                            <button class="action-btn resolve-btn" onclick="resolveComplaint('${complaint.id}')">
+                                <i class="fas fa-check"></i> Resolve
+                            </button>
+                        ` : ''}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const complaints = getStoredComplaints();
+            console.log('Stored complaints:', complaints);
+        });
+
+        function renderMonthlyTrendsChart() {
+    const monthlyTrends = JSON.parse('{{ analytics.monthly_trends | tojson | safe }}');
+    const months = Object.keys(monthlyTrends);
+    const totalCases = months.map(month => monthlyTrends[month].total);
+    const resolvedCases = months.map(month => monthlyTrends[month].resolved);
+
+    const ctx = document.getElementById('monthlyTrendsChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: months,
+            datasets: [
+                {
+                    label: 'Total Cases',
+                    data: totalCases,
+                    borderColor: '#db5299',
+                    backgroundColor: 'rgba(219, 82, 153, 0.1)',
+                    fill: true
+                },
+                {
+                    label: 'Resolved Cases',
+                    data: resolvedCases,
+                    borderColor: '#2ecc71',
+                    backgroundColor: 'rgba(46, 204, 113, 0.1)',
+                    fill: true
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Monthly Complaint Trends'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Ensure script runs after DOM is loaded
+document.addEventListener("DOMContentLoaded", renderMonthlyTrendsChart);
+
+        document.addEventListener('DOMContentLoaded', function () {
+            renderMonthlyTrendsChart();
+        });
+
+        // Add this function to format dates
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            const date = new Date(dateString);
+            return date.toLocaleString();
+        }
+
+        function filterComplaints() {
+            const statusFilter = document.getElementById('statusFilter').value;
+            const rows = document.querySelectorAll('.complaint-row');
+
+            rows.forEach(row => {
+                const status = row.getAttribute('data-status');
+                if (statusFilter === 'all' || status === statusFilter) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

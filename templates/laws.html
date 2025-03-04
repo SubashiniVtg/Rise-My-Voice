@@ -106,61 +106,51 @@
 .footer {
     background-color: #181d38 !important;
     color: #F0FBFC !important;
-    padding-top: 3rem !important;
-    margin-top: 3rem !important;
+    position: relative;
+}
+
+.footer::before {
+    display: none;
 }
 
 .footer .btn-social {
-    margin-right: 5px;
+    margin: 0 5px;
     width: 35px;
     height: 35px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #F0FBFC;
-    font-weight: normal;
-    border: 1px solid #FFFFFF;
-    border-radius: 35px;
-    transition: .3s;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transition: all 0.3s ease;
 }
 
 .footer .btn-social:hover {
-    color: #ec6daf; /* Hover color */
-}
-
-.footer .btn-social i {
-    font-size: 18px;
+    color: #fff;
+    background: #ff4b2b;
+    border-color: #ff4b2b;
+    transform: translateY(-3px);
 }
 
 .footer .btn-link {
-    display: block;
-    margin-bottom: 5px;
-    padding: 0;
-    text-align: left;
-    color: #FFFFFF;
+    display: inline-block;
+    margin: 0 15px;
+    padding: 8px 0;
+    color: #F0FBFC;
     font-size: 15px;
-    font-weight: normal;
-    text-transform: capitalize;
-    transition: .3s;
-}
-
-.footer .btn-link::before {
-    position: relative;
-    content: "\f105"; /* Font Awesome icon */
-    font-family: "Font Awesome 5 Free";
-    font-weight: 900;
-    margin-right: 10px;
+    text-decoration: none;
+    transition: all 0.3s ease;
 }
 
 .footer .btn-link:hover {
+    color: #ff4b2b;
     letter-spacing: 1px;
-    box-shadow: none;
 }
 
 .footer .copyright {
-    padding: 25px 0;
-    font-size: 15px;
-    border-top: 1px solid rgba(256, 256, 256, .1);
+    padding-top: 25px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .footer .copyright a {
@@ -169,29 +159,14 @@
 }
 
 .footer .copyright a:hover {
-    text-decoration: underline;
+    color: #ff4b2b;
 }
 
-.footer .footer-menu a {
-    margin-right: 15px;
-    padding-right: 15px;
-    border-right: 1px solid #ec6daf;
-    color: #F0FBFC;
-    text-decoration: none;
+.footer .border-bottom {
+    border-bottom: 1px solid #ff4b2b !important;
 }
 
-.footer .footer-menu a:last-child {
-    margin-right: 0;
-    padding-right: 0;
-    border-right: none;
-}
-
-.footer .footer-menu a:hover {
-    letter-spacing: 1px;
-    color: #ec6daf;
-}
-
-/* Responsive Design for Footer */
+/* Responsive Design */
 @media (max-width: 768px) {
     .footer .footer-menu {
         text-align: center;
@@ -199,13 +174,32 @@
     }
     
     .footer .btn-link {
-        display: inline-block;
-        margin: 5px 0;
+        margin: 5px 10px;
     }
     
     .footer .btn-social {
-        margin-right: 10px;
+        margin: 5px;
     }
+}
+
+/* Animation */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.footer .row > div {
+    animation: fadeInUp 0.5s ease-out forwards;
+}
+
+.footer .row > div:nth-child(2) {
+    animation-delay: 0.2s;
 }
 
     </style>
@@ -290,22 +284,22 @@
 <!-- Footer Start -->
 <div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
     <div class="container">
-        <!-- <div class="row">
-             Footer Menu Section 
+        <div class="row mb-4">
+            <!-- Footer Menu Section -->
             <div class="col-md-6 footer-menu">
                 <a href="{{ url_for('index') }}" class="btn btn-link">Home</a>
                 <a href="{{ url_for('about') }}" class="btn btn-link">About Us</a>
                 <a href="{{ url_for('laws') }}" class="btn btn-link">Laws & Regulations</a>
                 <a href="{{ url_for('contact') }}" class="btn btn-link">Contact Us</a>
             </div>
-            Social Media Icons Section 
+            <!-- Social Media Icons Section -->
             <div class="col-md-6 text-center text-md-end">
-                <a href="#" class="btn btn-social btn-facebook"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" class="btn btn-social btn-twitter"><i class="fab fa-twitter"></i></a>
-                <a href="#" class="btn btn-social btn-linkedin"><i class="fab fa-linkedin-in"></i></a>
-                <a href="#" class="btn btn-social btn-instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="btn btn-social"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="btn btn-social"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="btn btn-social"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" class="btn btn-social"><i class="fab fa-instagram"></i></a>
             </div>
-        </div> --> 
+        </div>
         <div class="copyright">
             <div class="row">
                 <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
@@ -432,6 +426,9 @@
                 tableContent.innerHTML = tableData[tabIndex];
             });
         });
+
+        // Update copyright year
+        document.getElementById('year').textContent = new Date().getFullYear();
     </script>
 </body>
 </html>
