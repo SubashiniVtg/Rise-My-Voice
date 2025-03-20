@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="x-icon" href="{{ url_for('static', filename='img/icon.jpg') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <title>Complaint Details - Raise-My-Voice</title>
+    <style>
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+        }
+
+        h2 {
+            color: #db5299;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2em;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: #db5299;
+            border-radius: 2px;
+        }
+
+        .complaint-sections {
+            display: grid;
+            gap: 25px;
+        }
+
+        .section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-title {
+            color: #db5299;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            width: 24px;
+        }
+
+        .detail-row {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 20px;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .detail-label {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .detail-value {
+            color: #333;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-registered {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .status-submitted {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        .status-resolved {
+            background: #e8f5e9;
+            color: #388e3c;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 30px;
+            padding: 12px 25px;
+            background: #db5299;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            box-shadow: 0 4px 15px rgba(219, 82, 153, 0.3);
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(219, 82, 153, 0.4);
+            background: #c4407e;
+        }
+
+        .personal-info,
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .info-item {
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .complaint-text {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 10px;
+            line-height: 1.6;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .timestamp {
+            color: #666;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .timestamp i {
+            color: #db5299;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Complaint Details</h2>
+
+        <div class="complaint-sections">
+            <!-- Basic Information -->
+            <div class="section">
+                <div class="section-title">
+                    <i class="fas fa-info-circle"></i>Basic Information
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Status</div>
+                    <div class="detail-value">
+                        <span class="status-badge status-{{ complaint.status.lower() }}">
+                            {{ complaint.status }}
+                        </span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Registered At</div>
+                    <div class="detail-value timestamp">
+                        <i class="far fa-calendar-alt"></i>
+                        {{ complaint.registered_at }}
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Email</div>
+                    <div class="detail-value">{{ complaint.email }}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Name</div>
+                    <div class="detail-value">{{ complaint.name }}</div>
+                </div>
+            </div>
+
+            <!-- Personal Information -->
+            {% if complaint.details and complaint.details.personal_info %}
+            <div class="section">
+                <div class="section-title">
+                    <i class="fas fa-user"></i>Personal Information
+                </div>
+                <div class="personal-info">
+                    <div class="info-item">
+                        <div class="detail-label">Full Name</div>
+                        <div class="detail-value">{{ complaint.details.personal_info.full_name }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="detail-label">Date of Birth</div>
+                        <div class="detail-value">{{ complaint.details.personal_info.dob }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="detail-label">Gender</div>
+                        <div class="detail-value">{{ complaint.details.personal_info.gender }}</div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Contact Information -->
+            {% if complaint.details and complaint.details.contact_info %}
+            <div class="section">
+                <div class="section-title">
+                    <i class="fas fa-address-card"></i>Contact Information
+                </div>
+                <div class="contact-info">
+                    <div class="info-item">
+                        <div class="detail-label">City</div>
+                        <div class="detail-value">{{ complaint.details.contact_info.city }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="detail-label">State</div>
+                        <div class="detail-value">{{ complaint.details.contact_info.state }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="detail-label">Pincode</div>
+                        <div class="detail-value">{{ complaint.details.contact_info.pincode }}</div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Organization -->
+            {% if complaint.details and complaint.details.organization %}
+            <div class="section">
+                <div class="section-title">
+                    <i class="fas fa-building"></i>Organization
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Organization & Role</div>
+                    <div class="detail-value">{{ complaint.details.organization }}</div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Complaint Details -->
+            {% if complaint.submission %}
+            <div class="section">
+                <div class="section-title">
+                    <i class="fas fa-file-alt"></i>Complaint Details
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Complainant Name</div>
+                    <div class="detail-value">{{ complaint.submission.complainant_name }}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Submission Date</div>
+                    <div class="detail-value timestamp">
+                        <i class="far fa-calendar-check"></i>
+                        {{ complaint.submission.submission_date }}
+                    </div>
+                </div>
+                {% if complaint.submission.on_behalf %}
+                <div class="detail-row">
+                    <div class="detail-label">On Behalf Of</div>
+                    <div class="detail-value">{{ complaint.submission.on_behalf }}</div>
+                </div>
+                {% endif %}
+                <div class="detail-row">
+                    <div class="detail-label">Complaint Text</div>
+                    <div class="detail-value">
+                        <div class="complaint-text">
+                            {{ complaint.submission.complaint_text }}
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Submitted At</div>
+                    <div class="detail-value timestamp">
+                        <i class="far fa-clock"></i>
+                        {{ complaint.submission.submitted_at }}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <a href="{{ url_for('dashboard') }}" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+            Back to Dashboard
+        </a>
+    </div>
+</body>
+
+</html>

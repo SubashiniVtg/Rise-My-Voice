@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Page</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/profile.css') }}" rel="stylesheet">
+</head>
+
+<body>
+    <div class="profile-container">
+        <!-- Left Section - Profile Details -->
+        <div class="profile-details">
+            <div class="profile-header">
+                <div class="profile-icon" onclick="triggerFileInput()">
+                    <img id="profileImage"
+                        src="{{ url_for('static', filename=user.profile_image) if user.profile_image else url_for('static', filename='img/default_profile.png') }}"
+                        alt="Profile Image">
+                    <input type="file" id="fileInput" accept="image/*" style="display:none"
+                        onchange="updateProfileImage(event)">
+                </div>
+                <div class="profile-name">
+                    <span>{{ user.name }}</span>
+                </div>
+            </div>
+
+            <form method="POST" action="{{ url_for('profile') }}">
+                <div class="profile-item">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" value="{{ user.name }}">
+                </div>
+                <div class="profile-item">
+                    <label for="phone">Phone Number</label>
+                    <input type="text" id="phone" name="phone" value="{{ user.phone }}">
+                </div>
+                <div class="profile-item">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" value="{{ user.email }}" readonly>
+                </div>
+                <div class="profile-item">
+                    <label for="gender">Gender</label>
+                    <select id="gender" name="gender">
+                        <option value="Male" {{ 'selected' if user.gender=='Male' else '' }}>Male</option>
+                        <option value="Female" {{ 'selected' if user.gender=='Female' else '' }}>Female</option>
+                        <option value="Other" {{ 'selected' if user.gender=='Other' else '' }}>Other</option>
+                    </select>
+                </div>
+                <div class="profile-item">
+                    <label for="dob">Date of Birth</label>
+                    <input type="date" id="dob" name="dob" value="{{ user.dob }}">
+                </div>
+                <div class="profile-item">
+                    <label for="address">Address</label>
+                    <input type="text" id="address" name="address" value="{{ user.address }}">
+                </div>
+                <div class="save-container">
+                    <button type="submit">Save Changes</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Right Section - Navigation -->
+        <div class="profile-nav">
+            <div class="nav-header">
+                <h2>Quick Access</h2>
+            </div>
+            <div class="nav-links">
+                <a href="{{ url_for('home') }}" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="{{ url_for('contact') }}" class="nav-item">
+                    <i class="fas fa-envelope"></i>
+                    <span>Messages</span>
+                </a>
+                <a href="{{ url_for('about') }}" class="nav-item">
+                    <i class="fas fa-info-circle"></i>
+                    <span>About Us</span>
+                </a>
+                <a href="{{ url_for('laws') }}" class="nav-item">
+                    <i class="fas fa-gavel"></i>
+                    <span>Legal Resources</span>
+                </a>
+                <a href="{{ url_for('track_my_complaints') }}" class="nav-item">
+                    <i class="fas fa-search"></i>
+                    <span>Track Status</span>
+                </a>
+                <a href="{{ url_for('logout') }}" class="nav-item logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Sign Out</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Handle profile image upload
+        function triggerFileInput() {
+            document.getElementById('fileInput').click();
+        }
+
+        function updateProfileImage(event) {
+            var file = event.target.files[0];
+            if (file) {
+                // Show preview immediately
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('profileImage').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+
+                // Send image to server
+                var formData = new FormData();
+                formData.append('profile_image', file);
+                formData.append('csrf_token', '{{ csrf_token() }}');
+
+                fetch('{{ url_for("upload_profile_image") }}', {
+                    method: 'POST',
+                    body: formData,
+                    credentials: 'same-origin'
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            console.log('Profile image updated successfully');
+                        } else {
+                            console.error('Failed to update profile image:', data.message);
+                            alert('Failed to update profile image: ' + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred while uploading the image');
+                    });
+            }
+        }
+    </script>
+
+</body>
+
+</html>

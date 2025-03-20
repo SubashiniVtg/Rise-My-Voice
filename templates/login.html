@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" type="x-icon" href="{{ url_for('static', filename='img/icon.jpg') }}">
+  <title>Raise-My-Voice</title>
+  <link href="{{ url_for('static', filename='css/login.css') }}" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <meta name="google-signin-client_id"
+    content="551987201810-t6ieb9re5u0cc4s5rq8jt1vacfh90a9a.apps.googleusercontent.com">
+  <script src="https://accounts.google.com/gsi/client" async></script>
+  <style>
+    /* Revert container and panel styles */
+    .container {
+      width: 90%;
+      max-width: 900px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+      overflow: hidden;
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      min-height: 600px;
+    }
+
+    .left-panel {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      background: #fff;
+    }
+
+    .left-panel img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      filter: brightness(1) contrast(1.05);
+    }
+
+    .left-panel::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg,
+          rgba(0, 0, 0, 0.1),
+          rgba(0, 0, 0, 0.1));
+      backdrop-filter: blur(0px);
+    }
+
+    .right-panel {
+      flex: 1;
+      padding: 30px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: white;
+    }
+
+    /* Revert captcha styles */
+    .captcha {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 15px;
+      margin: 20px 0;
+      background: #f8f9fa;
+      border: 1px solid #eee;
+      border-radius: 8px;
+    }
+
+    .captcha-code {
+      font-size: 24px;
+      padding: 5px 15px;
+      background: white;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .captcha-refresh {
+      width: 35px;
+      height: 35px;
+      font-size: 20px;
+      background: linear-gradient(45deg, #764ba2, #db5299);
+      color: white;
+      border-radius: 50%;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .captcha-refresh:hover {
+      transform: rotate(180deg) scale(1.1);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Responsive styles */
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+
+      .left-panel {
+        min-height: 300px;
+      }
+
+      .right-panel {
+        padding: 30px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        width: 100%;
+        border-radius: 0;
+      }
+
+      .left-panel {
+        min-height: 200px;
+      }
+
+      .right-panel {
+        padding: 20px;
+      }
+
+      .captcha {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+
+    /* Update button styles */
+    .btn {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(45deg, #764ba2, #db5299);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+      font-size: 15px;
+    }
+
+    .btn:hover {
+      background: linear-gradient(45deg, #db5299, #764ba2);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(219, 82, 153, 0.3);
+    }
+
+    #sendOtpButton {
+      margin-top: 5px;
+    }
+
+    /* Update form group spacing */
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    /* Update input field container */
+    .input-field {
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="left-panel">
+      <img src="{{ url_for('static', filename='img/banner.jpg') }}" alt="Banner Image" loading="eager"
+        draggable="false">
+    </div>
+    <div class="right-panel">
+      <h1>Login</h1>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="emailOrUsername">Email or Username</label>
+          <div class="input-field">
+            <input type="text" id="emailOrUsername" placeholder="Enter your email" name="email" required />
+            <button type="button" id="sendOtpButton" class="btn">Send OTP</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="password-container">
+            <input type="password" id="password" placeholder="Enter your password" name="password" required />
+            <span class="toggle-password" onclick="togglePasswordVisibility('password', this)">
+              <i class="fas fa-eye-slash"></i>
+            </span>
+          </div>
+        </div>
+
+        <div class="form-group otp-section">
+          <label for="otpInput">OTP Verification</label>
+          <div class="otp-input">
+            <input type="text" id="otpInput" placeholder="Enter OTP" required />
+          </div>
+
+        </div>
+
+        <div class="form-group captcha">
+          <span class="captcha-code" id="captchaCode"></span>
+          <input type="text" id="captchaInput" placeholder="Enter CAPTCHA" required />
+          <span class="captcha-refresh" id="refreshCaptcha">
+            <i class="fas fa-sync-alt"></i>
+          </span>
+        </div>
+
+        <button type="submit" class="btn">Login</button>
+
+        <div class="google-signin-container">
+          <div id="g_id_onload"
+            data-client_id="551987201810-t6ieb9re5u0cc4s5rq8jt1vacfh90a9a.apps.googleusercontent.com"
+            data-context="signin" data-ux_mode="redirect" data-login_uri="http://localhost:5000/google-auth"
+            data-auto_prompt="false">
+          </div>
+          <div class="g_id_signin" data-type="standard" data-shape="rectangular" data-theme="filled_blue"
+            data-text="continue_with" data-size="large" data-logo_alignment="left">
+          </div>
+        </div>
+
+        <div class="login-link">
+          <p>Don't have an account? <a href="{{ url_for('signup') }}">Sign Up</a></p>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function generateCaptcha() {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let captcha = '';
+      for (let i = 0; i < 6; i++) {
+        captcha += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return captcha;
+    }
+
+    // Load CAPTCHA on page load
+    const captchaCodeElement = document.getElementById('captchaCode');
+    const captchaInputElement = document.getElementById('captchaInput');
+    const refreshCaptchaButton = document.getElementById('refreshCaptcha');
+
+    function loadCaptcha() {
+      const captcha = generateCaptcha();
+      captchaCodeElement.textContent = captcha;
+      captchaInputElement.value = '';
+    }
+
+    loadCaptcha();
+
+    // Refresh CAPTCHA on icon click
+    refreshCaptchaButton.addEventListener('click', loadCaptcha);
+
+    // Toggle password visibility
+    function togglePasswordVisibility(fieldId, toggleElement) {
+      const field = document.getElementById(fieldId);
+      const icon = toggleElement.querySelector('i');
+      if (field.type === 'password') {
+        field.type = 'text';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+      } else {
+        field.type = 'password';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+      }
+    }
+
+    // Handle sending OTP
+    document.getElementById('sendOtpButton').addEventListener('click', async function () {
+      const email = document.getElementById('emailOrUsername').value;
+
+      if (!email) {
+        alert('Please enter your email first.');
+        return;
+      }
+
+      try {
+        const response = await fetch('/send-otp-login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token() }}'
+          },
+          body: JSON.stringify({
+            email: email
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to send OTP');
+        }
+
+        alert('OTP sent successfully! Please check your email.');
+
+        // Start countdown timer
+        const button = document.getElementById('sendOtpButton');
+        let timeLeft = 60;
+        button.disabled = true;
+
+        const timer = setInterval(() => {
+          if (timeLeft <= 0) {
+            clearInterval(timer);
+            button.disabled = false;
+            button.textContent = 'Send OTP';
+          } else {
+            button.textContent = `Resend OTP in ${timeLeft}s`;
+            timeLeft--;
+          }
+        }, 1000);
+
+      } catch (error) {
+        console.error('Error:', error);
+        alert(error.message);
+      }
+    });
+
+    // Handle form submission for login (including OTP verification and CAPTCHA)
+    document.getElementById('loginForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const emailOrUsername = document.getElementById('emailOrUsername').value;
+      const password = document.getElementById('password').value;
+      const otp = document.getElementById('otpInput').value;
+      const captchaInput = document.getElementById('captchaInput').value;
+
+      // Basic validation
+      if (!emailOrUsername || !password || !otp || !captchaInput) {
+        alert('All fields are required.');
+        return;
+      }
+
+      // Validate CAPTCHA
+      if (captchaInput !== captchaCodeElement.textContent) {
+        alert('Incorrect CAPTCHA. Please try again.');
+        loadCaptcha();
+        return;
+      }
+
+      try {
+        const response = await fetch('/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token() }}'
+          },
+          body: JSON.stringify({
+            email: emailOrUsername,
+            password: password,
+            otp: otp
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Login failed');
+        }
+
+        if (data.success) {
+          window.location.href = '/home';  // Redirect to home page on success
+        } else {
+          throw new Error(data.error || 'Login failed');
+        }
+
+      } catch (error) {
+        console.error('Error:', error);
+        alert(error.message);
+      }
+    });
+
+    function handleCredentialResponse(response) {
+      console.log("Google Sign-In Response:", response);  // For debugging
+
+      fetch('/google-auth', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          credential: response.credential
+        })
+      })
+        .then(res => res.json())
+        .then(data => {
+          console.log("Server Response:", data);  // For debugging
+          if (data.error) {
+            alert(data.error);
+          } else if (data.redirect) {
+            window.location.href = data.redirect;
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('An error occurred during Google sign-in');
+        });
+    }
+  </script>
+
+  <style>
+    .google-signin-container {
+      margin: 20px 0;
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .g_id_signin {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    #g_id_onload {
+      display: none;
+    }
+
+    .btn:disabled {
+      background: #cccccc !important;
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+  </style>
+</body>
+
+</html>
