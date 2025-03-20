@@ -240,7 +240,8 @@ def send_otp_signup():
             
             return jsonify({
                 'message': 'OTP sent successfully!',
-                'email': email
+                'email': email,
+                 'otp':otp
             })
             
         except Exception as mail_error:
