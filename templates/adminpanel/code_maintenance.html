@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Maintenance</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        .dropdown-content {
+            display: block;
+        }
+        .status-active {
+            color: #10B981;
+            font-weight: bold;
+        }
+        .status-inactive {
+            color: #EF4444;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="flex flex-col md:flex-row">
+        <!-- Sidebar -->
+        <div class="bg-gray-800 text-white w-full md:w-64 min-h-screen p-4">
+            <h1 class="text-2xl font-bold mb-6">Raise My Voice</h1>
+            <ul>
+                <li class="mb-4">
+                    <i class="fas fa-tachometer-alt mr-2"></i>
+                    <a href="{{ url_for('code_maintenance') }}" class="hover:text-gray-400">Dashboard</a>
+                </li>
+                <li class="relative dropdown">
+                    <i class="fas fa-users-cog mr-2"></i>
+                    <a href="#" class="hover:text-gray-400 focus:outline-none">Admin Management</a>
+                    <ul class="absolute left-0 mt-2 w-48 bg-gray-700 text-white rounded-lg shadow-lg dropdown-content">
+                        <li class="px-4 py-2 hover:bg-gray-600"><a href="manage_role.html">Manage Role</a></li>
+                        <li class="px-4 py-2 hover:bg-gray-600"><a href="manage_user.html">Manage User</a></li>
+                        <li class="px-4 py-2 bg-gray-600"><a href="code_maintenance.html">Code Maintenance</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <!-- Main Content -->
+        <div class="flex-1 p-6">
+            <div class="bg-white p-4 rounded-lg shadow-lg mb-4">
+                <div class="flex flex-col md:flex-row items-center justify-between">
+                    <h2 class="text-xl font-bold">Code Maintenance</h2>
+                    <nav class="text-gray-600 mt-2 md:mt-0">
+                        <a href="{{ url_for('code_maintenance') }}" class="hover:underline">Home</a> &gt; <span>Code Maintenance</span>
+                    </nav>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-lg mb-4">
+                <h2 class="text-xl font-bold mb-4">Content Type List</h2>
+                <div class="flex flex-col md:flex-row items-center justify-between mb-4">
+                    <div class="flex space-x-4 mb-2 md:mb-0">
+                        <span class="bg-gray-800 text-white px-2 py-1 rounded-full flex items-center">
+                            <i class="fas fa-list mr-1"></i> All <span class="bg-blue-600 text-white px-1 py-0.5 rounded ml-1">5</span>
+                        </span>
+                        <span class="flex items-center">
+                            <i class="fas fa-check mr-1"></i> Active <span class="bg-green-600 text-white px-1 py-0.5 rounded ml-1">4</span>
+                        </span>
+                        <span class="flex items-center">
+                            <i class="fas fa-times mr-1"></i> Inactive <span class="bg-red-600 text-white px-1 py-0.5 rounded ml-1">1</span>
+                        </span>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button class="bg-blue-600 text-white px-2 py-1 rounded" onclick="window.location.href='add_code.html'"><i class="fas fa-plus"></i></button>
+                        <button class="bg-blue-600 text-white px-2 py-1 rounded" onclick="filterRows()"><i class="fas fa-filter"></i></button>
+                        <button class="bg-blue-600 text-white px-2 py-1 rounded" onclick="refreshTable()"><i class="fas fa-sync-alt"></i></button>
+                        <button class="bg-blue-600 text-white px-2 py-1 rounded" onclick="downloadTable()"><i class="fas fa-download"></i></button>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 border-b">Code</th>
+                                <th class="py-2 px-4 border-b">Description</th>
+                                <th class="py-2 px-4 border-b">Content Type</th>
+                                <th class="py-2 px-4 border-b">Status</th>
+                                <th class="py-2 px-4 border-b">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Rows will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="flex items-center justify-between mt-2 text-sm">
+                    <div class="flex items-center space-x-2">
+                        <label for="pageSize" class="text-gray-700">Page size:</label>
+                        <select id="pageSize" class="border border-gray-300 rounded p-1">
+                            <option>5</option>
+                            <option>10</option>
+                            <option>15</option>
+                            <option>20</option>
+                        </select>
+                    </div>
+                    <div class="text-gray-700">
+                        Showing 1 to 5 of 5 entries
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button class="bg-gray-300 text-gray-700 px-2 py-1 rounded"><i class="fas fa-chevron-left"></i></button>
+                        <span class="text-gray-700">Page 1</span>
+                        <button class="bg-gray-300 text-gray-700 px-2 py-1 rounded"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function removeRow(button) {
+            const row = button.closest('tr');
+            const code = row.querySelector('td:first-child').innerText;
+            let codes = JSON.parse(localStorage.getItem('codes')) || [];
+            codes = codes.filter(c => c.code !== code);
+            localStorage.setItem('codes', JSON.stringify(codes));
+            row.remove();
+        }
+
+        function editRow(button) {
+            const row = button.closest('tr');
+            const cells = row.querySelectorAll('td');
+
+            cells.forEach((cell, index) => {
+                if (index < cells.length - 1) { // Skip the last cell (Actions)
+                    const currentValue = cell.innerText;
+                    cell.innerHTML = `<input type="text" value="${currentValue}" class="border border-gray-300 rounded p-1 w-full">`;
+                }
+            });
+
+            button.innerHTML = '<i class="fas fa-save"></i>';
+            button.onclick = function() { saveRow(button); };
+        }
+
+        function saveRow(button) {
+            const row = button.closest('tr');
+            const inputs = row.querySelectorAll('input');
+
+            const updatedData = {};
+            inputs.forEach((input, index) => {
+                const value = input.value;
+                const cell = input.closest('td');
+                cell.innerHTML = value;
+                if (index === 0) updatedData.code = value;
+                if (index === 1) updatedData.description = value;
+                if (index === 2) updatedData.contentType = value;
+                if (index === 3) updatedData.status = value;
+            });
+
+            let codes = JSON.parse(localStorage.getItem('codes')) || [];
+            const index = codes.findIndex(c => c.code === updatedData.code);
+            if (index !== -1) {
+                codes[index] = updatedData;
+            }
+            localStorage.setItem('codes', JSON.stringify(codes));
+
+            const statusCell = row.querySelector('td:nth-child(4)');
+            const statusValue = statusCell.innerText.trim().toUpperCase();
+            if (statusValue === 'ACTIVE') {
+                statusCell.innerHTML = '<span class="status-active">ACTIVE</span>';
+            } else {
+                statusCell.innerHTML = '<span class="status-inactive">INACTIVE</span>';
+            }
+
+            button.innerHTML = '<i class="fas fa-edit"></i>';
+            button.onclick = function() { editRow(button); };
+        }
+
+        function filterRows() {
+            const filterValue = prompt("Enter status to filter (ACTIVE/INACTIVE):").toUpperCase();
+            const rows = document.querySelectorAll('tbody tr');
+
+            rows.forEach(row => {
+                const statusCell = row.querySelector('td:nth-child(4)');
+                const statusValue = statusCell.innerText.trim().toUpperCase();
+                if (statusValue === filterValue || filterValue === "") {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        }
+
+        function refreshTable() {
+            const codes = JSON.parse(localStorage.getItem('codes')) || [
+                { code: 'GENDER', description: 'Gender Types', contentType: 'Gender', status: 'Active' },
+                { code: 'STATE', description: 'State Names', contentType: 'State', status: 'Active' },
+                { code: 'CITY', description: 'City Names', contentType: 'City', status: 'Inactive' }
+            ];
+
+            const tbody = document.querySelector('tbody');
+            tbody.innerHTML = '';
+
+            codes.forEach(data => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="py-2 px-4 border-b">${data.code}</td>
+                    <td class="py-2 px-4 border-b">${data.description}</td>
+                    <td class="py-2 px-4 border-b">${data.contentType}</td>
+                    <td class="py-2 px-4 border-b"><span class="status-${data.status.toLowerCase()}">${data.status}</span></td>
+                    <td class="py-2 px-4 border-b">
+                        <button class="text-black px-2 py-1 rounded mr-2 btn-small" onclick="editRow(this)"><i class="fas fa-edit"></i></button>
+                        <button class="text-black px-2 py-1 rounded btn-small" onclick="removeRow(this)"><i class="fas fa-trash"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function addRow(code, description, contentType, status) {
+            const tbody = document.querySelector('tbody');
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="py-2 px-4 border-b">${code}</td>
+                <td class="py-2 px-4 border-b">${description}</td>
+                <td class="py-2 px-4 border-b">${contentType}</td>
+                <td class="py-2 px-4 border-b"><span class="status-${status.toLowerCase()}">${status}</span></td>
+                <td class="py-2 px-4 border-b">
+                    <button class="text-black px-2 py-1 rounded mr-2 btn-small" onclick="editRow(this)"><i class="fas fa-edit"></i></button>
+                    <button class="text-black px-2 py-1 rounded btn-small" onclick="removeRow(this)"><i class="fas fa-trash"></i></button>
+                </td>
+            `;
+            tbody.appendChild(row);
+
+            let codes = JSON.parse(localStorage.getItem('codes')) || [];
+            codes.push({ code, description, contentType, status });
+            localStorage.setItem('codes', JSON.stringify(codes));
+        }
+
+        function downloadTable() {
+            const rows = document.querySelectorAll('table tr');
+            let csvContent = "data:text/csv;charset=utf-8,";
+
+            rows.forEach(row => {
+                const cols = row.querySelectorAll('td, th');
+                const rowData = Array.from(cols).map(col => col.innerText).join(",");
+                csvContent += rowData + "\r\n";
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "code_list.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        document.addEventListener('DOMContentLoaded', refreshTable);
+    </script>
+</body>
+</html>

@@ -13,170 +13,143 @@
     <script src="https://accounts.google.com/gsi/client" async></script>
     <style>
         :root {
-            --primary-color: #4285f4;
-            --secondary-color: #34a853;
-            --error-color: #ea4335;
-            --background-color: #f5f5f5;
-            --box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            --primary-gradient: linear-gradient(135deg, #2c3e50, #3498db);
+            --secondary-gradient: linear-gradient(135deg, #3498db, #2980b9);
+            --accent-color: #e74c3c;
+            --success-color: #2ecc71;
+            --background-color: #f8fafc;
+            --text-color: #2c3e50;
+            --text-muted: #7f8c8d;
+            --border-color: #e2e8f0;
+            --input-bg: #ffffff;
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
 
         body {
             margin: 0;
-            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             background: var(--background-color);
+            background-image: linear-gradient(135deg, #f5f7fa 0%, #e0e6ed 100%);
+            font-family: 'Poppins', sans-serif;
+            padding: 2rem;
+            color: var(--text-color);
         }
 
         .container {
-            width: 85%;
-            max-width: 900px;
-            min-height: 550px;
-            display: flex;
-            gap: 0;
-            margin: 2rem auto;
-            background: #fff;
-            border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
-            overflow: hidden;
-        }
-
-        .left-panel {
-            flex: 1;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #fff;
-        }
-
-        .left-panel img {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center;
+            max-width: 1200px;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 16px;
+            padding: 3rem;
+            box-shadow: var(--shadow-lg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
         }
 
-        .left-panel::after {
-            display: none;
-        }
-
-        .right-panel {
-            flex: 1;
-            padding: 25px 30px;
-            background: white;
-            max-width: none;
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
         }
 
         h1 {
-            color: var(--primary-color);
-            font-size: 2.2em;
-            margin-bottom: 25px;
-            text-align: center;
+            font-size: 2.5rem;
             font-weight: 600;
+            text-align: center;
+            margin-bottom: 2.5rem;
+            color: var(--text-color);
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--primary-gradient);
+            border-radius: 2px;
+        }
+
+        .form-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 3rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .form-section {
+            background: #ffffff;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .form-section:hover {
+            box-shadow: var(--shadow-md);
+            border-color: #3498db;
+        }
+
+        .form-section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #f0f2f5;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 1.5rem;
             position: relative;
         }
 
-        input {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e1e1e1;
-            border-radius: 10px;
-            font-size: 15px;
-            transition: all 0.3s ease;
-            background: #f8f9fa;
+        .form-group label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
         }
 
-        input:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.2);
+        .form-group label span {
+            color: var(--accent-color);
+            margin-left: 2px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--input-bg);
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            color: var(--text-color);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
             outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
         }
 
-        .btn {
-            background: #ff4b2b;
-            color: white;
-            padding: 12px 25px;
-            border: none;
-            border-radius: 10px;
-            font-size: 15px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: 100%;
-            font-weight: 600;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .btn:hover {
-            background: #ff3916;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .captcha {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 15px;
-            margin: 20px 0;
-            background: #f8f9fa;
-            border: 1px solid #eee;
-            border-radius: 8px;
-        }
-
-        .captcha-code {
-            font-size: 24px;
-            padding: 5px 15px;
-            background: white;
-            border-radius: 6px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .captcha input {
-            flex: 1;
-            min-width: 180px;
-            padding: 12px 15px;
-            font-size: 15px;
-            border: 2px solid #e1e1e1;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .captcha input:focus {
-            border-color: #764ba2;
-            box-shadow: 0 0 0 3px rgba(118, 75, 162, 0.1);
-        }
-
-        .captcha-refresh {
-            width: 35px;
-            height: 35px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            background: linear-gradient(45deg, #764ba2, #db5299);
-            color: white;
-            border-radius: 50%;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease;
-            cursor: pointer;
-            flex-shrink: 0;
-        }
-
-        .captcha-refresh i {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            height: 100%;
-        }
-
-        .captcha-refresh:hover {
-            transform: rotate(180deg) scale(1.1);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        .form-group input:hover,
+        .form-group select:hover {
+            border-color: #3498db;
         }
 
         .password-container {
@@ -185,218 +158,587 @@
 
         .toggle-password {
             position: absolute;
-            right: 15px;
+            right: 1rem;
             top: 50%;
             transform: translateY(-50%);
             cursor: pointer;
-            color: #666;
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+            padding: 0.5rem;
+            border-radius: 50%;
+            background: transparent;
         }
 
-        .google-signin-container {
-            margin: 15px 0;
-            position: relative;
+        .toggle-password:hover {
+            color: #3498db;
+            background: rgba(52, 152, 219, 0.1);
         }
 
-        .google-signin-container::before,
-        .google-signin-container::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            width: calc(50% - 70px);
-            height: 1px;
-            background: #e1e1e1;
-        }
-
-        .google-signin-container::before {
-            left: 0;
-        }
-
-        .google-signin-container::after {
-            right: 0;
-        }
-
-        .login-link {
-            text-align: center;
-            margin-top: 15px;
-            color: #666;
-        }
-
-        .login-link a {
-            color: var(--primary-color);
-            text-decoration: none;
+        button[type="submit"],
+        #sendOtpButton {
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
             font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            box-shadow: var(--shadow-md);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .login-link a:hover {
-            text-decoration: underline;
+        button[type="submit"]:hover,
+        #sendOtpButton:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            background: var(--secondary-gradient);
+        }
+
+        .captcha-container {
+            background: rgba(52, 152, 219, 0.05);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border: 2px solid rgba(52, 152, 219, 0.1);
         }
 
         .error-message {
-            color: var(--error-color);
-            font-size: 14px;
-            margin-top: 5px;
+            color: var(--accent-color);
+            font-size: 0.85rem;
+            margin-top: 0.4rem;
+            display: block;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
         }
 
-        /* Responsive Design */
-        @media (max-width: 968px) {
-            .container {
-                flex-direction: column;
-            }
+        .error-message.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-            .left-panel {
-                display: none;
-            }
+        .action-buttons {
+            display: grid;
+            gap: 1.5rem;
+            margin-top: 2.5rem;
+        }
 
-            .right-panel {
-                padding: 30px 20px;
-            }
+        .google-signin-container {
+            padding: 1rem;
+            border-radius: 8px;
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .google-signin-container:hover {
+            background: #ffffff;
+            border-color: #3498db;
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* File Upload Styles */
+        .file-upload-container {
+            margin-top: 1rem;
+            padding: 1.5rem;
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .file-upload-container:hover {
+            border-color: #3498db;
+            background-color: rgba(52, 152, 219, 0.05);
+        }
+
+        .file-preview {
+            margin-top: 1rem;
+            max-width: 100%;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .file-preview img {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+            object-fit: contain;
+        }
+
+        .file-preview iframe {
+            width: 100%;
+            height: 400px;
+            border: none;
+            border-radius: 8px;
+        }
+
+        .file-info {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .file-error {
+            color: var(--accent-color);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .file-details {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .file-details.show {
+            display: block;
+        }
+
+        .file-details p {
+            margin: 0.5rem 0;
+            color: var(--text-color);
+        }
+
+        .file-details .file-name {
+            font-weight: 600;
+            word-break: break-all;
+        }
+
+        .file-details .file-size {
+            color: var(--text-muted);
+        }
+
+        .file-details .file-type {
+            color: var(--primary-color);
         }
 
         @media (max-width: 768px) {
-            .captcha {
-                flex-direction: row;
-                flex-wrap: wrap;
-                gap: 10px;
+            body {
+                padding: 1rem;
             }
 
-            .captcha input {
-                min-width: 150px;
+            .container {
+                padding: 2rem;
+            }
+
+            .form-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .form-section {
+                padding: 1.5rem;
             }
         }
 
         @media (max-width: 480px) {
+            .container {
+                padding: 1.5rem;
+            }
+
             h1 {
-                font-size: 2em;
+                font-size: 2rem;
+                margin-bottom: 2rem;
             }
 
-            .btn {
-                padding: 12px 20px;
+            .form-section {
+                padding: 1.25rem;
             }
 
-            .captcha {
-                flex-direction: column;
-                align-items: center;
-                padding: 12px;
-            }
-
-            .captcha input {
-                width: 100%;
-            }
-
-            .captcha-refresh {
-                margin-top: 10px;
+            .form-group input,
+            .form-group select {
+                padding: 0.7rem;
             }
         }
 
-        /* Animation */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        /* Progress indicator */
+        .progress-indicator {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
         }
 
-        .form-group {
-            animation: fadeIn 0.5s ease-out forwards;
+        .progress-step {
+            display: flex;
+            align-items: center;
+            margin: 0 1rem;
         }
 
-        .form-group:nth-child(2) {
-            animation-delay: 0.1s;
+        .step-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-right: 0.5rem;
         }
 
-        .form-group:nth-child(3) {
-            animation-delay: 0.2s;
+        .step-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 500;
         }
 
-        .form-group:nth-child(4) {
-            animation-delay: 0.3s;
-        }
-
-        .captcha > * {
-            margin: 0;
+        .step-active .step-label {
+            color: var(--text-color);
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <div class="left-panel">
-            <img src="{{ url_for('static', filename='img/banner.jpg') }}" width="350" height="700">
-        </div>
-
-        <div class="right-panel">
-            <h1>Create an account</h1>
-            <form id="signupForm">
-                <div class="form-group">
-                    <label for="fullName">Full Name <span>*</span></label>
-                    <input type="text" id="fullName" placeholder="Preethi" name="name" required />
-                    <div class="error-message" id="fullNameError"></div>
-                </div>
-
-                <div class="form-group">
-                    <label for="email">Email <span>*</span></label>
-                    <input type="email" id="email" placeholder="preethi@gmail.com" name="email" required />
-                    <button type="button" id="sendOtpButton" class="btn">Send OTP</button>
-                    <div class="error-message" id="emailError"></div>
-                </div>
-
-                <div class="form-group">
-                    <label for="verification">OTP verification <span>*</span></label>
-                    <input type="text" id="otpInput" required />
-                    <div class="error-message" id="OTPError"></div>
-                </div>
-
-                <div class="form-group">
-                    <label for="password">Password <span>*</span></label>
-                    <div class="password-container">
-                        <input id="password" placeholder="Preethi@1" name="password" required />
-                        <span class="toggle-password" onclick="togglePasswordVisibility('password', this)">
-                            <i class="fas fa-eye-slash"></i>
-                        </span>
+        <h1>Create an account</h1>
+        <form id="signupForm">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="form-content">
+                <div class="form-section">
+                    <div class="form-section-title">Personal Details</div>
+                    <div class="form-group">
+                        <label for="firstName">First Name <span>*</span></label>
+                        <input type="text" id="firstName" name="firstName" required />
+                        <div class="error-message" id="firstNameError"></div>
                     </div>
-                    <div class="error-message" id="passwordError"></div>
-                </div>
 
-                <div class="form-group">
-                    <label for="retypePassword">Retype Password <span>*</span></label>
-                    <div class="retypepassword-container">
-                        <input id="retypePassword" required />
-                        <span class="toggle-password" onclick="togglePasswordVisibility('retypePassword', this)">
-                            <i class="fas fa-eye-slash"></i>
-                        </span>
+                    <div class="form-group">
+                        <label for="middleName">Middle Name</label>
+                        <input type="text" id="middleName" name="middleName" />
                     </div>
-                    <div class="error-message" id="retypePasswordError"></div>
-                </div>
 
-                <div class="form-group captcha">
-                    <span class="captcha-code" id="captchaCode"></span>
-                    <input type="text" id="captchaInput" placeholder="Enter CAPTCHA" required />
-                    <span class="captcha-refresh" id="refreshCaptcha">&#x21bb;</span>
-                </div>
-
-                <button type="submit" class="btn" id="signupButton">Sign Up</button>
-                <div class="google-signin-container">
-                    <div id="g_id_onload"
-                        data-client_id="551987201810-t6ieb9re5u0cc4s5rq8jt1vacfh90a9a.apps.googleusercontent.com"
-                        data-context="signup" data-ux_mode="redirect" data-login_uri="http://localhost:5000/google-auth"
-                        data-auto_prompt="false" data-itp_support="true">
+                    <div class="form-group">
+                        <label for="lastName">Last Name <span>*</span></label>
+                        <input type="text" id="lastName" name="lastName" required />
+                        <div class="error-message" id="lastNameError"></div>
                     </div>
-                    <div class="g_id_signin" data-type="standard" data-shape="rectangular" data-theme="outline"
-                        data-text="signup_with" data-size="large" data-logo_alignment="left">
+
+                    <div class="form-group">
+                        <label for="dob">Date of Birth <span>*</span></label>
+                        <input type="date" id="dob" name="dob" required max="{{ '2009-03-24' }}" onchange="validateAge(this)" />
+                        <div class="error-message" id="dobError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gender">Gender <span>*</span></label>
+                        <select id="gender" name="gender" required>
+                            <option value="">Select Gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="others">Others</option>
+                        </select>
+                        <div class="error-message" id="genderError"></div>
                     </div>
                 </div>
-                <div class="login-link">
-                    <p>Already have an account? <a href="{{ url_for('login') }}">Login</a></p>
+
+                <div class="form-section">
+                    <div class="form-section-title">Contact Information</div>
+                    <div class="form-group">
+                        <label for="email">Email <span>*</span></label>
+                        <input type="email" id="email" placeholder="preethi@gmail.com" name="email" required />
+                        <button type="button" id="sendOtpButton" class="btn">Send OTP</button>
+                        <div class="error-message" id="emailError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="otp">OTP verification <span>*</span></label>
+                        <input type="text" id="otp" name="otp" placeholder="Enter OTP" required />
+                        <div class="error-message" id="otpError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="city">City <span>*</span></label>
+                        <select id="city" name="city" required>
+                            <option value="">--Select City--</option>
+                            <option value="Agra">Agra</option>
+                            <option value="Ahmedabad">Ahmedabad</option>
+                            <option value="Bangalore">Bangalore</option>
+                            <option value="Bhopal">Bhopal</option>
+                            <option value="Chandigarh">Chandigarh</option>
+                            <option value="Chennai">Chennai</option>
+                            <option value="Coimbatore">Coimbatore</option>
+                            <option value="Delhi">Delhi</option>
+                            <option value="Erode">Erode</option>
+                            <option value="Hyderabad">Hyderabad</option>
+                            <option value="Indore">Indore</option>
+                            <option value="Jaipur">Jaipur</option>
+                            <option value="Kanchipuram">Kanchipuram</option>
+                            <option value="Kanpur">Kanpur</option>
+                            <option value="Karur">Karur</option>
+                            <option value="Kolkata">Kolkata</option>
+                            <option value="Lucknow">Lucknow</option>
+                            <option value="Madurai">Madurai</option>
+                            <option value="Mumbai">Mumbai</option>
+                            <option value="Nagapattinam">Nagapattinam</option>
+                            <option value="Nagpur">Nagpur</option>
+                            <option value="Namakkal">Namakkal</option>
+                            <option value="Patna">Patna</option>
+                            <option value="Pollachi">Pollachi</option>
+                            <option value="Pondicherry">Pondicherry</option>
+                            <option value="Pune">Pune</option>
+                            <option value="Rameswaram">Rameswaram</option>
+                            <option value="Salem">Salem</option>
+                            <option value="Surat">Surat</option>
+                            <option value="Thanjavur">Thanjavur</option>
+                            <option value="Theni">Theni</option>
+                            <option value="Thiruvallur">Thiruvallur</option>
+                            <option value="Thiruvarur">Thiruvarur</option>
+                            <option value="Thoothukudi">Thoothukudi</option>
+                            <option value="Tiruchirappalli">Tiruchirappalli</option>
+                            <option value="Tirunelveli">Tirunelveli</option>
+                            <option value="Tiruppur">Tiruppur</option>
+                            <option value="Tiruvannamalai">Tiruvannamalai</option>
+                            <option value="Vadodara">Vadodara</option>
+                            <option value="Vellore">Vellore</option>
+                            <option value="Viluppuram">Viluppuram</option>
+                            <option value="Visakhapatnam">Visakhapatnam</option>
+                            <option value="Virudhunagar">Virudhunagar</option>
+                        </select>
+                        <div class="error-message" id="cityError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="state">State <span>*</span></label>
+                        <select id="state" name="state" required>
+                            <option value="">--Select State--</option>
+                            <option value="Andhra Pradesh">Andhra Pradesh</option>
+                            <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                            <option value="Assam">Assam</option>
+                            <option value="Bihar">Bihar</option>
+                            <option value="Chhattisgarh">Chhattisgarh</option>
+                            <option value="Goa">Goa</option>
+                            <option value="Gujarat">Gujarat</option>
+                            <option value="Haryana">Haryana</option>
+                            <option value="Himachal Pradesh">Himachal Pradesh</option>
+                            <option value="Jammu & Kashmir">Jammu & Kashmir</option>
+                            <option value="Jharkhand">Jharkhand</option>
+                            <option value="Karnataka">Karnataka</option>
+                            <option value="Kerala">Kerala</option>
+                            <option value="Madhya Pradesh">Madhya Pradesh</option>
+                            <option value="Maharashtra">Maharashtra</option>
+                            <option value="Manipur">Manipur</option>
+                            <option value="Meghalaya">Meghalaya</option>
+                            <option value="Mizoram">Mizoram</option>
+                            <option value="Nagaland">Nagaland</option>
+                            <option value="Orissa">Orissa</option>
+                            <option value="Punjab">Punjab</option>
+                            <option value="Rajasthan">Rajasthan</option>
+                            <option value="Sikkim">Sikkim</option>
+                            <option value="Tamil Nadu">Tamil Nadu</option>
+                            <option value="Telangana">Telangana</option>
+                            <option value="Tripura">Tripura</option>
+                            <option value="Uttar Pradesh">Uttar Pradesh</option>
+                            <option value="Uttarakhand">Uttarakhand</option>
+                            <option value="West Bengal">West Bengal</option>
+                        </select>
+                        <div class="error-message" id="stateError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pincode">Pincode <span>*</span></label>
+                        <input type="text" id="pincode" name="pincode" placeholder="Enter your pincode" required pattern="\d{6}" />
+                        <div class="error-message" id="pincodeError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="organization-category">Organization Category <span>*</span></label>
+                        <select id="organization-category" name="organization-category" required>
+                            <option value="">Choose a profession</option>
+                            <option value="Education">Education</option>
+                            <option value="Healthcare">Healthcare</option>
+                            <option value="Business & Finance">Business & Finance</option>
+                            <option value="Technology & IT">Technology & IT</option>
+                            <option value="Engineering">Engineering</option>
+                            <option value="Science & Research">Science & Research</option>
+                            <option value="Creative & Media">Creative & Media</option>
+                            <option value="Law & Justice">Law & Justice</option>
+                            <option value="Public Service & Administration">Public Service & Administration</option>
+                            <option value="Retail & Sales">Retail & Sales</option>
+                            <option value="Agriculture & Farming">Agriculture & Farming</option>
+                            <option value="Manufacturing & Labor">Manufacturing & Labor</option>
+                            <option value="Hospitality & Tourism">Hospitality & Tourism</option>
+                            <option value="Sports & Fitness">Sports & Fitness</option>
+                            <option value="Household & Domestic Work">Household & Domestic Work</option>
+                        </select>
+                        <div class="error-message" id="organizationCategoryError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="organization-role">Specific Role <span>*</span></label>
+                        <select id="organization-role" name="organization" required>
+                            <option value="">Select Role</option>
+                        </select>
+                        <div class="error-message" id="organizationRoleError"></div>
+                    </div>
                 </div>
-            </form>
-        </div>
+
+                <div class="form-section">
+                    <div class="form-section-title">Profile Document</div>
+                    <div class="form-group">
+                        <label for="profile-document">Upload Document <span>*</span></label>
+                        <div class="file-upload-container">
+                            <input type="file" id="profile-document" name="profile-document" 
+                                accept=".pdf,.jpg,.jpeg,.png" 
+                                style="display: none;" 
+                                required />
+                            <button type="button" id="upload-trigger" class="upload-btn">
+                                <i class="fas fa-cloud-upload-alt"></i> Choose File
+                            </button>
+                            <div class="file-info">Supported formats: PDF, JPG, JPEG, PNG (Max size: 200MB)</div>
+                            <div class="file-error"></div>
+                            <div class="file-details">
+                                <p class="file-name"></p>
+                                <p class="file-type"></p>
+                                <p class="file-size"></p>
+                            </div>
+                        </div>
+                        <div class="file-preview" id="file-preview">
+                            <img id="image-preview" src="" alt="Preview" style="display: none;">
+                            <iframe id="pdf-preview" style="display: none;"></iframe>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="form-section-title">Security Information</div>
+                    <div class="form-group">
+                        <label for="password">Password <span>*</span></label>
+                        <div class="password-container">
+                            <input id="password" placeholder="Password must contain 10-20" name="password" required />
+                            <span class="toggle-password" onclick="togglePasswordVisibility('password', this)">
+                                <i class="fas fa-eye-slash"></i>
+                            </span>
+                        </div>
+                        <div class="error-message" id="passwordError"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="retypePassword">Retype Password <span>*</span></label>
+                        <div class="retypepassword-container">
+                            <input id="retypePassword" required />
+                            <span class="toggle-password" onclick="togglePasswordVisibility('retypePassword', this)">
+                                <i class="fas fa-eye-slash"></i>
+                            </span>
+                        </div>
+                        <div class="error-message" id="retypePasswordError"></div>
+                    </div>
+
+                    <div class="form-group captcha">
+                        <span class="captcha-code" id="captchaCode"></span>
+                        <input type="text" id="captchaInput" placeholder="Enter CAPTCHA" required />
+                        <span class="captcha-refresh" id="refreshCaptcha">&#x21bb;</span>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button type="submit" class="btn" id="signupButton">Sign Up</button>
+                        <div class="google-signin-container">
+                            <div id="g_id_onload"
+                                data-client_id="551987201810-t6ieb9re5u0cc4s5rq8jt1vacfh90a9a.apps.googleusercontent.com"
+                                data-context="signup" data-ux_mode="redirect" data-login_uri="http://localhost:5000/google-auth"
+                                data-auto_prompt="false" data-itp_support="true">
+                            </div>
+                            <div class="g_id_signin" data-type="standard" data-shape="rectangular" data-theme="outline"
+                                data-text="signup_with" data-size="large" data-logo_alignment="left">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="login-link">
+                <p>Already have an account? <a href="{{ url_for('login') }}">Login</a></p>
+            </div>
+        </form>
     </div>
     <script>
+        // Age validation
+        function validateAge(input) {
+            const dob = new Date(input.value);
+            const today = new Date();
+            let age = today.getFullYear() - dob.getFullYear();
+            const monthDiff = today.getMonth() - dob.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+                age--;
+            }
+
+            const errorElement = document.getElementById('dobError');
+            if (age < 16) {
+                errorElement.textContent = 'You must be at least 16 years old to register';
+                input.setCustomValidity('You must be at least 16 years old to register');
+            } else {
+                errorElement.textContent = '';
+                input.setCustomValidity('');
+            }
+        }
+
+        // Set max date to 16 years ago from today
+        function setMaxDate() {
+            const dobInput = document.getElementById('dob');
+            const today = new Date();
+            const maxDate = new Date(today.getFullYear() - 16, today.getMonth(), today.getDate());
+            const formattedDate = maxDate.toISOString().split('T')[0];
+            dobInput.setAttribute('max', formattedDate);
+        }
+
+        // Call setMaxDate when the page loads
+        window.addEventListener('load', setMaxDate);
+
+        // Organization roles mapping
+        const organizationRoles = {
+            'Education': ['Teacher', 'Professor', 'Tutor', 'Principal'],
+            'Healthcare': ['Doctor', 'Nurse', 'Pharmacist', 'Physiotherapist', 'Dentist'],
+            'Business & Finance': ['Entrepreneur', 'Accountant', 'Banker', 'Financial Analyst'],
+            'Technology & IT': ['Software Developer', 'Data Analyst', 'Cybersecurity Expert', 'IT Manager'],
+            'Engineering': ['Civil Engineer', 'Mechanical Engineer', 'Electrical Engineer', 'Architect'],
+            'Science & Research': ['Scientist', 'Researcher', 'Lab Technician', 'Environmental Scientist'],
+            'Creative & Media': ['Writer', 'Journalist', 'Photographer', 'Graphic Designer', 'Filmmaker'],
+            'Law & Justice': ['Lawyer', 'Judge', 'Legal Advisor', 'Police Officer'],
+            'Public Service & Administration': ['Government Officer', 'Social Worker', 'NGO Worker'],
+            'Retail & Sales': ['Sales Associate', 'Store Manager', 'Marketing Specialist'],
+            'Agriculture & Farming': ['Farmer', 'Agricultural Scientist', 'Horticulturist'],
+            'Manufacturing & Labor': ['Factory Worker', 'Construction Worker', 'Tailor'],
+            'Hospitality & Tourism': ['Chef', 'Hotel Manager', 'Tour Guide', 'Flight Attendant'],
+            'Sports & Fitness': ['Athlete', 'Coach', 'Fitness Trainer', 'Yoga Instructor'],
+            'Household & Domestic Work': ['Housekeeper', 'Babysitter', 'Caregiver']
+        };
+
+        // Add event listener for category change
+        document.getElementById('organization-category').addEventListener('change', function () {
+            const categorySelect = this;
+            const roleSelect = document.getElementById('organization-role');
+            const selectedCategory = categorySelect.value;
+
+            console.log('Selected category:', selectedCategory);
+
+            // Clear existing options
+            roleSelect.innerHTML = '<option value="">Select Role</option>';
+
+            if (selectedCategory) {
+                console.log('Available roles:', organizationRoles[selectedCategory]);
+                // Add new options based on selected category
+                organizationRoles[selectedCategory].forEach(role => {
+                    const option = document.createElement('option');
+                    option.value = `${selectedCategory} - ${role}`;
+                    option.textContent = role;
+                    roleSelect.appendChild(option);
+                    console.log('Added role:', role);
+                });
+            }
+        });
+
         // CAPTCHA generation logic
         function generateCaptcha() {
             const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -484,53 +826,117 @@
             }
         });
 
-        // Form submission logic
-        document.getElementById('signupForm').addEventListener('submit', async function (e) {
+        // Form submission handler
+        document.getElementById('signupForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
-            const name = document.getElementById('fullName').value;
+            // Validate required fields
             const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const retypePassword = document.getElementById('retypePassword').value;
-            const otp = document.getElementById('otpInput').value;
+            const otp = document.getElementById('otp').value;
             const captchaInput = document.getElementById('captchaInput').value;
+            const captchaCode = document.getElementById('captchaCode').textContent;
 
-            // Validate CAPTCHA
-            if (captchaInput !== captchaCodeElement.textContent) {
-                alert('Incorrect CAPTCHA. Please try again.');
+            if (!email || !otp) {
+                alert('Please fill in all required fields and verify your email with OTP.');
+                return;
+            }
+
+            if (captchaInput !== captchaCode) {
+                alert('Invalid CAPTCHA. Please try again.');
                 loadCaptcha();
                 return;
             }
 
+            // Create FormData object
+            const formData = new FormData(this);
+            
             try {
-                const response = await fetch('/verify-otp', {
+                const response = await fetch('/verify-and-signup', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
                         'X-CSRFToken': '{{ csrf_token() }}'
                     },
-                    body: JSON.stringify({
-                        name: name,
-                        email: email,
-                        password: password,
-                        otp: otp
-                    })
+                    body: formData
                 });
-
+                
                 const data = await response.json();
-
-                if (!response.ok) {
-                    throw new Error(data.error || 'Failed to sign up');
+                if (response.ok) {
+                    alert('Registration successful!');
+                    window.location.href = '/home';
+                } else {
+                    alert(data.error || 'An error occurred');
+                    if (data.error && data.error.includes('OTP')) {
+                        document.getElementById('otp').value = '';
+                    }
                 }
-
-                alert('Signup successful! Redirecting to home page...');
-                window.location.href = '/home';  // Redirect to home page
-
             } catch (error) {
                 console.error('Error:', error);
-                alert(error.message);
+                alert('An error occurred while processing your request');
             }
         });
+
+        // File upload functionality
+        document.getElementById('upload-trigger').addEventListener('click', function() {
+            document.getElementById('profile-document').click();
+        });
+
+        document.getElementById('profile-document').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const fileError = document.querySelector('.file-error');
+            const filePreview = document.getElementById('file-preview');
+            const imagePreview = document.getElementById('image-preview');
+            const pdfPreview = document.getElementById('pdf-preview');
+            const fileDetails = document.querySelector('.file-details');
+            
+            // Reset error and preview
+            fileError.style.display = 'none';
+            filePreview.style.display = 'none';
+            imagePreview.style.display = 'none';
+            pdfPreview.style.display = 'none';
+            fileDetails.classList.remove('show');
+            
+            if (file) {
+                // Check file size (200MB = 200 * 1024 * 1024 bytes)
+                if (file.size > 200 * 1024 * 1024) {
+                    fileError.textContent = 'File size exceeds 200MB limit';
+                    fileError.style.display = 'block';
+                    this.value = ''; // Clear the file input
+                    return;
+                }
+                
+                // Update file details
+                fileDetails.querySelector('.file-name').textContent = 'File: ' + file.name;
+                fileDetails.querySelector('.file-type').textContent = 'Type: ' + file.type;
+                fileDetails.querySelector('.file-size').textContent = 'Size: ' + formatFileSize(file.size);
+                fileDetails.classList.add('show');
+                
+                // Check file type and show preview
+                const fileType = file.type;
+                if (fileType.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        imagePreview.src = e.target.result;
+                        imagePreview.style.display = 'block';
+                        filePreview.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                } else if (fileType === 'application/pdf') {
+                    const fileUrl = URL.createObjectURL(file);
+                    pdfPreview.src = fileUrl;
+                    pdfPreview.style.display = 'block';
+                    filePreview.style.display = 'block';
+                }
+            }
+        });
+
+        // Helper function to format file size
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
 
         function togglePasswordVisibility(fieldId, toggleElement) {
             const field = document.getElementById(fieldId);
@@ -573,52 +979,6 @@
                 });
         }
     </script>
-
-    <style>
-        .google-signin-container {
-            margin: 15px 0;
-            display: flex;
-            justify-content: center;
-            width: 100%;
-        }
-
-        .g_id_signin {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-        }
-
-        #g_id_onload {
-            display: none;
-        }
-
-        #sendOtpButton {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(45deg, #764ba2, #db5299);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 10px;
-        }
-
-        #sendOtpButton:disabled {
-            background: #cccccc !important;
-            cursor: not-allowed;
-            opacity: 0.7;
-        }
-
-        .otp-section {
-            margin: 20px 0;
-        }
-
-        .otp-input {
-            margin-bottom: 10px;
-        }
-    </style>
 </body>
 
 </html>

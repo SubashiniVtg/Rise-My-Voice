@@ -1,0 +1,116 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Code</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        .dropdown-content {
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="flex flex-col md:flex-row">
+        <!-- Sidebar -->
+        <div class="bg-gray-800 text-white w-full md:w-64 min-h-screen p-4">
+            <h1 class="text-2xl font-bold mb-6">Raise My Voice</h1>
+            <ul>
+                <li class="mb-4">
+                    <i class="fas fa-tachometer-alt mr-2"></i>
+                    <a href="code_maintenance.html" class="hover:text-gray-400">Dashboard</a>
+                </li>
+                <li class="relative dropdown">
+                    <i class="fas fa-users-cog mr-2"></i>
+                    <a href="#" class="hover:text-gray-400 focus:outline-none">Admin Management</a>
+                    <ul class="absolute left-0 mt-2 w-48 bg-gray-700 text-white rounded-lg shadow-lg dropdown-content">
+                        <li class="px-4 py-2 hover:bg-gray-600"><a href="manage_role.html">Manage Role</a></li>
+                        <li class="px-4 py-2 hover:bg-gray-600"><a href="manage_user.html">Manage User</a></li>
+                        <li class="px-4 py-2 bg-gray-600"><a href="code_maintenance.html">Code Maintenance</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <!-- Main Content -->
+        <div class="flex-1 p-6">
+            <div class="bg-white p-4 rounded-lg shadow-lg mb-4">
+                <div class="flex flex-col md:flex-row items-center justify-between">
+                    <h2 class="text-xl font-bold">Edit Code</h2>
+                    <nav class="text-gray-600 mt-2 md:mt-0">
+                        <a href="code_maintenance.html" class="hover:underline">Home</a> &gt;
+                        <a href="code_maintenance.html" class="hover:underline">Code Maintenance</a> &gt;
+                        <span>Edit Code</span>
+                    </nav>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <form class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Code</label>
+                            <input type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" value="GENDER" disabled>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Description</label>
+                            <input type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" value="Gender Types">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Content Type</label>
+                            <select class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                <option>Gender</option>
+                                <option>State</option>
+                                <option>City</option>
+                                <option>Organization</option>
+                                <option>Organization Role</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Status</label>
+                            <select class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                <option>Active</option>
+                                <option>Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flex justify-end space-x-4">
+                        <button type="button" onclick="location.href='code_maintenance.html'" class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            Cancel
+                        </button>
+                        <button type="submit" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" onclick="updateCode(event)">
+                            Submit
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateCode(event) {
+            event.preventDefault();
+
+            const code = 'GENDER'; // Assuming code is fixed and not editable
+            const description = document.querySelector('input[type="text"][value="Gender Types"]').value;
+            const contentType = document.querySelector('select').value;
+            const status = document.querySelector('select').value;
+
+            const updatedCode = { code, description, contentType, status };
+
+            let codes = JSON.parse(localStorage.getItem('codes')) || [];
+            const index = codes.findIndex(c => c.code === code);
+            if (index !== -1) {
+                codes[index] = updatedCode;
+            } else {
+                codes.push(updatedCode);
+            }
+            localStorage.setItem('codes', JSON.stringify(codes));
+
+            alert('Code updated');
+            window.location.href = 'code_maintenance.html';
+        }
+    </script>
+</body>
+</html>

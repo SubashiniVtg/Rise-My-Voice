@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nodal Officer Dashboard</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
             font-family: 'Poppins', Arial, sans-serif;
@@ -201,213 +202,88 @@
             background: #db5299;
             color: white;
             transition: all 0.3s ease;
-        }
-
-        .action-btn:hover {
-            background: #c4407e;
-            transform: translateY(-2px);
-        }
-
-        .complaint-details {
-            max-width: 300px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .complaints-categories {
-            margin-top: 30px;
-        }
-
-        .complaints-section {
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
-
-        .complaints-section h2 {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #333;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #db5299;
-        }
-
-        .complaints-section h2 i {
-            color: #db5299;
-        }
-
-        .count {
-            background: #db5299;
-            color: white;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 0.8em;
-            margin-left: auto;
-        }
-
-        .complaints-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .complaint-card {
-            background: #f8f9fa;
-            border-radius: 8px;
-            padding: 15px;
-            transition: transform 0.3s ease;
-        }
-
-        .complaint-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .complaint-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .complaint-body h3 {
-            color: #333;
-            margin: 0 0 10px 0;
-            font-size: 1.1em;
-        }
-
-        .complaint-info {
-            margin-top: 10px;
+            margin: 2px;
             font-size: 0.9em;
-            color: #666;
         }
 
-        .complaint-info p {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin: 5px 0;
+        .action-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
         }
 
-        .complaint-actions {
-            margin-top: 15px;
-            display: flex;
-            gap: 10px;
+        .action-btn:hover:not(:disabled) {
+            background: #c23c7e;
         }
 
-        .analytics-section {
+        .modal {
             display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
         }
 
-        .chart-container {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-            margin-top: 20px;
-        }
-
-        .chart-box {
-            width: 45%;
-            max-width: 500px;
-            height: 300px;
+        .modal-content {
+            position: relative;
             background: white;
+            margin: 15% auto;
             padding: 20px;
+            width: 80%;
+            max-width: 500px;
             border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
-        .chart-box canvas {
-            width: 100% !important;
-            height: 100% !important;
+        .close-modal {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
         }
 
-        .full-width {
-            width: 90%;
-            height: 300px;
-            margin: 20px auto;
-        }
-
-        .complaints-filter {
-            margin-bottom: 20px;
-        }
-
-        .complaints-filter select {
-            padding: 8px 15px;
-            border-radius: 8px;
+        .message-textarea {
+            width: 100%;
+            min-height: 100px;
+            margin: 10px 0;
+            padding: 10px;
             border: 1px solid #ddd;
-            background: white;
-            font-size: 14px;
-            color: #333;
+            border-radius: 5px;
+            resize: vertical;
         }
 
-        .complainant-info {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
 
-        .complainant-info .name {
-            font-weight: bold;
-            color: #333;
-        }
+            .sidebar {
+                width: 100%;
+                margin-bottom: 20px;
+            }
 
-        .complainant-info .full-name {
-            font-size: 0.9em;
-            color: #666;
-        }
+            .main-content {
+                padding: 15px;
+            }
 
-        .organization-info {
-            padding: 5px 10px;
-            background: #f8f9fa;
-            border-radius: 4px;
-            font-size: 0.9em;
-        }
+            .overview-cards {
+                grid-template-columns: 1fr;
+            }
 
-        .contact-info {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-            font-size: 0.9em;
-            color: #666;
-            margin-top: 5px;
-        }
+            table {
+                display: block;
+                overflow-x: auto;
+            }
 
-        .contact-info span {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .contact-info i {
-            color: #db5299;
-            width: 16px;
-        }
-
-        .date-info {
-            font-size: 0.9em;
-            color: #666;
-        }
-
-        .date-info i {
-            color: #db5299;
-            margin-right: 5px;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 8px;
-        }
-
-        .complaint-text {
-            font-size: 0.9em;
-            line-height: 1.4;
-            color: #333;
-            margin-bottom: 8px;
+            .modal-content {
+                width: 95%;
+                margin: 5% auto;
+            }
         }
     </style>
 </head>
@@ -552,33 +428,22 @@
                                     {{ complaint.status }}
                                 </span>
                             </td>
+                            <td>{{ complaint.registered_at }}</td>
                             <td>
-                                <div class="date-info">
-                                    {% if complaint.submission and complaint.submission.submitted_at %}
-                                    <span class="submission-date">
-                                        <i class="far fa-calendar-check"></i>
-                                        {{ complaint.submission.submitted_at }}
-                                    </span>
-                                    {% else %}
-                                    <span class="registration-date">
-                                        <i class="far fa-calendar-alt"></i>
-                                        {{ complaint.registered_at }}
-                                    </span>
-                                    {% endif %}
-                                </div>
-                            </td>
-                            <td>
-                                <div class="action-buttons">
-                                    <button class="action-btn view-btn" onclick="viewComplaint('{{ complaint.id }}')">
-                                        <i class="fas fa-eye"></i> View
-                                    </button>
-                                    {% if complaint.status.lower() != 'resolved' %}
-                                    <button class="action-btn resolve-btn"
-                                        onclick="resolveComplaint('{{ complaint.id }}')">
-                                        <i class="fas fa-check"></i> Resolve
-                                    </button>
-                                    {% endif %}
-                                </div>
+                                <button class="action-btn take-case-btn" onclick="takeCase('{{ complaint.id }}')" {% if complaint.assigned_to %}disabled{% endif %}>
+                                    Take Case
+                                </button>
+                                <button class="action-btn investigate-btn" onclick="investigate('{{ complaint.id }}')" {% if not complaint.assigned_to or complaint.assigned_to != session.nodal_email %}disabled{% endif %}>
+                                    Investigate
+                                </button>
+                                <button class="action-btn action-taken-btn" onclick="actionTaken('{{ complaint.id }}')" {% if not complaint.assigned_to or complaint.assigned_to != session.nodal_email %}disabled{% endif %}>
+                                    Action Taken
+                                </button>
+                                {% if complaint.status.lower() != 'resolved' %}
+                                <button class="action-btn resolve-btn" onclick="resolveComplaint('{{ complaint.id }}')" {% if not complaint.assigned_to or complaint.assigned_to != session.nodal_email %}disabled{% endif %}>
+                                    Resolve
+                                </button>
+                                {% endif %}
                             </td>
                         </tr>
                         {% endfor %}
@@ -599,6 +464,25 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Add modals -->
+    <div id="investigateModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('investigateModal')">&times;</span>
+            <h3>Investigation Details</h3>
+            <textarea id="investigationText" class="message-textarea" placeholder="Enter investigation details..."></textarea>
+            <button class="action-btn" onclick="sendInvestigationDetails()">Send</button>
+        </div>
+    </div>
+
+    <div id="actionTakenModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('actionTakenModal')">&times;</span>
+            <h3>Action Taken Details</h3>
+            <textarea id="actionText" class="message-textarea" placeholder="Enter action taken details..."></textarea>
+            <button class="action-btn" onclick="sendActionTakenDetails()">Send</button>
         </div>
     </div>
 
@@ -887,57 +771,178 @@
             console.log('Stored complaints:', complaints);
         });
 
-        function renderMonthlyTrendsChart() {
-    const monthlyTrends = JSON.parse('{{ analytics.monthly_trends | tojson | safe }}');
-    const months = Object.keys(monthlyTrends);
-    const totalCases = months.map(month => monthlyTrends[month].total);
-    const resolvedCases = months.map(month => monthlyTrends[month].resolved);
+        let currentComplaintId = null;
 
-    const ctx = document.getElementById('monthlyTrendsChart').getContext('2d');
-    new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: months,
-            datasets: [
-                {
-                    label: 'Total Cases',
-                    data: totalCases,
-                    borderColor: '#db5299',
-                    backgroundColor: 'rgba(219, 82, 153, 0.1)',
-                    fill: true
+        function takeCase(complaintId) {
+            fetch(`/take_case/${complaintId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Case assigned successfully');
+                    location.reload();
+                } else {
+                    alert(data.message || 'Failed to take case');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to take case');
+            });
+        }
+
+        function investigate(complaintId) {
+            currentComplaintId = complaintId;
+            document.getElementById('investigateModal').style.display = 'block';
+        }
+
+        function actionTaken(complaintId) {
+            currentComplaintId = complaintId;
+            document.getElementById('actionTakenModal').style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            currentComplaintId = null;
+        }
+
+        function sendInvestigationDetails() {
+            const text = document.getElementById('investigationText').value;
+            if (!text.trim()) {
+                alert('Please enter investigation details');
+                return;
+            }
+
+            fetch(`/send_investigation/${currentComplaintId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
                 },
-                {
-                    label: 'Resolved Cases',
-                    data: resolvedCases,
-                    borderColor: '#2ecc71',
-                    backgroundColor: 'rgba(46, 204, 113, 0.1)',
-                    fill: true
+                body: JSON.stringify({ message: text })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Investigation details sent successfully');
+                    closeModal('investigateModal');
+                    document.getElementById('investigationText').value = '';
+                } else {
+                    alert(data.message || 'Failed to send investigation details');
                 }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                title: {
-                    display: true,
-                    text: 'Monthly Complaint Trends'
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to send investigation details');
+            });
+        }
+
+        function sendActionTakenDetails() {
+            const text = document.getElementById('actionText').value;
+            if (!text.trim()) {
+                alert('Please enter action taken details');
+                return;
+            }
+
+            fetch(`/send_action_taken/${currentComplaintId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message: text })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Action taken details sent successfully');
+                    closeModal('actionTakenModal');
+                    document.getElementById('actionText').value = '';
+                } else {
+                    alert(data.message || 'Failed to send action taken details');
                 }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        stepSize: 1
-                    }
-                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to send action taken details');
+            });
+        }
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            if (event.target.className === 'modal') {
+                event.target.style.display = 'none';
+                currentComplaintId = null;
             }
         }
-    });
-}
 
-// Ensure script runs after DOM is loaded
-document.addEventListener("DOMContentLoaded", renderMonthlyTrendsChart);
+        function renderMonthlyTrendsChart() {
+            try {
+                const monthlyTrends = {{ analytics.monthly_trends | tojson | safe if analytics and analytics.monthly_trends else '{}' }};
+                if (!monthlyTrends || Object.keys(monthlyTrends).length === 0) {
+                    console.log('No monthly trends data available');
+                    return;
+                }
+
+                const months = Object.keys(monthlyTrends);
+                const totalCases = months.map(month => monthlyTrends[month].total);
+                const resolvedCases = months.map(month => monthlyTrends[month].resolved);
+
+                const ctx = document.getElementById('monthlyTrendsChart');
+                if (!ctx) {
+                    console.log('Chart canvas not found');
+                    return;
+                }
+
+                new Chart(ctx.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: months,
+                        datasets: [
+                            {
+                                label: 'Total Cases',
+                                data: totalCases,
+                                borderColor: '#db5299',
+                                backgroundColor: 'rgba(219, 82, 153, 0.1)',
+                                fill: true
+                            },
+                            {
+                                label: 'Resolved Cases',
+                                data: resolvedCases,
+                                borderColor: '#2ecc71',
+                                backgroundColor: 'rgba(46, 204, 113, 0.1)',
+                                fill: true
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Monthly Complaint Trends'
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1
+                                }
+                            }
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Error rendering chart:', error);
+            }
+        }
+
+        // Ensure script runs after DOM is loaded
+        document.addEventListener("DOMContentLoaded", renderMonthlyTrendsChart);
 
         document.addEventListener('DOMContentLoaded', function () {
             renderMonthlyTrendsChart();

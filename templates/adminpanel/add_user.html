@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create User</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        .dropdown-content {
+            display: block;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #4CAF50;
+        }
+        .toggle-checkbox:checked + .toggle-label::after {
+            transform: translateX(1.5rem);
+        }
+        .toggle-label::after {
+            content: '';
+            display: block;
+            width: 1rem;
+            height: 1rem;
+            background-color: white;
+            border-radius: 50%;
+            transition: transform 0.2s;
+            transform: translateX(0.25rem);
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="flex flex-col md:flex-row">
+        <!-- Sidebar -->
+        <div class="bg-gray-800 text-white w-full md:w-64 min-h-screen p-4">
+            <h1 class="text-2xl font-bold mb-6">Raise My Voice</h1>
+            <ul>
+                <li class="mb-4">
+                    <i class="fas fa-tachometer-alt mr-2"></i>
+                    <a href="#" class="hover:text-gray-400">Dashboard</a>
+                </li>
+                <li class="relative">
+                    <i class="fas fa-users-cog mr-2"></i>
+                    <a href="#" class="hover:text-gray-400 focus:outline-none">Admin Management</a>
+                    <ul class="mt-2 w-48 bg-gray-700 text-white rounded-lg shadow-lg">
+                        <li class="px-4 py-2 hover:bg-gray-600"><a href="manage_role.html" onclick="window.location.href='manage_role.html'">Manage Role</a></li>
+                        <li class="px-4 py-2 bg-gray-600"><a href="manage_user.html">Manage User</a></li>
+                        <li class="px-4 py-2 hover:bg-gray-600"><a href="code_maintenance.html">Code Maintenance</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <!-- Main Content -->
+        <div class="flex-1 p-6">
+            <div class="bg-white p-4 rounded-lg shadow-lg mb-4">
+                <div class="flex flex-col md:flex-row items-center justify-between">
+                    <h2 class="text-xl font-bold">Create User</h2>
+                    <nav class="text-gray-600 mt-2 md:mt-0">
+                        <a href="#" class="hover:underline">Home</a> &gt; <a href="javascript:history.back()" class="hover:underline">Manage User List</a> &gt; <span>Create User</span>
+                    </nav>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h2 class="text-xl font-bold mb-4">Create User</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label for="username" class="block text-gray-700">Username</label>
+                        <input type="text" id="username" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label for="email" class="block text-gray-700">Email ID</label>
+                        <input type="email" id="email" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label for="role" class="block text-gray-700">Role</label>
+                        <select id="role" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option>Admin</option>
+                            <option>User</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label for="status" class="block text-gray-700">Status</label>
+                    <div class="flex items-center">
+                        <input type="checkbox" id="status" class="toggle-checkbox hidden">
+                        <label for="status" class="toggle-label block w-12 h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+                    </div>
+                </div>
+                <button class="bg-blue-500 text-white px-2 py-1 rounded" onclick="createUser()">Create User</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        function createUser() {
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const role = document.getElementById('role').value;
+            const status = document.getElementById('status').checked ? 'ACTIVE' : 'INACTIVE';
+
+            const newUser = { username, email, role, status };
+
+            let users = JSON.parse(localStorage.getItem('users')) || [];
+            users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(users));
+
+            alert('User created');
+            window.location.href = 'manage_user.html';
+        }
+    </script>
+</body>
+</html>

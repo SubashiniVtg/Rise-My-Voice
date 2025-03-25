@@ -1,144 +1,404 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile Page</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <link href="{{ url_for('static', filename='css/profile.css') }}" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4285f4;
+            --secondary-color: #34a853;
+            --accent-color: #ea4335;
+            --background-color: #f5f7fa;
+            --text-color: #333;
+            --border-color: #e1e4e8;
+            --hover-color: #2b68cc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: var(--background-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            padding-top: 60px;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-links a i {
+            font-size: 1.2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .profile-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .profile-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .profile-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-info h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-info p {
+            color: #666;
+        }
+
+        .document-info {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 5px;
+            border: 1px solid var(--border-color);
+        }
+
+        .document-info p {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .document-info p:last-child {
+            margin-bottom: 0;
+        }
+
+        .document-info i {
+            color: var(--primary-color);
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+        }
+
+        .form-section h2 {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .btn {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .btn:hover {
+            background: var(--hover-color);
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert-info {
+            background: #cce5ff;
+            color: #004085;
+            border: 1px solid #b8daff;
+        }
+
+        .file-upload {
+            position: relative;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .file-upload input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+        }
+
+        .file-upload label {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: var(--secondary-color);
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .file-info {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .logout-btn {
+            color: var(--accent-color) !important;
+        }
+
+        .btn-view-doc {
+            background: var(--secondary-color);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+        }
+
+        .btn-view-doc:hover {
+            background: #2d8f47;
+        }
+
+        .btn-view-doc i {
+            font-size: 1rem;
+        }
+    </style>
 </head>
-
 <body>
-    <div class="profile-container">
-        <!-- Left Section - Profile Details -->
-        <div class="profile-details">
-            <div class="profile-header">
-                <div class="profile-icon" onclick="triggerFileInput()">
-                    <img id="profileImage"
-                        src="{{ url_for('static', filename=user.profile_image) if user.profile_image else url_for('static', filename='img/default_profile.png') }}"
-                        alt="Profile Image">
-                    <input type="file" id="fileInput" accept="image/*" style="display:none"
-                        onchange="updateProfileImage(event)">
-                </div>
-                <div class="profile-name">
-                    <span>{{ user.name }}</span>
-                </div>
-            </div>
-
-            <form method="POST" action="{{ url_for('profile') }}">
-                <div class="profile-item">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <label for="name">Full Name</label>
-                    <input type="text" id="name" name="name" value="{{ user.name }}">
-                </div>
-                <div class="profile-item">
-                    <label for="phone">Phone Number</label>
-                    <input type="text" id="phone" name="phone" value="{{ user.phone }}">
-                </div>
-                <div class="profile-item">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" value="{{ user.email }}" readonly>
-                </div>
-                <div class="profile-item">
-                    <label for="gender">Gender</label>
-                    <select id="gender" name="gender">
-                        <option value="Male" {{ 'selected' if user.gender=='Male' else '' }}>Male</option>
-                        <option value="Female" {{ 'selected' if user.gender=='Female' else '' }}>Female</option>
-                        <option value="Other" {{ 'selected' if user.gender=='Other' else '' }}>Other</option>
-                    </select>
-                </div>
-                <div class="profile-item">
-                    <label for="dob">Date of Birth</label>
-                    <input type="date" id="dob" name="dob" value="{{ user.dob }}">
-                </div>
-                <div class="profile-item">
-                    <label for="address">Address</label>
-                    <input type="text" id="address" name="address" value="{{ user.address }}">
-                </div>
-                <div class="save-container">
-                    <button type="submit">Save Changes</button>
-                </div>
-            </form>
+    <nav class="navbar">
+        <a href="{{ url_for('home') }}" class="navbar-brand">Raise My Voice</a>
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}"><i class="fas fa-home"></i> Home</a>
+            <a href="{{ url_for('track_my_complaints') }}"><i class="fas fa-list"></i> My Complaints</a>
+            <a href="{{ url_for('profile') }}"><i class="fas fa-user"></i> Profile</a>
+            <a href="{{ url_for('logout') }}" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
         </div>
+    </nav>
 
-        <!-- Right Section - Navigation -->
-        <div class="profile-nav">
-            <div class="nav-header">
-                <h2>Quick Access</h2>
-            </div>
-            <div class="nav-links">
-                <a href="{{ url_for('home') }}" class="nav-item">
-                    <i class="fas fa-home"></i>
-                    <span>Dashboard</span>
-                </a>
-                <a href="{{ url_for('contact') }}" class="nav-item">
-                    <i class="fas fa-envelope"></i>
-                    <span>Messages</span>
-                </a>
-                <a href="{{ url_for('about') }}" class="nav-item">
-                    <i class="fas fa-info-circle"></i>
-                    <span>About Us</span>
-                </a>
-                <a href="{{ url_for('laws') }}" class="nav-item">
-                    <i class="fas fa-gavel"></i>
-                    <span>Legal Resources</span>
-                </a>
-                <a href="{{ url_for('track_my_complaints') }}" class="nav-item">
-                    <i class="fas fa-search"></i>
-                    <span>Track Status</span>
-                </a>
-                <a href="{{ url_for('logout') }}" class="nav-item logout">
-                    <i class="fas fa-sign-out-alt"></i>
-                    <span>Sign Out</span>
-                </a>
-            </div>
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="profile-container">
+            <form action="{{ url_for('profile') }}" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                
+                <div class="profile-header">
+                    <div class="profile-image">
+                        <img src="{{ url_for('static', filename=profile_image) }}" alt="Profile Picture">
+                        <div class="file-upload">
+                            <input type="file" name="profile-document" id="profile-document" accept="image/*,.pdf">
+                            <label for="profile-document">Change Picture</label>
+                        </div>
+                    </div>
+                    <div class="profile-info">
+                        <h1>{{ user.firstName }} {{ user.lastName }}</h1>
+                        <p>{{ user.email }}</p>
+                        {% if user.created_at %}
+                            <p>Member since {{ user.created_at }}</p>
+                        {% endif %}
+                        {% if user.profile_document %}
+                            <div class="document-info">
+                                <p><i class="fas fa-file-alt"></i> Current Document: {{ user.profile_document }}</p>
+                                {% if user.profile_document_size %}
+                                    <p><i class="fas fa-hdd"></i> Size: {{ user.profile_document_size }}</p>
+                                {% endif %}
+                                <a href="{{ url_for('view_document', filename=user.profile_document) }}" class="btn btn-view-doc" target="_blank">
+                                    <i class="fas fa-eye"></i> View Document
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>Personal Information</h2>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="firstName">First Name</label>
+                            <input type="text" id="firstName" name="firstName" value="{{ user.firstName }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Last Name</label>
+                            <input type="text" id="lastName" name="lastName" value="{{ user.lastName }}" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone</label>
+                        <input type="tel" id="phone" name="phone" value="{{ user.phone }}" required>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>Address Information</h2>
+                    <div class="form-group">
+                        <label for="address">Address</label>
+                        <textarea id="address" name="address" rows="3" required>{{ user.address }}</textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="city">City</label>
+                            <input type="text" id="city" name="city" value="{{ user.city }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="state">State</label>
+                            <input type="text" id="state" name="state" value="{{ user.state }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="pincode">Pincode</label>
+                            <input type="text" id="pincode" name="pincode" value="{{ user.pincode }}" required pattern="[0-9]{6}" title="Please enter a valid 6-digit pincode">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>Organization Details</h2>
+                    <div class="form-group">
+                        <label for="organization">Organization</label>
+                        <input type="text" id="organization" name="organization" value="{{ user.organization }}" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn">Save Changes</button>
+            </form>
         </div>
     </div>
 
     <script>
-        // Handle profile image upload
-        function triggerFileInput() {
-            document.getElementById('fileInput').click();
-        }
-
-        function updateProfileImage(event) {
-            var file = event.target.files[0];
+        // Preview image before upload
+        document.getElementById('profile-document').addEventListener('change', function(e) {
+            const file = e.target.files[0];
             if (file) {
-                // Show preview immediately
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    document.getElementById('profileImage').src = e.target.result;
-                };
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.querySelector('.profile-image img').src = e.target.result;
+                }
                 reader.readAsDataURL(file);
-
-                // Send image to server
-                var formData = new FormData();
-                formData.append('profile_image', file);
-                formData.append('csrf_token', '{{ csrf_token() }}');
-
-                fetch('{{ url_for("upload_profile_image") }}', {
-                    method: 'POST',
-                    body: formData,
-                    credentials: 'same-origin'
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            console.log('Profile image updated successfully');
-                        } else {
-                            console.error('Failed to update profile image:', data.message);
-                            alert('Failed to update profile image: ' + data.message);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('An error occurred while uploading the image');
-                    });
             }
-        }
+        });
     </script>
-
 </body>
-
 </html>

@@ -180,13 +180,22 @@
                 </div>
                 <hr>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" onclick="handleOk()">Proceed</button>
+                    <button type="button" class="btn btn-secondary" onclick="handleOk()">Myself</button>
+                    <button type="button" class="btn btn-secondary" onclick="handleOk1()">On behalf of someone</button>
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancel</button>
                 </div>
             </div>
         </div>
     </div>
     <!-- Modal End -->
+
+    <!-- Hidden Complaint Form -->
+    <form id="complaintForm" action="{{ url_for('register_complaint') }}" method="POST" style="display: none;">
+        <input type="hidden" id="name" name="name">
+        <input type="hidden" id="email" name="email">
+        <input type="hidden" id="phone" name="phone">
+        <input type="hidden" id="address" name="address">
+    </form>
 
     <!-- Service Start -->
     <div class="container-xxl py-5">
@@ -307,15 +316,49 @@
     <!-- Template Javascript -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     <script>
-        function handleOk() {
-    // Close the modal manually
-    var modal = bootstrap.Modal.getInstance(document.getElementById('registerModal')); 
-    modal.hide();
-    
-    // Redirect to complaintlogin.html
-    window.location.href = "{{ url_for('complaint_login') }}"; // This will use the Flask route
-}
+        async function handleOk() {
+            try {
+                // Fetch user data from session
+                const response = await fetch('/profile', {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch user data');
+                }
+                
+                const userData = await response.json();
+                
+                // Auto-fill the complaint form with user data
+                document.getElementById('name').value = userData.name || '';
+                document.getElementById('email').value = userData.email || '';
+                document.getElementById('phone').value = userData.phone || '';
+                document.getElementById('address').value = userData.address || '';
+                
+                // Close the modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('registerModal'));
+                modal.hide();
+                
+                // Navigate to complaint registration page with pre-filled data
+                window.location.href = `/register_complaint?name=${encodeURIComponent(userData.name || '')}&email=${encodeURIComponent(userData.email || '')}&phone=${encodeURIComponent(userData.phone || '')}&address=${encodeURIComponent(userData.address || '')}`;
+                
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while processing your request. Please try again.');
+            }
+        }
 
+        function handleOk1() {
+            // Close the modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('registerModal'));
+            modal.hide();
+            
+            // Navigate to complaint submission page
+            window.location.href = '/complaint_submission';
+        }
     </script>
 </body>
 
