@@ -1,34 +1,56 @@
-import os
-from flask import Flask, render_template, request, jsonify, send_from_directory, abort, redirect, flash, url_for, session, send_file
-from werkzeug.utils import secure_filename, safe_join
+from flask import Flask, render_template, request, redirect, url_for, session, flash, send_file, jsonify, Response, send_from_directory, abort
 from pymongo import MongoClient
-from flask_cors import CORS
-import random
-import re
-import smtplib
-from flask_pymongo import PyMongo
-from flask_session import Session
+from datetime import datetime, timedelta
+import os
+import uuid
+import json
+import calendar
+from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename, safe_join
+from bson import ObjectId
+from functools import wraps
+from PIL import Image
+import io
+import base64
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from datetime import datetime, timedelta
+import smtplib
+import random
+import string
+import math
+import requests
+from google.oauth2 import id_token
+from google.auth.transport import requests as google_requests
+from google_auth_oauthlib.flow import Flow
+from flask_pymongo import PyMongo
+from flask_session import Session
+from flask_cors import CORS
+from flask_wtf.csrf import CSRFProtect, CSRFError
+from flask_mail import Mail, Message
+import humanize
 import pytz
 import time
 from pymongo import WriteConcern
-from bson.objectid import ObjectId
-import os.path
-import humanize 
-from flask_wtf.csrf import CSRFProtect, CSRFError
-from flask_mail import Mail, Message
-from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import Flow
-from google.oauth2 import id_token
-from google.auth.transport import requests
-import json
-import calendar
 
+# Ensure JSON response for API routes
+def json_response(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        try:
+            response = f(*args, **kwargs)
+            if isinstance(response, tuple):
+                data, status_code = response
+                return Response(json.dumps(data), status=status_code, mimetype='application/json')
+            return Response(json.dumps(response), mimetype='application/json')
+        except Exception as e:
+            error_response = {'success': False, 'message': str(e)}
+            return Response(json.dumps(error_response), status=500, mimetype='application/json')
+    return decorated_function
+
+# Initialize Flask app
 app = Flask(__name__, 
             template_folder=os.path.join(os.getcwd(), 'templates'),  # Path to templates folder
-            static_folder=os.path.join(os.getcwd(), 'static'))  # Path to static folder
+            static_folder=os.path.join(os.getcwd(), 'static'))      # Path to static folder
 
 # Basic configuration
 app.secret_key = 'SHini260426'
@@ -160,7 +182,7 @@ def callback():
         
         id_info = id_token.verify_oauth2_token(
             credentials.id_token,
-            token_request,
+            requests.Request(),
             flow.client_config['client_id']
         )
 
@@ -299,9 +321,10 @@ def verify_and_signup():
         # Get form data
         email = request.form.get('email')
         otp = request.form.get('otp')
+        password = request.form.get('password')
         
-        if not email or not otp:
-            return jsonify({'error': 'Email and OTP are required'}), 400
+        if not email or not otp or not password:
+            return jsonify({'error': 'Email, OTP and password are required'}), 400
 
         # Verify OTP
         stored_otp = otp_collection.find_one({
@@ -320,7 +343,7 @@ def verify_and_signup():
         if datetime.now() - otp_time > timedelta(minutes=5):
             return jsonify({'error': 'OTP has expired'}), 400
 
-        # Create new user
+        # Create new user with hashed password
         user_data = {
             'email': email,
             'firstName': request.form.get('firstName'),
@@ -333,6 +356,7 @@ def verify_and_signup():
             'state': request.form.get('state'),
             'pincode': request.form.get('pincode'),
             'organization': request.form.get('organization'),
+            'password': generate_password_hash(password),  # Hash the password
             'created_at': datetime.now(pytz.timezone("Asia/Kolkata")).strftime("%Y-%m-%d %H:%M:%S")
         }
 
@@ -391,7 +415,7 @@ def verify_otp():
                 user_data = {
                     'email': email,
                     'name': data.get('name'),
-                    'password': data.get('password'),  # Remember to hash this in production
+                    'password': generate_password_hash(data.get('password')),  # Hash the password
                     'dob': data.get('dob'),
                     'gender': data.get('gender'),
                     'city': data.get('city'),
@@ -432,11 +456,19 @@ def verify_otp():
 ########################### Login functionalities ############################################################
 @app.route('/')
 def root():
+    # If user is already logged in, redirect to home
+    if 'user_id' in session:
+        return redirect(url_for('home'))
+    # Otherwise, show the index page
     return render_template('index.html')
 
 @app.route('/index')
 def index():
-    return redirect(url_for('login'))
+    # If user is already logged in, redirect to home
+    if 'user_id' in session:
+        return redirect(url_for('home'))
+    # Otherwise, show the index page
+    return render_template('index.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -463,12 +495,13 @@ def login():
         
         email = data.get('email')
         password = data.get('password')
+        otp = data.get('otp')
         
-        print(f"Email: {email}, Password length: {len(password) if password else 0}")  # Debug log
+        print(f"Email: {email}, Password length: {len(password) if password else 0}, OTP: {otp}")  # Debug log
         
-        if not all([email, password]):
-            print("Missing email or password")  # Debug log
-            return jsonify({'success': False, 'message': 'Please enter both email and password'}), 400
+        if not all([email, password, otp]):
+            print("Missing email, password or OTP")  # Debug log
+            return jsonify({'success': False, 'message': 'Please enter email, password and OTP'}), 400
             
         # Verify user exists
         user = user_collection.find_one({'email': email})
@@ -478,10 +511,38 @@ def login():
             print(f"No user found with email: {email}")  # Debug log
             return jsonify({'success': False, 'message': 'Invalid email or password'}), 401
             
-        # Verify password (in production, use proper password hashing)
+        # Verify password
         if user['password'] != password:
             print("Password mismatch")  # Debug log
             return jsonify({'success': False, 'message': 'Invalid email or password'}), 401
+        
+        # Verify OTP
+        stored_otp = otp_collection.find_one({
+            'email': email,
+            'purpose': 'login',
+            'is_used': False,
+            'expiry': {'$gt': datetime.now(pytz.timezone("Asia/Kolkata"))}
+        })
+        
+        print(f"Found OTP record: {stored_otp is not None}")  # Debug log
+        if stored_otp:
+            print(f"Stored OTP expiry: {stored_otp.get('expiry')}")  # Debug log
+            print(f"Current time: {datetime.now(pytz.timezone('Asia/Kolkata'))}")  # Debug log
+            print(f"OTP match: {stored_otp.get('otp') == otp}")  # Debug log
+        
+        if not stored_otp:
+            print("No valid OTP found")  # Debug log
+            return jsonify({'success': False, 'message': 'No valid OTP found. Please request a new OTP.'}), 401
+            
+        if stored_otp['otp'] != otp:
+            print("OTP mismatch")  # Debug log
+            return jsonify({'success': False, 'message': 'Invalid OTP. Please try again.'}), 401
+            
+        # Mark OTP as used
+        otp_collection.update_one(
+            {'_id': stored_otp['_id']},
+            {'$set': {'is_used': True}}
+        )
             
         # If everything is valid, create session
         session['user_id'] = str(user['_id'])
@@ -551,7 +612,9 @@ def send_otp_login():
                 '$set': {
                     'otp': otp,
                     'created_at': datetime.now(),
-                    'purpose': 'login'
+                    'purpose': 'login',
+                    'expiry': datetime.now(pytz.timezone("Asia/Kolkata")) + timedelta(minutes=5),
+                    'is_used': False
                 }
             },
             upsert=True
@@ -607,7 +670,9 @@ def send_otp_complaint():
                 '$set': {
                     'otp': otp,
                     'created_at': datetime.now(),
-                    'purpose': 'complaint'
+                    'purpose': 'complaint',
+                    'expiry': datetime.now(pytz.timezone("Asia/Kolkata")) + timedelta(minutes=5),
+                    'is_used': False
                 }
             },
             upsert=True
@@ -831,7 +896,7 @@ def profile():
             session.clear()
             flash('User not found', 'error')
             return redirect(url_for('login'))
-
+        
         if request.method == 'POST':
             # Handle form submission
             data = request.form.to_dict()
@@ -853,6 +918,7 @@ def profile():
                             file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                             file.save(file_path)
                             update_data['profile_document'] = filename
+                            update_data['profile_image'] = os.path.join('uploads', filename)
                             update_data['profile_document_size'] = get_file_size_str(file_path)
                         except Exception as e:
                             flash(f'Error uploading file: {str(e)}', 'error')
@@ -987,7 +1053,7 @@ def nodal_registration():
                 'organization': request.form.get('organization'),
                 'designation': request.form.get('designation'),
                 'phone': request.form.get('phone'),
-                'password': request.form.get('password'),  # In production, hash this password
+                'password': generate_password_hash(request.form.get('password')),  # Hash the password
                 'role': 'nodal_officer',
                 'status': 'pending',  # Requires admin approval
                 'created_at': datetime.now(IST).strftime("%Y-%m-%d %H:%M:%S"),
@@ -1761,7 +1827,7 @@ def calculate_analytics_data():
             'status': {'$regex': '^resolved$', '$options': 'i'}
         }) or 0
         total_pending = complaint_collection.count_documents({
-            'status': {'$regex': '^submitted$', '$options': 'i'}
+            'status': {'$not': {'$regex': '^resolved$', '$options': 'i'}}
         }) or 0
         
         # Get monthly trends data
@@ -2301,6 +2367,143 @@ def view_document(filename):
     except Exception as e:
         flash(f'Error viewing document: {str(e)}', 'error')
         return redirect(url_for('profile'))
+
+@app.route('/get_user_details')
+def get_user_details():
+    try:
+        if 'user_id' not in session:
+            return jsonify({'success': False, 'message': 'User not logged in'}), 401
+            
+        user = user_collection.find_one({'_id': ObjectId(session['user_id'])})
+        if not user:
+            return jsonify({'success': False, 'message': 'User not found'}), 404
+            
+        return jsonify({
+            'success': True,
+            'name': user.get('name', ''),
+            'email': user.get('email', ''),
+            'phone': user.get('phone', ''),
+            'address': user.get('address', '')
+        })
+        
+    except Exception as e:
+        print(f"Error fetching user details: {str(e)}")
+        return jsonify({'success': False, 'message': 'Error fetching user details'}), 500
+
+@app.route('/complaint_details_form')
+def complaint_details_form():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+        
+    # Get query parameters
+    name = request.args.get('name', '')
+    email = request.args.get('email', '')
+    phone = request.args.get('phone', '')
+    address = request.args.get('address', '')
+    
+    return render_template('complaint/complaintdetails.html', 
+                         name=name,
+                         email=email,
+                         phone=phone,
+                         address=address)
+
+@app.route('/api/submit_complaint', methods=['POST'])
+@json_response
+def api_submit_complaint():
+    print("Received request:", request.method)
+    print("Content-Type:", request.headers.get('Content-Type'))
+    print("Is JSON?", request.is_json)
+    
+    # Check if user is logged in
+    if 'user_id' not in session:
+        return {'success': False, 'message': 'Please login first'}, 401
+    
+    # Check if request is JSON
+    if not request.is_json:
+        return {'success': False, 'message': 'Invalid content type. Expected JSON'}, 400
+        
+    # Get and validate data
+    data = request.get_json()
+    print("Received data:", data)
+    
+    if not data:
+        return {'success': False, 'message': 'No data provided'}, 400
+        
+    # Validate required fields
+    required_fields = ['name', 'email', 'phone', 'address', 'gender', 'age']
+    missing_fields = [field for field in required_fields if not data.get(field)]
+    if missing_fields:
+        return {
+            'success': False, 
+            'message': f'Missing required fields: {", ".join(missing_fields)}'
+        }, 400
+        
+    try:
+        # Add metadata
+        complaint_data = {
+            'user_id': session['user_id'],
+            'complaint_id': str(uuid.uuid4()),
+            'status': "Registered",
+            'registered_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            **data  # Include all form data
+        }
+        
+        print("Saving complaint:", complaint_data)
+        
+        # Store in database
+        result = complaint_collection.insert_one(complaint_data)
+        
+        if not result.inserted_id:
+            return {'success': False, 'message': 'Failed to save complaint'}, 500
+            
+        response_data = {
+            'success': True,
+            'message': 'Complaint submitted successfully',
+            'complaint_id': complaint_data['complaint_id']
+        }
+        print("Sending response:", response_data)
+        return response_data
+        
+    except Exception as e:
+        print(f"Error submitting complaint: {str(e)}")
+        return {'success': False, 'message': str(e)}, 500
+
+@app.route('/complaint_submit_success')
+def complaint_submit_success():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    try:
+        # Get all complaints for the current user
+        user_complaints = list(complaint_collection.find({'user_id': session['user_id']}))
+        
+        # Convert ObjectId to string for JSON serialization
+        for complaint in user_complaints:
+            complaint['_id'] = str(complaint['_id'])
+            
+        return render_template('complaint/submission.html', complaints=user_complaints)
+        
+    except Exception as e:
+        print(f"Error fetching complaints: {str(e)}")
+        return redirect(url_for('home'))
+
+@app.route('/my_complaints')
+def my_complaints():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+        
+    try:
+        # Get all complaints for the current user
+        user_complaints = list(complaint_collection.find({'user_id': session['user_id']}))
+        
+        # Convert ObjectId to string for JSON serialization
+        for complaint in user_complaints:
+            complaint['_id'] = str(complaint['_id'])
+            
+        return render_template('my_complaints.html', complaints=user_complaints)
+        
+    except Exception as e:
+        print(f"Error fetching complaints: {str(e)}")
+        return redirect(url_for('home'))
 
 if __name__ == '__main__':
     app.run(debug=True)

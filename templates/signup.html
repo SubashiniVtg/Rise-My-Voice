@@ -460,6 +460,28 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="password">Password <span>*</span></label>
+                        <div class="password-container">
+                            <input type="password" id="password" name="password" placeholder="Enter password" required />
+                            <span class="toggle-password" onclick="togglePasswordVisibility('password', this)">
+                                <i class="fas fa-eye-slash"></i>
+                            </span>
+                        </div>
+                        <div class="error-message" id="passwordError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password <span>*</span></label>
+                        <div class="password-container">
+                            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm password" required />
+                            <span class="toggle-password" onclick="togglePasswordVisibility('confirmPassword', this)">
+                                <i class="fas fa-eye-slash"></i>
+                            </span>
+                        </div>
+                        <div class="error-message" id="confirmPasswordError"></div>
+                    </div>
+
+                    <div class="form-group">
                         <label for="city">City <span>*</span></label>
                         <select id="city" name="city" required>
                             <option value="">--Select City--</option>
@@ -615,27 +637,7 @@
                 <div class="form-section">
                     <div class="form-section-title">Security Information</div>
                     <div class="form-group">
-                        <label for="password">Password <span>*</span></label>
-                        <div class="password-container">
-                            <input id="password" placeholder="Password must contain 10-20" name="password" required />
-                            <span class="toggle-password" onclick="togglePasswordVisibility('password', this)">
-                                <i class="fas fa-eye-slash"></i>
-                            </span>
-                        </div>
-                        <div class="error-message" id="passwordError"></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="retypePassword">Retype Password <span>*</span></label>
-                        <div class="retypepassword-container">
-                            <input id="retypePassword" required />
-                            <span class="toggle-password" onclick="togglePasswordVisibility('retypePassword', this)">
-                                <i class="fas fa-eye-slash"></i>
-                            </span>
-                        </div>
-                        <div class="error-message" id="retypePasswordError"></div>
-                    </div>
-
-                    <div class="form-group captcha">
+                        <label for="captcha">CAPTCHA <span>*</span></label>
                         <span class="captcha-code" id="captchaCode"></span>
                         <input type="text" id="captchaInput" placeholder="Enter CAPTCHA" required />
                         <span class="captcha-refresh" id="refreshCaptcha">&#x21bb;</span>
@@ -835,8 +837,10 @@
             const otp = document.getElementById('otp').value;
             const captchaInput = document.getElementById('captchaInput').value;
             const captchaCode = document.getElementById('captchaCode').textContent;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
 
-            if (!email || !otp) {
+            if (!email || !otp || !password || !confirmPassword) {
                 alert('Please fill in all required fields and verify your email with OTP.');
                 return;
             }
@@ -844,6 +848,11 @@
             if (captchaInput !== captchaCode) {
                 alert('Invalid CAPTCHA. Please try again.');
                 loadCaptcha();
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                alert('Passwords do not match. Please try again.');
                 return;
             }
 
@@ -862,7 +871,7 @@
                 const data = await response.json();
                 if (response.ok) {
                     alert('Registration successful!');
-                    window.location.href = '/home';
+                    window.location.href = '{{ url_for('home') }}';
                 } else {
                     alert(data.error || 'An error occurred');
                     if (data.error && data.error.includes('OTP')) {

@@ -308,7 +308,7 @@
                 
                 <div class="profile-header">
                     <div class="profile-image">
-                        <img src="{{ url_for('static', filename=profile_image) }}" alt="Profile Picture">
+                        <img src="{{ url_for('static', filename=user.get('profile_image', 'img/default_profile.png')) }}" alt="Profile Picture">
                         <div class="file-upload">
                             <input type="file" name="profile-document" id="profile-document" accept="image/*,.pdf">
                             <label for="profile-document">Change Picture</label>

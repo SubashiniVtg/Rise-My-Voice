@@ -4,346 +4,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Complaints</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="shortcut icon" type="x-icon" href="{{ url_for('static', filename='img/icon.jpg') }}">
+    <title>My Complaints - Raise-My-Voice</title>
     <style>
         body {
-            font-family: 'Poppins', Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: Arial, sans-serif;
+            background-color: #181d38;
+            color: #f8f9fa;
+            min-height: 100vh;
             margin: 0;
             padding: 20px;
-            min-height: 100vh;
         }
 
         .container {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 30px;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
-        }
-
-        h1 {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+            padding: 20px;
             color: #333;
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 2.5em;
-            position: relative;
-            padding-bottom: 15px;
         }
 
-        h1::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 4px;
-            background: linear-gradient(to right, #667eea, #764ba2);
-            border-radius: 2px;
-        }
-
-        .complaints-list {
-            display: grid;
-            gap: 25px;
+        .header {
+            background-color: #db5299;
+            padding: 20px;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #ffffff;
+            margin: -20px -20px 20px;
         }
 
         .complaint-card {
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            cursor: pointer;
-            border: 1px solid #eee;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .complaint-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 5px;
-            height: 100%;
-            background: #db5299;
-            border-radius: 3px 0 0 3px;
-        }
-
-        .complaint-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .complaint-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #eee;
+            margin-bottom: 10px;
         }
 
         .complaint-id {
             font-size: 0.9em;
             color: #666;
-            font-weight: 500;
         }
 
-        .status-badge {
-            padding: 8px 20px;
-            border-radius: 25px;
+        .status {
+            padding: 4px 8px;
+            border-radius: 4px;
             font-size: 0.9em;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .status-registered {
-            background-color: #e3f2fd;
-            color: #1976d2;
-        }
-
-        .status-submitted {
-            background-color: #fff3e0;
-            color: #f57c00;
-        }
-
-        .status-resolved {
-            background-color: #e8f5e9;
-            color: #388e3c;
+            background-color: #db5299;
+            color: white;
         }
 
         .complaint-details {
-            padding: 10px 0;
-        }
-
-        .complaint-details h3 {
-            color: #333;
-            margin: 0 0 15px 0;
-            font-size: 1.3em;
+            margin-top: 10px;
         }
 
         .complaint-details p {
-            color: #666;
-            line-height: 1.6;
-            margin: 0 0 15px 0;
+            margin: 5px 0;
         }
 
-        .complaint-date {
-            font-size: 0.9em;
-            color: #888;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .complaint-date i {
+        .home-btn {
+            background-color: #ffffff;
             color: #db5299;
-        }
-
-        .pending-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 15px;
-            background: #fff3e0;
-            border-radius: 10px;
-            color: #f57c00;
-        }
-
-        .pending-info i {
-            font-size: 1.2em;
-        }
-
-        .back-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 30px;
-            padding: 12px 25px;
-            background: linear-gradient(45deg, #db5299, #cd3c7b);
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            font-weight: 500;
-            box-shadow: 0 4px 15px rgba(219, 82, 153, 0.3);
-        }
-
-        .back-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(219, 82, 153, 0.4);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
         }
 
         .no-complaints {
             text-align: center;
-            padding: 60px 20px;
+            padding: 40px;
             color: #666;
-        }
-
-        .no-complaints i {
-            font-size: 64px;
-            color: #db5299;
-            margin-bottom: 20px;
-        }
-
-        .no-complaints p {
-            font-size: 1.2em;
-            margin: 15px 0;
-        }
-
-        .no-complaints .sub-text {
-            font-size: 0.9em;
-            color: #888;
-        }
-
-        .resolved-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 15px;
-            background: #e8f5e9;
-            border-radius: 10px;
-            color: #388e3c;
-        }
-
-        .resolved-info i {
-            font-size: 1.2em;
-        }
-
-        .complaint-text {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 10px 0;
-            color: #495057;
-            line-height: 1.6;
-        }
-
-        .complaint-dates {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-top: 15px;
-        }
-
-        .resolution-date {
-            margin-top: 8px;
-            color: #28a745;
-            font-size: 0.9em;
-        }
-
-        .status-registered {
-            background-color: #e3f2fd;
-            color: #1976d2;
-        }
-
-        .status-submitted {
-            background-color: #fff3e0;
-            color: #f57c00;
-        }
-
-        .status-resolved {
-            background-color: #e8f5e9;
-            color: #388e3c;
-        }
-
-        .complaint-date i {
-            color: #db5299;
-            width: 20px;
-            text-align: center;
-            margin-right: 8px;
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <h1>My Complaints</h1>
+        <div class="header">
+            <h1>My Complaints</h1>
+            <button class="home-btn" onclick="window.location.href='{{ url_for('home') }}';">Home</button>
+        </div>
 
-        <div class="complaints-list">
-            {% if complaints %}
+        {% if complaints %}
             {% for complaint in complaints %}
-            <div class="complaint-card" onclick="viewComplaintDetails('{{ complaint._id }}');">
+            <div class="complaint-card">
                 <div class="complaint-header">
-                    <div class="complaint-id">
-                        <i class="fas fa-hashtag"></i> {{ complaint._id }}
-                    </div>
-                    <div class="status-badge status-{{ complaint.status.lower() }}">
-                        <i class="fas fa-circle"></i> {{ complaint.status }}
-                    </div>
+                    <div class="complaint-id">ID: {{ complaint._id }}</div>
+                    <div class="status">{{ complaint.status }}</div>
                 </div>
                 <div class="complaint-details">
-                    <h3>
-                        <i class="fas fa-file-alt"></i>
-                        {% if complaint.submission %}
-                        {{ complaint.submission.complainant_name }}
-                        {% else %}
-                        {{ complaint.name }}
-                        {% endif %}
-                    </h3>
-
-                    {% if complaint.status.lower() == 'resolved' %}
-                    <div class="resolved-info">
-                        <i class="fas fa-check-circle"></i>
-                        <span>Your complaint has been resolved</span>
-                        {% if complaint.resolved_at %}
-                        <div class="resolution-date">
-                            <i class="far fa-calendar-check"></i>
-                            Resolved on: {{ complaint.resolved_at }}
-                        </div>
-                        {% endif %}
-                    </div>
-                    {% elif complaint.submission and complaint.submission.complaint_text %}
-                    <div class="complaint-text">
-                        <p>{{ complaint.submission.complaint_text[:200] }}...</p>
-                    </div>
+                    {% if complaint.submission %}
+                    <p><strong>Name:</strong> {{ complaint.submission.complainant_name }}</p>
                     {% else %}
-                    <div class="pending-info">
-                        <i class="fas fa-clock"></i>
-                        <span>Complaint registration in progress...</span>
-                    </div>
+                    <p><strong>Name:</strong> {{ complaint.name }}</p>
                     {% endif %}
-
-                    <div class="complaint-dates">
-                        <div class="complaint-date">
-                            <i class="far fa-calendar-alt"></i>
-                            <span>Registered: {{ complaint.registered_at }}</span>
-                        </div>
-                        {% if complaint.submission and complaint.submission.submitted_at %}
-                        <div class="complaint-date">
-                            <i class="far fa-calendar-plus"></i>
-                            <span>Submitted: {{ complaint.submission.submitted_at }}</span>
-                        </div>
-                        {% endif %}
-                    </div>
+                    <p><strong>Registered:</strong> {{ complaint.registered_at }}</p>
+                    {% if complaint.submission and complaint.submission.submitted_at %}
+                    <p><strong>Submitted:</strong> {{ complaint.submission.submitted_at }}</p>
+                    {% endif %}
+                    {% if complaint.status.lower() == 'resolved' %}
+                    <p><strong>Resolved:</strong> {{ complaint.resolved_at }}</p>
+                    {% endif %}
                 </div>
             </div>
             {% endfor %}
-            {% else %}
+        {% else %}
             <div class="no-complaints">
-                <i class="fas fa-folder-open"></i>
-                <p>No Complaints Found</p>
-                <p class="sub-text">You haven't submitted any complaints yet.</p>
+                <h2>No complaints found</h2>
+                <p>You haven't submitted any complaints yet.</p>
             </div>
-            {% endif %}
-        </div>
-
-        <a href="{{ url_for('profile') }}" class="back-btn">
-            <i class="fas fa-arrow-left"></i>
-            <span>Back to Profile</span>
-        </a>
+        {% endif %}
     </div>
-
-    <script>
-        function viewComplaintDetails(complaintId) {
-            window.location.href = "{{ url_for('view_complaint', complaint_id='') }}" + complaintId;
-        }
-    </script>
 </body>
 
 </html>

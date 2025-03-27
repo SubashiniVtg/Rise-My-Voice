@@ -363,20 +363,21 @@
         });
 
         const data = await response.json();
+        console.log("Server response:", data); // Debug log
 
         if (!response.ok) {
-          throw new Error(data.error || 'Login failed');
+          throw new Error(data.message || 'Login failed');
         }
 
         if (data.success) {
-          window.location.href = '/home';  // Redirect to home page on success
+          window.location.href = data.redirect || '/home';  // Use provided redirect URL
         } else {
-          throw new Error(data.error || 'Login failed');
+          throw new Error(data.message || 'Login failed');
         }
 
       } catch (error) {
         console.error('Error:', error);
-        alert(error.message);
+        alert(error.message || 'Login failed. Please try again.');
       }
     });
 

@@ -316,39 +316,22 @@
     <!-- Template Javascript -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     <script>
-        async function handleOk() {
-            try {
-                // Fetch user data from session
-                const response = await fetch('/profile', {
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'application/json'
+        function handleOk() {
+            // Get user details from session
+            fetch('/get_user_details')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Redirect to complaint details form page with user data
+                        window.location.href = `/complaint_details_form?name=${encodeURIComponent(data.name)}&email=${encodeURIComponent(data.email)}&phone=${encodeURIComponent(data.phone)}&address=${encodeURIComponent(data.address)}`;
+                    } else {
+                        alert('Error fetching user details. Please try again.');
                     }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error fetching user details. Please try again.');
                 });
-                
-                if (!response.ok) {
-                    throw new Error('Failed to fetch user data');
-                }
-                
-                const userData = await response.json();
-                
-                // Auto-fill the complaint form with user data
-                document.getElementById('name').value = userData.name || '';
-                document.getElementById('email').value = userData.email || '';
-                document.getElementById('phone').value = userData.phone || '';
-                document.getElementById('address').value = userData.address || '';
-                
-                // Close the modal
-                const modal = bootstrap.Modal.getInstance(document.getElementById('registerModal'));
-                modal.hide();
-                
-                // Navigate to complaint registration page with pre-filled data
-                window.location.href = `/register_complaint?name=${encodeURIComponent(userData.name || '')}&email=${encodeURIComponent(userData.email || '')}&phone=${encodeURIComponent(userData.phone || '')}&address=${encodeURIComponent(userData.address || '')}`;
-                
-            } catch (error) {
-                console.error('Error:', error);
-                alert('An error occurred while processing your request. Please try again.');
-            }
         }
 
         function handleOk1() {

@@ -186,9 +186,9 @@
                  Are you certain you want to submit your complaint?
             </div>
             <div class="modal-footer">
-                <!-- Removed data-bs-dismiss here and added onclick to handle redirection -->
-                <button type="button" class="btn btn-secondary" onclick="handleOk()">Sign Up</button>
-                <button type="button" class="btn btn-secondary" onclick="handleOk1()">Login</button>  
+                <!-- Fixed onclick handlers to properly handle navigation -->
+                <button type="button" class="btn btn-secondary" onclick="event.preventDefault(); window.location.href='{{ url_for('signup') }}';">Sign Up</button>
+                <button type="button" class="btn btn-secondary" onclick="event.preventDefault(); window.location.href='{{ url_for('login') }}';">Login</button>
                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancel</button>
             </div>
         </div>
@@ -292,7 +292,7 @@
             <div class="copyright">
                 <div class="row">
                     <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                        &copy; <a class="border-bottom" href="{ {url_for('index') }}">Raise My Voice</a>, All Right Reserved.
+                        &copy; <a class="border-bottom" href="{{ url_for('index') }}">Raise My Voice</a>, All Right Reserved.
 
                     </div>
                 </div>

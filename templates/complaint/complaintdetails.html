@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="shortcut icon" type="x-icon" href="{{ url_for('static', filename='img/icon.jpg') }}">
+  <link rel="shortcut icon" type="x-icon" href="/static/img/icon.jpg">
   <title>Raise-My-Voice</title>
   <style>
     /* Reset and general styles */
@@ -246,324 +245,135 @@
 
   <div class="container">
     <div class="header">
-      <button class="home-btn" onclick="goHome()">Home</button>
       <h1>Complaint Details</h1>
-      <button class="logout" onclick="toggleLogoutOptions()">Log Out</button>
-    </div>
-
-    <!-- Horizontal Progress Bar -->
-    <div class="progress-bar-container">
-      <div class="progress-bar"></div>
-      <div class="progress-step-container">
-        <div class="progress-step" style="left: 0%;">1</div>
-        <div class="progress-step" style="left: 50%;">2</div>
+      <div>
+        <button class="home-btn" onclick="goHome()">Home</button>
+        <button class="logout" onclick="toggleLogoutOptions()">Logout</button>
       </div>
     </div>
 
+    <div id="logoutOptions" style="display: none;">
+      <p>Are you sure you want to logout?</p>
+      <button onclick="logout()">Yes</button>
+      <button onclick="cancelLogout()">No</button>
+    </div>
+
     <div class="form-section">
-      <h2>Personal Details</h2>
+      <h2>Personal Information</h2>
       <div class="form-layout">
-        <form id="complaintForm">
+        <form id="complaintForm" onsubmit="handleSubmit(event)">
           <div class="form-group">
             <div>
-              <label for="first-name">First name<span style="color: red;">*</span></label>
-              <input type="text" id="first-name" name="first_name" placeholder="Enter your first name" required>
+              <label for="name">Full Name:</label>
+              <input type="text" id="name" name="name" value="{{ name }}" required>
             </div>
             <div>
-              <label for="middle-name">Middle name</label>
-              <input type="text" id="middle-name" name="middle_name" placeholder="Enter your middle name">
+              <label for="email">Email:</label>
+              <input type="email" id="email" name="email" value="{{ email }}" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div>
+              <label for="phone">Phone Number:</label>
+              <input type="tel" id="phone" name="phone" value="{{ phone }}" required>
             </div>
             <div>
-              <label for="last-name">Last name<span style="color: red;">*</span></label>
-              <input type="text" id="last-name" name="last_name" placeholder="Enter your last name" required>
+              <label for="address">Address:</label>
+              <textarea id="address" name="address" required>{{ address }}</textarea>
             </div>
+          </div>
+
+          <div class="form-group">
             <div>
-              <label for="dob">Date of Birth<span style="color: red;">*</span></label>
-              <input type="date" id="dob" name="dob" required>
-            </div>
-            <div>
-              <label for="gender">Gender<span style="color: red;">*</span></label>
+              <label for="gender">Gender:</label>
               <select id="gender" name="gender" required>
-                <option value="">--Select--</option>
-                <option value="male">Male</option>
+                <option value="">Select Gender</option>
                 <option value="female">Female</option>
+                <option value="male">Male</option>
                 <option value="other">Other</option>
               </select>
             </div>
             <div>
-              <label for="email">Email<span style="color: red;">*</span></label>
-              <input type="email" id="email" name="email" placeholder="Enter your email" required>
-              <div id="emailError" class="error"></div>
-            </div>
-            <div>
-              <label for="city">City<span style="color: red;">*</span></label>
-              <select id="city" name="city" required>
-                <option value="">--Select--</option>
-                <option value="Agra">Agra</option>
-                <option value="Ahmedabad">Ahmedabad</option>
-                <option value="Bangalore">Bangalore</option>
-                <option value="Bhopal">Bhopal</option>
-                <option value="Chandigarh">Chandigarh</option>
-                <option value="Chennai">Chennai</option>
-                <option value="Coimbatore">Coimbatore</option>
-                <option value="Delhi">Delhi</option>
-                <option value="Erode">Erode</option>
-                <option value="Hyderabad">Hyderabad</option>
-                <option value="Indore">Indore</option>
-                <option value="Jaipur">Jaipur</option>
-                <option value="Kanchipuram">Kanchipuram</option>
-                <option value="Kanpur">Kanpur</option>
-                <option value="Karur">Karur</option>
-                <option value="Kolkata">Kolkata</option>
-                <option value="Lucknow">Lucknow</option>
-                <option value="Madurai">Madurai</option>
-                <option value="Mumbai">Mumbai</option>
-                <option value="Nagapattinam">Nagapattinam</option>
-                <option value="Nagpur">Nagpur</option>
-                <option value="Namakkal">Namakkal</option>
-                <option value="Patna">Patna</option>
-                <option value="Pollachi">Pollachi</option>
-                <option value="Pondicherry">Pondicherry</option>
-                <option value="Pune">Pune</option>
-                <option value="Rameswaram">Rameswaram</option>
-                <option value="Salem">Salem</option>
-                <option value="Surat">Surat</option>
-                <option value="Thanjavur">Thanjavur</option>
-                <option value="Theni">Theni</option>
-                <option value="Thiruvallur">Thiruvallur</option>
-                <option value="Thiruvarur">Thiruvarur</option>
-                <option value="Thoothukudi">Thoothukudi</option>
-                <option value="Tiruchirappalli">Tiruchirappalli</option>
-                <option value="Tirunelveli">Tirunelveli</option>
-                <option value="Tiruppur">Tiruppur</option>
-                <option value="Tiruvannamalai">Tiruvannamalai</option>
-                <option value="Vadodara">Vadodara</option>
-                <option value="Vellore">Vellore</option>
-                <option value="Viluppuram">Viluppuram</option>
-                <option value="Visakhapatnam">Visakhapatnam</option>
-                <option value="Virudhunagar">Virudhunagar</option>
-              </select>
-            </div>
-            <div>
-              <label for="state">State<span style="color: red;">*</span></label>
-              <select id="state" name="state" required>
-                <option value="">--Select--</option>
-                <option value="Andhra Pradesh">Andhra Pradesh</option>
-                <option value="Arunachal Pradesh">Arunachal Pradesh</option>
-                <option value="Assam">Assam</option>
-                <option value="Bihar">Bihar</option>
-                <option value="Chhattisgarh">Chhattisgarh</option>
-                <option value="Goa">Goa</option>
-                <option value="Gujarat">Gujarat</option>
-                <option value="Haryana">Haryana</option>
-                <option value="Himachal Pradesh">Himachal Pradesh</option>
-                <option value="Jammu & Kashmir">Jammu & Kashmir</option>
-                <option value="Jharkhand">Jharkhand</option>
-                <option value="Karnataka">Karnataka</option>
-                <option value="Kerala">Kerala</option>
-                <option value="Madhya Pradesh">Madhya Pradesh</option>
-                <option value="Maharashtra">Maharashtra</option>
-                <option value="Manipur">Manipur</option>
-                <option value="Meghalaya">Meghalaya</option>
-                <option value="Mizoram">Mizoram</option>
-                <option value="Nagaland">Nagaland</option>
-                <option value="Orissa">Orissa</option>
-                <option value="Punjab">Punjab</option>
-                <option value="Rajasthan">Rajasthan</option>
-                <option value="Sikkim">Sikkim</option>
-                <option value="Tamil Nadu">Tamil Nadu</option>
-                <option value="Telangana">Telangana</option>
-                <option value="Tripura">Tripura</option>
-                <option value="Uttar Pradesh">Uttar Pradesh</option>
-                <option value="Uttarakhand">Uttarakhand</option>
-                <option value="West Bengal">West Bengal</option>
-              </select>
-            </div>
-
-            <div>
-              <label for="pincode">Pincode<span style="color: red;">*</span></label>
-              <input type="text" id="pincode" name="pincode" placeholder="Enter your pincode" required pattern="\d{6}">
-            </div>
-            <div>
-              <label for="organization-category">Organization Category<span style="color: red;">*</span></label>
-              <select id="organization-category" name="organization-category" required>
-                <option value="">Choose a profession</option>
-                <option value="Education">Education</option>
-                <option value="Healthcare">Healthcare</option>
-                <option value="Business & Finance">Business & Finance</option>
-                <option value="Technology & IT">Technology & IT</option>
-                <option value="Engineering">Engineering</option>
-                <option value="Science & Research">Science & Research</option>
-                <option value="Creative & Media">Creative & Media</option>
-                <option value="Law & Justice">Law & Justice</option>
-                <option value="Public Service & Administration">Public Service & Administration</option>
-                <option value="Retail & Sales">Retail & Sales</option>
-                <option value="Agriculture & Farming">Agriculture & Farming</option>
-                <option value="Manufacturing & Labor">Manufacturing & Labor</option>
-                <option value="Hospitality & Tourism">Hospitality & Tourism</option>
-                <option value="Sports & Fitness">Sports & Fitness</option>
-                <option value="Household & Domestic Work">Household & Domestic Work</option>
-              </select>
-            </div>
-            <div id="role-container">
-              <label for="organization-role">Specific Role<span style="color: red;">*</span></label>
-              <select id="organization-role" name="organization" required>
-                <option value="">Select Role</option>
-              </select>
+              <label for="age">Age:</label>
+              <input type="number" id="age" name="age" min="18" max="100" required>
             </div>
           </div>
-          <button type="submit" class="submit-btn">Submit</button>
+
+          <button type="submit" class="submit-btn">Next</button>
         </form>
       </div>
     </div>
   </div>
 
-  <footer>
-    © 2025 Raise-My-Voice
-  </footer>
-
-  <!-- Logout Options -->
-  <div id="logoutOptions">
-    <button onclick="logout()">Confirm Logout</button>
-    <button onclick="cancelLogout()">Cancel</button>
-  </div>
-
   <script>
-    // Organization roles mapping
-    const organizationRoles = {
-      'Education': ['Teacher', 'Professor', 'Tutor', 'Principal'],
-      'Healthcare': ['Doctor', 'Nurse', 'Pharmacist', 'Physiotherapist', 'Dentist'],
-      'Business & Finance': ['Entrepreneur', 'Accountant', 'Banker', 'Financial Analyst'],
-      'Technology & IT': ['Software Developer', 'Data Analyst', 'Cybersecurity Expert', 'IT Manager'],
-      'Engineering': ['Civil Engineer', 'Mechanical Engineer', 'Electrical Engineer', 'Architect'],
-      'Science & Research': ['Scientist', 'Researcher', 'Lab Technician', 'Environmental Scientist'],
-      'Creative & Media': ['Writer', 'Journalist', 'Photographer', 'Graphic Designer', 'Filmmaker'],
-      'Law & Justice': ['Lawyer', 'Judge', 'Legal Advisor', 'Police Officer'],
-      'Public Service & Administration': ['Government Officer', 'Social Worker', 'NGO Worker'],
-      'Retail & Sales': ['Sales Associate', 'Store Manager', 'Marketing Specialist'],
-      'Agriculture & Farming': ['Farmer', 'Agricultural Scientist', 'Horticulturist'],
-      'Manufacturing & Labor': ['Factory Worker', 'Construction Worker', 'Tailor'],
-      'Hospitality & Tourism': ['Chef', 'Hotel Manager', 'Tour Guide', 'Flight Attendant'],
-      'Sports & Fitness': ['Athlete', 'Coach', 'Fitness Trainer', 'Yoga Instructor'],
-      'Household & Domestic Work': ['Housekeeper', 'Babysitter', 'Caregiver']
-    };
-
-    // Add event listener for category change
-    document.getElementById('organization-category').addEventListener('change', function () {
-      const categorySelect = this;
-      const roleSelect = document.getElementById('organization-role');
-      const selectedCategory = categorySelect.value;
-
-      // Clear existing options
-      roleSelect.innerHTML = '<option value="">Select Role</option>';
-
-      if (selectedCategory) {
-        // Add new options based on selected category
-        organizationRoles[selectedCategory].forEach(role => {
-          const option = document.createElement('option');
-          option.value = `${selectedCategory} - ${role}`;
-          option.textContent = role;
-          roleSelect.appendChild(option);
-        });
-      }
-    });
-
-    // Form submission handler
-    document.getElementById('complaintForm').addEventListener('submit', async function (event) {
-      event.preventDefault();
-
-      // Validate organization selection
-      const organizationRole = document.getElementById('organization-role').value;
-      if (!organizationRole) {
-        alert('Please select both Organization Category and Role');
-        return;
-      }
-
-      // Get form data with correct field names
-      const formData = {
-        first_name: document.getElementById('first-name').value,
-        middle_name: document.getElementById('middle-name').value || '',
-        last_name: document.getElementById('last-name').value,
-        name: [
-          document.getElementById('first-name').value,
-          document.getElementById('middle-name').value,
-          document.getElementById('last-name').value
-        ].filter(Boolean).join(' '),
-        email: document.getElementById('email').value,
-        dob: document.getElementById('dob').value,
-        gender: document.getElementById('gender').value,
-        city: document.getElementById('city').value,
-        state: document.getElementById('state').value,
-        pincode: document.getElementById('pincode').value,
-        organization: organizationRole,
-        status: "Registered",
-        registered_at: new Date().toISOString().replace('T', ' ').split('.')[0]
-      };
-
-      console.log('Sending data:', formData); // Debug log
-
+    async function handleSubmit(e) {
+      e.preventDefault();
+      
       try {
-        const response = await fetch('/submit_details', {
+        const formData = {
+          name: document.getElementById('name').value,
+          email: document.getElementById('email').value,
+          phone: document.getElementById('phone').value,
+          address: document.getElementById('address').value,
+          gender: document.getElementById('gender').value,
+          age: parseInt(document.getElementById('age').value)
+        };
+
+        console.log('Sending data:', formData);
+
+        const response = await fetch('/api/submit_complaint', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'X-CSRFToken': '{{ csrf_token() }}'
+            'Accept': 'application/json'
           },
           body: JSON.stringify(formData)
         });
 
-        console.log('Response status:', response.status); // Debug log
+        console.log('Response status:', response.status);
+        const contentType = response.headers.get('content-type');
+        console.log('Response content-type:', contentType);
 
-        if (!response.ok) {
-          const errorData = await response.json();
-          console.error('Server error:', errorData); // Debug log
-          throw new Error(errorData.error || 'Failed to submit details');
+        if (!contentType || !contentType.includes('application/json')) {
+          throw new Error('Expected JSON response but got ' + contentType);
         }
 
         const data = await response.json();
-        console.log('Server response:', data); // Debug log
-
-        // Store data for next step
-        sessionStorage.setItem('complaintDetails', JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          organization: formData.organization
-        }));
-
-        if (data.complaint_id) {
-          sessionStorage.setItem('complaintId', data.complaint_id);
+        console.log('Response data:', data);
+        
+        if (data.success) {
+          window.location.href = '/complaintsubmission';
+        } else {
+          alert(data.message || 'Error submitting complaint');
         }
-
-        // Show success message and redirect
-        alert('Your details have been stored in the database successfully!');
-        window.location.href = '/complaintsubmission';
       } catch (error) {
         console.error('Error:', error);
-        alert('Error submitting form: ' + error.message);
+        alert('Error submitting complaint. Please check the console for details.');
       }
-    });
+    }
 
-    // Home button functionality
     function goHome() {
       window.location.href = "/home";
     }
 
-    // Logout options toggle
     function toggleLogoutOptions() {
-      const logoutOptions = document.getElementById('logoutOptions');
-      logoutOptions.style.display = logoutOptions.style.display === 'block' ? 'none' : 'block';
+      const options = document.getElementById('logoutOptions');
+      options.style.display = options.style.display === 'none' ? 'block' : 'none';
     }
 
-    // Confirm Logout functionality
     function logout() {
-      window.location.href = "/";
+      window.location.href = "/logout";
     }
 
-    // Cancel logout
     function cancelLogout() {
-      toggleLogoutOptions();
+      document.getElementById('logoutOptions').style.display = 'none';
     }
   </script>
+
+  <footer>
+    &copy; 2025 Raise-My-Voice
+  </footer>
 </body>
 
 </html>
