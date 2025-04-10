@@ -828,59 +828,69 @@
             }
         });
 
-        // Form submission handler
-        document.getElementById('signupForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-
+        // Form validation function
+        function validateForm() {
             // Validate required fields
             const email = document.getElementById('email').value;
             const otp = document.getElementById('otp').value;
-            const captchaInput = document.getElementById('captchaInput').value;
-            const captchaCode = document.getElementById('captchaCode').textContent;
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const dateOfBirth = document.getElementById('dob').value;
+            const gender = document.getElementById('gender').value;
+            const city = document.getElementById('city').value;
+            const state = document.getElementById('state').value;
+            const organization = document.getElementById('organization-role').value;
 
-            if (!email || !otp || !password || !confirmPassword) {
-                alert('Please fill in all required fields and verify your email with OTP.');
-                return;
-            }
-
-            if (captchaInput !== captchaCode) {
-                alert('Invalid CAPTCHA. Please try again.');
-                loadCaptcha();
-                return;
+            if (!email || !otp || !password || !confirmPassword || !firstName || !lastName || 
+                !dateOfBirth || !gender || !city || !state || !organization) {
+                alert('Please fill in all required fields.');
+                return false;
             }
 
             if (password !== confirmPassword) {
                 alert('Passwords do not match. Please try again.');
+                return false;
+            }
+
+            // Validate email format
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Please enter a valid email address.');
+                return false;
+            }
+
+            return true;
+        }
+
+        // Form submission handler
+        document.getElementById('signupForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            if (!validateForm()) {
                 return;
             }
 
-            // Create FormData object
             const formData = new FormData(this);
             
             try {
                 const response = await fetch('/verify-and-signup', {
                     method: 'POST',
-                    headers: {
-                        'X-CSRFToken': '{{ csrf_token() }}'
-                    },
                     body: formData
                 });
-                
+
                 const data = await response.json();
-                if (response.ok) {
-                    alert('Registration successful!');
-                    window.location.href = '{{ url_for('home') }}';
+                
+                if (data.success) {
+                    alert('Registration successful! Redirecting to home page...');
+                    window.location.href = '/home';
                 } else {
-                    alert(data.error || 'An error occurred');
-                    if (data.error && data.error.includes('OTP')) {
-                        document.getElementById('otp').value = '';
-                    }
+                    alert(data.error || 'Registration failed. Please try again.');
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('An error occurred while processing your request');
+                alert('An error occurred. Please try again.');
             }
         });
 
