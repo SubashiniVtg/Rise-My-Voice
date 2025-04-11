@@ -189,19 +189,11 @@
                     </div>
                 </div>
                 <div class="detail-row">
-                    <div class="detail-label">Registered At</div>
+                    <div class="detail-label">Created At</div>
                     <div class="detail-value timestamp">
                         <i class="far fa-calendar-alt"></i>
-                        {{ complaint.registered_at }}
+                        {{ complaint.created_at }}
                     </div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-label">Email</div>
-                    <div class="detail-value">{{ complaint.email }}</div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-label">Name</div>
-                    <div class="detail-value">{{ complaint.name }}</div>
                 </div>
             </div>
 
@@ -217,98 +209,91 @@
                         <div class="detail-value">{{ complaint.details.personal_info.full_name }}</div>
                     </div>
                     <div class="info-item">
-                        <div class="detail-label">Date of Birth</div>
-                        <div class="detail-value">{{ complaint.details.personal_info.dob }}</div>
+                        <div class="detail-label">Email</div>
+                        <div class="detail-value">{{ complaint.details.personal_info.email }}</div>
                     </div>
                     <div class="info-item">
-                        <div class="detail-label">Gender</div>
-                        <div class="detail-value">{{ complaint.details.personal_info.gender }}</div>
+                        <div class="detail-label">Phone</div>
+                        <div class="detail-value">{{ complaint.details.personal_info.phone }}</div>
                     </div>
-                </div>
-            </div>
-            {% endif %}
-
-            <!-- Contact Information -->
-            {% if complaint.details and complaint.details.contact_info %}
-            <div class="section">
-                <div class="section-title">
-                    <i class="fas fa-address-card"></i>Contact Information
-                </div>
-                <div class="contact-info">
+                    <div class="info-item">
+                        <div class="detail-label">Address</div>
+                        <div class="detail-value">{{ complaint.details.personal_info.address }}</div>
+                    </div>
                     <div class="info-item">
                         <div class="detail-label">City</div>
-                        <div class="detail-value">{{ complaint.details.contact_info.city }}</div>
+                        <div class="detail-value">{{ complaint.details.personal_info.city }}</div>
                     </div>
                     <div class="info-item">
                         <div class="detail-label">State</div>
-                        <div class="detail-value">{{ complaint.details.contact_info.state }}</div>
+                        <div class="detail-value">{{ complaint.details.personal_info.state }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="detail-label">Country</div>
+                        <div class="detail-value">{{ complaint.details.personal_info.country }}</div>
                     </div>
                     <div class="info-item">
                         <div class="detail-label">Pincode</div>
-                        <div class="detail-value">{{ complaint.details.contact_info.pincode }}</div>
+                        <div class="detail-value">{{ complaint.details.personal_info.pincode }}</div>
                     </div>
                 </div>
             </div>
             {% endif %}
 
-            <!-- Organization -->
-            {% if complaint.details and complaint.details.organization %}
+            <!-- Incident Details -->
+            {% if complaint.details and complaint.details.incident %}
             <div class="section">
                 <div class="section-title">
-                    <i class="fas fa-building"></i>Organization
+                    <i class="fas fa-exclamation-circle"></i>Incident Details
                 </div>
                 <div class="detail-row">
-                    <div class="detail-label">Organization & Role</div>
-                    <div class="detail-value">{{ complaint.details.organization }}</div>
-                </div>
-            </div>
-            {% endif %}
-
-            <!-- Complaint Details -->
-            {% if complaint.submission %}
-            <div class="section">
-                <div class="section-title">
-                    <i class="fas fa-file-alt"></i>Complaint Details
+                    <div class="detail-label">Date of Incident</div>
+                    <div class="detail-value">{{ complaint.details.incident.date }}</div>
                 </div>
                 <div class="detail-row">
-                    <div class="detail-label">Complainant Name</div>
-                    <div class="detail-value">{{ complaint.submission.complainant_name }}</div>
+                    <div class="detail-label">Location</div>
+                    <div class="detail-value">{{ complaint.details.incident.location }}</div>
                 </div>
                 <div class="detail-row">
-                    <div class="detail-label">Submission Date</div>
-                    <div class="detail-value timestamp">
-                        <i class="far fa-calendar-check"></i>
-                        {{ complaint.submission.submission_date }}
-                    </div>
-                </div>
-                {% if complaint.submission.on_behalf %}
-                <div class="detail-row">
-                    <div class="detail-label">On Behalf Of</div>
-                    <div class="detail-value">{{ complaint.submission.on_behalf }}</div>
-                </div>
-                {% endif %}
-                <div class="detail-row">
-                    <div class="detail-label">Complaint Text</div>
+                    <div class="detail-label">Description</div>
                     <div class="detail-value">
                         <div class="complaint-text">
-                            {{ complaint.submission.complaint_text }}
+                            {{ complaint.details.incident.description }}
                         </div>
                     </div>
                 </div>
-                <div class="detail-row">
-                    <div class="detail-label">Submitted At</div>
-                    <div class="detail-value timestamp">
-                        <i class="far fa-clock"></i>
-                        {{ complaint.submission.submitted_at }}
-                    </div>
-                </div>
             </div>
             {% endif %}
+
+            <!-- Evidence and Documents -->
+            <div class="section">
+                <div class="section-title">
+                    <i class="fas fa-file-alt"></i>Documents
+                </div>
+                {% if complaint.details.incident.evidence_path %}
+                <div class="detail-row">
+                    <div class="detail-label">Evidence</div>
+                    <div class="detail-value">
+                        <a href="{{ url_for('view_document', filename=complaint.details.incident.evidence_path.split('/')[-1]) }}"
+                            target="_blank" style="color: #db5299;">View Evidence</a>
+                    </div>
+                </div>
+                {% endif %}
+                {% if complaint.details.id_proof_path %}
+                <div class="detail-row">
+                    <div class="detail-label">ID Proof</div>
+                    <div class="detail-value">
+                        <a href="{{ url_for('view_document', filename=complaint.details.id_proof_path.split('/')[-1]) }}"
+                            target="_blank" style="color: #db5299;">View ID Proof</a>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
         </div>
 
-        <a href="{{ url_for('dashboard') }}" class="back-btn">
+        <a href="{{ url_for('track_my_complaints') }}" class="back-btn">
             <i class="fas fa-arrow-left"></i>
-            Back to Dashboard
+            Back to My Complaints
         </a>
     </div>
 </body>

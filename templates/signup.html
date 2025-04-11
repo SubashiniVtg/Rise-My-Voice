@@ -428,7 +428,8 @@
 
                     <div class="form-group">
                         <label for="dob">Date of Birth <span>*</span></label>
-                        <input type="date" id="dob" name="dob" required max="{{ '2009-03-24' }}" onchange="validateAge(this)" />
+                        <input type="date" id="dob" name="dob" required max="{{ '2009-03-24' }}"
+                            onchange="validateAge(this)" />
                         <div class="error-message" id="dobError"></div>
                     </div>
 
@@ -462,7 +463,8 @@
                     <div class="form-group">
                         <label for="password">Password <span>*</span></label>
                         <div class="password-container">
-                            <input type="password" id="password" name="password" placeholder="Enter password" required />
+                            <input type="password" id="password" name="password" placeholder="Enter password"
+                                required />
                             <span class="toggle-password" onclick="togglePasswordVisibility('password', this)">
                                 <i class="fas fa-eye-slash"></i>
                             </span>
@@ -473,7 +475,8 @@
                     <div class="form-group">
                         <label for="confirmPassword">Confirm Password <span>*</span></label>
                         <div class="password-container">
-                            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm password" required />
+                            <input type="password" id="confirmPassword" name="confirmPassword"
+                                placeholder="Confirm password" required />
                             <span class="toggle-password" onclick="togglePasswordVisibility('confirmPassword', this)">
                                 <i class="fas fa-eye-slash"></i>
                             </span>
@@ -571,7 +574,8 @@
 
                     <div class="form-group">
                         <label for="pincode">Pincode <span>*</span></label>
-                        <input type="text" id="pincode" name="pincode" placeholder="Enter your pincode" required pattern="\d{6}" />
+                        <input type="text" id="pincode" name="pincode" placeholder="Enter your pincode" required
+                            pattern="\d{6}" />
                         <div class="error-message" id="pincodeError"></div>
                     </div>
 
@@ -612,10 +616,8 @@
                     <div class="form-group">
                         <label for="profile-document">Upload Document <span>*</span></label>
                         <div class="file-upload-container">
-                            <input type="file" id="profile-document" name="profile-document" 
-                                accept=".pdf,.jpg,.jpeg,.png" 
-                                style="display: none;" 
-                                required />
+                            <input type="file" id="profile-document" name="profile-document"
+                                accept=".pdf,.jpg,.jpeg,.png" style="display: none;" required />
                             <button type="button" id="upload-trigger" class="upload-btn">
                                 <i class="fas fa-cloud-upload-alt"></i> Choose File
                             </button>
@@ -648,8 +650,9 @@
                         <div class="google-signin-container">
                             <div id="g_id_onload"
                                 data-client_id="551987201810-t6ieb9re5u0cc4s5rq8jt1vacfh90a9a.apps.googleusercontent.com"
-                                data-context="signup" data-ux_mode="redirect" data-login_uri="http://localhost:5000/google-auth"
-                                data-auto_prompt="false" data-itp_support="true">
+                                data-context="signup" data-ux_mode="redirect"
+                                data-login_uri="http://localhost:5000/google-auth" data-auto_prompt="false"
+                                data-itp_support="true">
                             </div>
                             <div class="g_id_signin" data-type="standard" data-shape="rectangular" data-theme="outline"
                                 data-text="signup_with" data-size="large" data-logo_alignment="left">
@@ -671,7 +674,7 @@
             const today = new Date();
             let age = today.getFullYear() - dob.getFullYear();
             const monthDiff = today.getMonth() - dob.getMonth();
-            
+
             if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
                 age--;
             }
@@ -768,7 +771,7 @@
         refreshCaptchaButton.addEventListener('click', loadCaptcha);
 
         // Handle sending OTP
-        document.getElementById('sendOtpButton').addEventListener('click', async function() {
+        document.getElementById('sendOtpButton').addEventListener('click', async function () {
             const email = document.getElementById('email').value;
 
             if (!email) {
@@ -843,7 +846,7 @@
             const state = document.getElementById('state').value;
             const organization = document.getElementById('organization-role').value;
 
-            if (!email || !otp || !password || !confirmPassword || !firstName || !lastName || 
+            if (!email || !otp || !password || !confirmPassword || !firstName || !lastName ||
                 !dateOfBirth || !gender || !city || !state || !organization) {
                 alert('Please fill in all required fields.');
                 return false;
@@ -865,7 +868,7 @@
         }
 
         // Form submission handler
-        document.getElementById('signupForm').addEventListener('submit', async function(e) {
+        document.getElementById('signupForm').addEventListener('submit', async function (e) {
             e.preventDefault();
 
             if (!validateForm()) {
@@ -873,7 +876,7 @@
             }
 
             const formData = new FormData(this);
-            
+
             try {
                 const response = await fetch('/verify-and-signup', {
                     method: 'POST',
@@ -881,10 +884,10 @@
                 });
 
                 const data = await response.json();
-                
+
                 if (data.success) {
                     alert('Registration successful! Redirecting to home page...');
-                    window.location.href = '/home';
+                    window.location.href = '/home';  // Redirect to home page
                 } else {
                     alert(data.error || 'Registration failed. Please try again.');
                 }
@@ -895,25 +898,25 @@
         });
 
         // File upload functionality
-        document.getElementById('upload-trigger').addEventListener('click', function() {
+        document.getElementById('upload-trigger').addEventListener('click', function () {
             document.getElementById('profile-document').click();
         });
 
-        document.getElementById('profile-document').addEventListener('change', function(e) {
+        document.getElementById('profile-document').addEventListener('change', function (e) {
             const file = e.target.files[0];
             const fileError = document.querySelector('.file-error');
             const filePreview = document.getElementById('file-preview');
             const imagePreview = document.getElementById('image-preview');
             const pdfPreview = document.getElementById('pdf-preview');
             const fileDetails = document.querySelector('.file-details');
-            
+
             // Reset error and preview
             fileError.style.display = 'none';
             filePreview.style.display = 'none';
             imagePreview.style.display = 'none';
             pdfPreview.style.display = 'none';
             fileDetails.classList.remove('show');
-            
+
             if (file) {
                 // Check file size (200MB = 200 * 1024 * 1024 bytes)
                 if (file.size > 200 * 1024 * 1024) {
@@ -922,18 +925,18 @@
                     this.value = ''; // Clear the file input
                     return;
                 }
-                
+
                 // Update file details
                 fileDetails.querySelector('.file-name').textContent = 'File: ' + file.name;
                 fileDetails.querySelector('.file-type').textContent = 'Type: ' + file.type;
                 fileDetails.querySelector('.file-size').textContent = 'Size: ' + formatFileSize(file.size);
                 fileDetails.classList.add('show');
-                
+
                 // Check file type and show preview
                 const fileType = file.type;
                 if (fileType.startsWith('image/')) {
                     const reader = new FileReader();
-                    reader.onload = function(e) {
+                    reader.onload = function (e) {
                         imagePreview.src = e.target.result;
                         imagePreview.style.display = 'block';
                         filePreview.style.display = 'block';

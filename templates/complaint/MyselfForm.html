@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Complaint Form - Myself</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+
+    h2 {
+      color: #d63384;
+    }
+
+    form {
+      background: #fff;
+      padding: 25px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .submit-btn {
+      background-color: #d63384;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .preview-container {
+      margin-top: 10px;
+      display: none;
+    }
+
+    .preview-container img {
+      max-width: 200px;
+      max-height: 200px;
+      margin-top: 10px;
+    }
+
+    .preview-container iframe {
+      width: 100%;
+      height: 300px;
+      margin-top: 10px;
+    }
+
+    .file-input-container {
+      position: relative;
+    }
+
+    .file-input-container input[type="file"] {
+      position: absolute;
+      left: 0;
+      top: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .file-input-label {
+      display: inline-block;
+      padding: 8px 12px;
+      background: #f8f9fa;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .file-name {
+      margin-left: 10px;
+      color: #666;
+    }
+  </style>
+</head>
+
+<body>
+  <h2>Sexual Harassment Complaint - Myself</h2>
+  <form id="complaintForm" enctype="multipart/form-data">
+    <h3>Personal Details</h3>
+    <div class="form-group">
+      <label>Full Name</label>
+      <input type="text" name="fullName" value="{{ user_data.name }}" required />
+    </div>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" name="email" value="{{ user_data.email }}" required />
+    </div>
+    <div class="form-group">
+      <label>Phone</label>
+      <input type="tel" name="phone" value="{{ user_data.phone }}" required />
+    </div>
+    <div class="form-group">
+      <label>Address</label>
+      <textarea name="address" rows="2" required>{{ user_data.address }}</textarea>
+    </div>
+    <div class="form-group">
+      <label>City</label>
+      <input type="text" name="city" required />
+    </div>
+    <div class="form-group">
+      <label>State</label>
+      <input type="text" name="state" required />
+    </div>
+    <div class="form-group">
+      <label>Country</label>
+      <input type="text" name="country" required />
+    </div>
+    <div class="form-group">
+      <label>Pincode</label>
+      <input type="text" name="pincode" required />
+    </div>
+
+    <h3>Incident Details</h3>
+    <div class="form-group">
+      <label>Date of Incident</label>
+      <input type="date" name="incidentDate" required />
+    </div>
+    <div class="form-group">
+      <label>Location of Incident</label>
+      <input type="text" name="incidentLocation" required />
+    </div>
+    <div class="form-group">
+      <label>Description</label>
+      <textarea name="incidentDescription" rows="4" required></textarea>
+    </div>
+    <div class="form-group">
+      <label>Upload Evidence</label>
+      <div class="file-input-container">
+        <label class="file-input-label">Choose File</label>
+        <input type="file" name="evidence" accept="application/pdf,image/*" required
+          onchange="previewFile(this, 'evidencePreview')" />
+        <span class="file-name"></span>
+      </div>
+      <div id="evidencePreview" class="preview-container"></div>
+    </div>
+
+    <h3>ID Proof</h3>
+    <div class="form-group">
+      <label>Aadhaar Card / Driving License/ Ration card</label>
+      <div class="file-input-container">
+        <label class="file-input-label">Choose File</label>
+        <input type="file" name="idProof" accept="application/pdf,image/*" required
+          onchange="previewFile(this, 'idProofPreview')" />
+        <span class="file-name"></span>
+      </div>
+      <div id="idProofPreview" class="preview-container"></div>
+    </div>
+
+    <button type="submit" class="submit-btn">Submit Complaint</button>
+  </form>
+
+  <script>
+    function previewFile(input, previewId) {
+      const previewContainer = document.getElementById(previewId);
+      const fileName = input.nextElementSibling;
+      const file = input.files[0];
+
+      if (file) {
+        fileName.textContent = file.name;
+        previewContainer.style.display = 'block';
+
+        if (file.type.startsWith('image/')) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            previewContainer.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+          };
+          reader.readAsDataURL(file);
+        } else if (file.type === 'application/pdf') {
+          previewContainer.innerHTML = `<iframe src="${URL.createObjectURL(file)}"></iframe>`;
+        }
+      } else {
+        previewContainer.style.display = 'none';
+        fileName.textContent = '';
+      }
+    }
+
+    // Handle form submission
+    document.getElementById('complaintForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const formData = new FormData(this);
+      console.log('Form data:', Object.fromEntries(formData));
+
+      try {
+        const response = await fetch('/submit_complaint', {
+          method: 'POST',
+          body: formData
+        });
+
+        console.log('Response status:', response.status);
+        console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('Server response:', errorText);
+          throw new Error('Server returned an error: ' + response.status);
+        }
+
+        const result = await response.json();
+        console.log('Response data:', result);
+
+        if (result.success) {
+          alert('Complaint submitted successfully!');
+          window.location.href = '/track_my_complaints';
+        } else {
+          alert('Error submitting complaint: ' + (result.message || 'Unknown error'));
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error submitting complaint: ' + error.message);
+      }
+    });
+  </script>
+</body>
+
+</html>

@@ -99,33 +99,33 @@
         </div>
 
         {% if complaints %}
-            {% for complaint in complaints %}
-            <div class="complaint-card">
-                <div class="complaint-header">
-                    <div class="complaint-id">ID: {{ complaint._id }}</div>
-                    <div class="status">{{ complaint.status }}</div>
-                </div>
-                <div class="complaint-details">
-                    {% if complaint.submission %}
-                    <p><strong>Name:</strong> {{ complaint.submission.complainant_name }}</p>
-                    {% else %}
-                    <p><strong>Name:</strong> {{ complaint.name }}</p>
-                    {% endif %}
-                    <p><strong>Registered:</strong> {{ complaint.registered_at }}</p>
-                    {% if complaint.submission and complaint.submission.submitted_at %}
-                    <p><strong>Submitted:</strong> {{ complaint.submission.submitted_at }}</p>
-                    {% endif %}
-                    {% if complaint.status.lower() == 'resolved' %}
-                    <p><strong>Resolved:</strong> {{ complaint.resolved_at }}</p>
-                    {% endif %}
-                </div>
+        {% for complaint in complaints %}
+        <div class="complaint-card">
+            <div class="complaint-header">
+                <div class="complaint-id">ID: {{ complaint._id }}</div>
+                <div class="status">{{ complaint.status }}</div>
             </div>
-            {% endfor %}
+            <div class="complaint-details">
+                {% if complaint.details and complaint.details.personal_info %}
+                <p><strong>Name:</strong> {{ complaint.details.personal_info.full_name }}</p>
+                <p><strong>Email:</strong> {{ complaint.details.personal_info.email }}</p>
+                <p><strong>Phone:</strong> {{ complaint.details.personal_info.phone }}</p>
+                {% endif %}
+                <p><strong>Created:</strong> {{ complaint.created_at }}</p>
+                {% if complaint.details and complaint.details.incident %}
+                <p><strong>Incident Date:</strong> {{ complaint.details.incident.date }}</p>
+                <p><strong>Location:</strong> {{ complaint.details.incident.location }}</p>
+                {% endif %}
+                <a href="{{ url_for('view_complaint', complaint_id=complaint._id) }}"
+                    style="color: #db5299; text-decoration: none;">View Details</a>
+            </div>
+        </div>
+        {% endfor %}
         {% else %}
-            <div class="no-complaints">
-                <h2>No complaints found</h2>
-                <p>You haven't submitted any complaints yet.</p>
-            </div>
+        <div class="no-complaints">
+            <h2>No complaints found</h2>
+            <p>You haven't submitted any complaints yet.</p>
+        </div>
         {% endif %}
     </div>
 </body>

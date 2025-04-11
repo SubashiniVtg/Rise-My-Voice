@@ -70,7 +70,7 @@
 
     // Header carousel
     $(".header-carousel").owlCarousel({
-        autoplay: true,
+        autoplay: false,
         smartSpeed: 1500,
         items: 1,
         dots: false,
@@ -83,30 +83,37 @@
     });
 
 })
-(jQuery);
+    (jQuery);
 
 
 const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
 const appendAlert = (message, type) => {
-  const wrapper = document.createElement('div')
-  wrapper.innerHTML = [
-    `<div class="alert alert-${type} alert-dismissible" role="alert">`,
-    `   <div>${message}</div>`,
-    '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
-    '</div>'
-  ].join('')
+    const wrapper = document.createElement('div')
+    wrapper.innerHTML = [
+        `<div class="alert alert-${type} alert-dismissible" role="alert">`,
+        `   <div>${message}</div>`,
+        '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+        '</div>'
+    ].join('')
 
-  alertPlaceholder.append(wrapper)
+    if (alertPlaceholder) {
+        alertPlaceholder.append(wrapper)
+    }
 }
 
-let profileDropdownList = document.querySelector(".profile-dropdown-list");
-let btn = document.querySelector(".profile-dropdown-btn");
+// Only initialize profile dropdown if elements exist
+const profileDropdownList = document.querySelector(".profile-dropdown-list");
+const profileDropdownBtn = document.querySelector(".profile-dropdown-btn");
 
-let classList = profileDropdownList.classList;
+if (profileDropdownList && profileDropdownBtn) {
+    const toggle = () => profileDropdownList.classList.toggle("active");
 
-const toggle = () => classList.toggle("active");
+    profileDropdownBtn.addEventListener("click", toggle);
 
-window.addEventListener("click", function (e) {
-  if (!btn.contains(e.target)) classList.remove("active");
-});
+    window.addEventListener("click", function (e) {
+        if (!profileDropdownBtn.contains(e.target)) {
+            profileDropdownList.classList.remove("active");
+        }
+    });
+}
 

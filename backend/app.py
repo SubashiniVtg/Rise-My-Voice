@@ -64,7 +64,8 @@ app.config['SESSION_COOKIE_NAME'] = 'session'
 app.config['SESSION_COOKIE_SECURE'] = False
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
-app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=5)
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=1)  # Changed from 5 minutes to 1 day
+app.config['SESSION_PERMANENT'] = True  # Added to make sessions permanent
 
 # CSRF configuration
 app.config['WTF_CSRF_ENABLED'] = True
@@ -358,7 +359,7 @@ def verify_and_signup():
             'state': request.form.get('state'),
             'pincode': request.form.get('pincode'),
             'organization': request.form.get('organization'),
-            'password': generate_password_hash(password),  # Hash the password
+            'password': password,  # Store password as plain text
             'created_at': datetime.now(pytz.timezone("Asia/Kolkata")).strftime("%Y-%m-%d %H:%M:%S")
         }
 
@@ -417,7 +418,7 @@ def verify_otp():
                 user_data = {
                     'email': email,
                     'name': data.get('name'),
-                    'password': generate_password_hash(data.get('password')),  # Hash the password
+                    'password': data.get('password'),  # Store password as plain text
                     'dob': data.get('dob'),
                     'gender': data.get('gender'),
                     'city': data.get('city'),
@@ -458,64 +459,39 @@ def verify_otp():
 ########################### Login functionalities ############################################################
 @app.route('/')
 def root():
-    # If user is already logged in, redirect to home
-    if 'user_id' in session:
-        return redirect(url_for('home'))
-    # Otherwise, show the index page
     return render_template('index.html')
-
 @app.route('/index')
 def index():
-    # If user is already logged in, redirect to home
-    if 'user_id' in session:
-        return redirect(url_for('home'))
-    # Otherwise, show the index page
     return render_template('index.html')
-
+#################################################################
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
-        # If user is already logged in, redirect to home
-        if 'user_id' in session:
-            return redirect(url_for('home'))
         return render_template('login.html')
         
     try:
-        print("Received login request")  # Debug log
-        
         # Check if the request has JSON data
         if not request.is_json:
-            print("Request is not JSON")  # Debug log
             return jsonify({'success': False, 'message': 'Invalid request format'}), 400
             
         data = request.get_json()
         if not data:
-            print("No JSON data received")  # Debug log
             return jsonify({'success': False, 'message': 'No data received'}), 400
-            
-        print(f"Request data: {data}")  # Debug log
         
         email = data.get('email')
         password = data.get('password')
         otp = data.get('otp')
         
-        print(f"Email: {email}, Password length: {len(password) if password else 0}, OTP: {otp}")  # Debug log
-        
         if not all([email, password, otp]):
-            print("Missing email, password or OTP")  # Debug log
             return jsonify({'success': False, 'message': 'Please enter email, password and OTP'}), 400
             
         # Verify user exists
         user = user_collection.find_one({'email': email})
-        print(f"Found user: {user is not None}")  # Debug log
-        
         if not user:
-            print(f"No user found with email: {email}")  # Debug log
             return jsonify({'success': False, 'message': 'Invalid email or password'}), 401
             
         # Verify password
         if user['password'] != password:
-            print("Password mismatch")  # Debug log
             return jsonify({'success': False, 'message': 'Invalid email or password'}), 401
         
         # Verify OTP
@@ -526,18 +502,10 @@ def login():
             'expiry': {'$gt': datetime.now(pytz.timezone("Asia/Kolkata"))}
         })
         
-        print(f"Found OTP record: {stored_otp is not None}")  # Debug log
-        if stored_otp:
-            print(f"Stored OTP expiry: {stored_otp.get('expiry')}")  # Debug log
-            print(f"Current time: {datetime.now(pytz.timezone('Asia/Kolkata'))}")  # Debug log
-            print(f"OTP match: {stored_otp.get('otp') == otp}")  # Debug log
-        
         if not stored_otp:
-            print("No valid OTP found")  # Debug log
             return jsonify({'success': False, 'message': 'No valid OTP found. Please request a new OTP.'}), 401
             
         if stored_otp['otp'] != otp:
-            print("OTP mismatch")  # Debug log
             return jsonify({'success': False, 'message': 'Invalid OTP. Please try again.'}), 401
             
         # Mark OTP as used
@@ -552,7 +520,6 @@ def login():
         session['name'] = user.get('name', '')
         session.permanent = True
         
-        print("Login successful")  # Debug log
         return jsonify({
             'success': True,
             'message': 'Login successful',
@@ -561,30 +528,27 @@ def login():
         })
         
     except Exception as e:
-        print(f"Login error: {str(e)}")  # Debug log
-        import traceback
-        traceback.print_exc()  # Print full error traceback
+        print(f"Login error: {str(e)}")
         return jsonify({'success': False, 'message': f'Server error: {str(e)}'}), 500
-        #####################################################################
 
 @app.route('/home')
 def home():
     # Check if user is logged in
     if 'user_id' not in session:
-        return redirect(url_for('login'))
+        return redirect(url_for('index'))  # Changed from login to index
         
     try:
         # Get user details from database
         user = user_collection.find_one({'_id': ObjectId(session['user_id'])})
         if not user:
             session.clear()
-            return redirect(url_for('login'))
+            return redirect(url_for('index'))  # Changed from login to index
             
         return render_template('home.html', user=user)
     except Exception as e:
         print(f"Error loading home page: {str(e)}")
         session.clear()
-        return redirect(url_for('login'))
+        return redirect(url_for('index'))  # Changed from login to index
 
 @app.route('/logout')
 def logout():
@@ -665,62 +629,76 @@ def contact():
 def profile():
     # Check if user is logged in
     if 'user_id' not in session:
+        print("DEBUG: No user_id in session")
+        print("DEBUG: Session contents:", dict(session))
         flash('Please login first', 'error')
         return redirect(url_for('login'))
 
     try:
+        print(f"DEBUG: User ID in session: {session['user_id']}")
+        print(f"DEBUG: Session contents: {dict(session)}")
+        # Make session permanent
+        session.permanent = True
+        
         # Get user details from database
         user = user_collection.find_one({'_id': ObjectId(session['user_id'])})
         
         if not user:
+            print("DEBUG: User not found in database")
             session.clear()
             flash('User not found', 'error')
             return redirect(url_for('login'))
         
+        print(f"DEBUG: Found user: {user.get('email', 'No email')}")
+        
         if request.method == 'POST':
             # Handle form submission
-            data = request.form.to_dict()
-            update_data = {}
+            firstName = request.form.get('firstName')
+            lastName = request.form.get('lastName')
+            phone = request.form.get('phone')
+            address = request.form.get('address')
+            city = request.form.get('city')
+            state = request.form.get('state')
+            pincode = request.form.get('pincode')
+            organization = request.form.get('organization')
             
-            # Update fields if they exist in the form
-            fields = ['firstName', 'lastName', 'phone', 'address', 'city', 'state', 'pincode', 'organization']
-            for field in fields:
-                if field in data:
-                    update_data[field] = data[field].strip() if data[field] else ''
-
-            # Handle file upload if present
+            # Update user data
+            update_data = {
+                'firstName': firstName,
+                'lastName': lastName,
+                'phone': phone,
+                'address': address,
+                'city': city,
+                'state': state,
+                'pincode': pincode,
+                'organization': organization
+            }
+            
+            # Handle profile picture upload
             if 'profile-document' in request.files:
                 file = request.files['profile-document']
-                if file and file.filename:  # Check if file was actually selected
+                if file and file.filename:
                     if allowed_file(file.filename):
                         try:
-                            filename = secure_filename(file.filename)
-                            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                            file.save(file_path)
+                            filename, file_path = save_file_with_unique_name(file)
                             update_data['profile_document'] = filename
-                            update_data['profile_image'] = os.path.join('uploads', filename)
                             update_data['profile_document_size'] = get_file_size_str(file_path)
+                            
+                            # If it's an image, also update the profile image
+                            if file.filename.lower().endswith(('.png', '.jpg', '.jpeg')):
+                                update_data['profile_image'] = f'uploads/{filename}'
                         except Exception as e:
                             flash(f'Error uploading file: {str(e)}', 'error')
                     else:
                         flash('Invalid file type. Allowed types are: ' + ', '.join(ALLOWED_EXTENSIONS), 'error')
 
-            # Update user in database if there are changes
-            if update_data:
-                try:
-                    result = user_collection.update_one(
+            # Update user in database
+            user_collection.update_one(
                         {'_id': ObjectId(session['user_id'])},
                         {'$set': update_data}
                     )
-                    if result.modified_count > 0:
-                        flash('Profile updated successfully!', 'success')
-                        # Refresh user data after update
-                        user = user_collection.find_one({'_id': ObjectId(session['user_id'])})
-                    else:
-                        flash('No changes were made', 'info')
-                except Exception as e:
-                    flash(f'Error updating profile: {str(e)}', 'error')
             
+            flash('Profile updated successfully', 'success')
             return redirect(url_for('profile'))
 
         # For GET request, render the profile page
@@ -734,14 +712,25 @@ def profile():
             except:
                 pass
 
+        # Set default profile image if none exists
+        profile_image = user.get('profile_image', 'img/default_profile.png')
+        if not profile_image.startswith('uploads/'):
+            profile_image = 'img/default_profile.png'
+
+        # Ensure email is set in user data
+        if 'email' not in user:
+            user['email'] = session.get('email', '')
+            print(f"DEBUG: Setting email from session: {user['email']}")
+
         return render_template('profile.html', 
                             user=user,
-                            profile_image=user.get('profile_image', 'img/default_profile.png'))
+                            profile_image=profile_image)
 
     except Exception as e:
-        print(f"Profile error: {str(e)}")  # Add logging
-        flash(f'An error occurred: {str(e)}', 'error')
-        return redirect(url_for('login'))
+        print(f"DEBUG: Error in profile route: {str(e)}")
+        flash('An error occurred. Please try again.', 'error')
+        return redirect(url_for('profile'))
+
 @app.route('/track_my_complaints')
 def track_my_complaints():
     try:
@@ -821,10 +810,305 @@ def view_complaint(complaint_id):
         flash('Error accessing complaint details')
         return redirect(url_for('track_my_complaints'))
 
-
+@app.route('/register_complaint', methods=['GET', 'POST'])
+def register_complaint():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
         
+    if request.method == 'POST':
+        try:
+            # Get form data
+            data = request.form.to_dict()
+            
+            # Add complaint to database
+            complaint_data = {
+                'user_id': session['user_id'],
+                'name': data.get('name'),
+                'email': data.get('email'),
+                'phone': data.get('phone'),
+                'address': data.get('address'),
+                'status': 'pending',
+                'created_at': datetime.now(pytz.timezone("Asia/Kolkata")).strftime("%Y-%m-%d %H:%M:%S")
+            }
+            
+            result = complaint_collection.insert_one(complaint_data)
+            
+            if result.inserted_id:
+                flash('Complaint registered successfully!', 'success')
+                return redirect(url_for('home'))
+            else:
+                flash('Failed to register complaint. Please try again.', 'error')
+                return redirect(url_for('home'))
+                
+        except Exception as e:
+            print(f"Error registering complaint: {str(e)}")
+            flash('An error occurred while registering the complaint.', 'error')
+            return redirect(url_for('home'))
+            
+    return redirect(url_for('home'))
 
+@app.route('/submit_complaint', methods=['POST'])
+@csrf.exempt
+def submit_complaint():
+    if 'user_id' not in session:
+        return jsonify({'success': False, 'message': 'Please login first'}), 401
 
+    try:
+        # Get form data
+        data = request.form.to_dict()
+        print("Received form data:", data)  # Debug print
+        
+        # Handle file uploads
+        evidence_file = request.files.get('evidence')
+        id_proof_file = request.files.get('idProof')
+        
+        # Save files if provided
+        evidence_path = None
+        id_proof_path = None
+        
+        if evidence_file and allowed_file(evidence_file.filename):
+            filename, file_path = save_file_with_unique_name(evidence_file)
+            evidence_path = f'uploads/{filename}'
+            print("Saved evidence file:", evidence_path)  # Debug print
+            
+        if id_proof_file and allowed_file(id_proof_file.filename):
+            filename, file_path = save_file_with_unique_name(id_proof_file)
+            id_proof_path = f'uploads/{filename}'
+            print("Saved ID proof file:", id_proof_path)  # Debug print
+
+        # Create complaint document
+        complaint_data = {
+            'user_id': session['user_id'],
+            'type': 'myself',
+            'status': 'pending',
+            'created_at': datetime.now(pytz.timezone("Asia/Kolkata")).strftime("%Y-%m-%d %H:%M:%S"),
+            'details': {
+                'personal_info': {
+                    'full_name': data.get('fullName'),
+                    'email': data.get('email'),
+                    'phone': data.get('phone'),
+                    'address': data.get('address'),
+                    'city': data.get('city'),
+                    'state': data.get('state'),
+                    'country': data.get('country'),
+                    'pincode': data.get('pincode')
+                },
+                'incident': {
+                    'date': data.get('incidentDate'),
+                    'location': data.get('incidentLocation'),
+                    'description': data.get('incidentDescription'),
+                    'evidence_path': evidence_path
+                },
+                'id_proof_path': id_proof_path
+            }
+        }
+
+        print("Complaint data to be inserted:", complaint_data)  # Debug print
+
+        # Insert complaint into database
+        result = complaint_collection.insert_one(complaint_data)
+        
+        if result.inserted_id:
+            return jsonify({
+                'success': True,
+                'message': 'Complaint submitted successfully',
+                'complaint_id': str(result.inserted_id)
+            })
+        else:
+            return jsonify({'success': False, 'message': 'Failed to submit complaint'}), 500
+
+    except Exception as e:
+        print(f"Error submitting complaint: {str(e)}")
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+@app.route('/get_user_details')
+def get_user_details():
+    if 'user_id' not in session:
+        return jsonify({'success': False, 'message': 'User not logged in'}), 401
+        
+    try:
+        user = user_collection.find_one({'_id': ObjectId(session['user_id'])})
+        if not user:
+            return jsonify({'success': False, 'message': 'User not found'}), 404
+            
+        return jsonify({
+            'success': True,
+            'name': f"{user.get('firstName', '')} {user.get('lastName', '')}",
+            'email': user.get('email', ''),
+            'phone': user.get('phone', ''),
+            'address': user.get('address', '')
+        })
+    except Exception as e:
+        print(f"Error getting user details: {str(e)}")
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+@app.route('/complaint/myself')
+def myself_form():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+        
+    try:
+        # Get user details from database
+        user = user_collection.find_one({'_id': ObjectId(session['user_id'])})
+        if not user:
+            return redirect(url_for('login'))
+            
+        # Prepare user data for the template
+        user_data = {
+            'name': f"{user.get('firstName', '')} {user.get('lastName', '')}",
+            'email': user.get('email', ''),
+            'phone': user.get('phone', ''),
+            'address': user.get('address', '')
+        }
+        
+        return render_template('complaint/MyselfForm.html', user_data=user_data)
+    except Exception as e:
+        print(f"Error in myself_form: {str(e)}")
+        return redirect(url_for('home'))
+
+@app.route('/complaint/onbehalf')
+def onbehalf_form():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+        
+    try:
+        # Get user details from database
+        user = user_collection.find_one({'_id': ObjectId(session['user_id'])})
+        if not user:
+            return redirect(url_for('login'))
+            
+        # Prepare user data for the template
+        user_data = {
+            'name': f"{user.get('firstName', '')} {user.get('lastName', '')}",
+            'email': user.get('email', ''),
+            'phone': user.get('phone', ''),
+            'address': user.get('address', '')
+        }
+        
+        return render_template('complaint/onbehalfForm.html', user_data=user_data)
+    except Exception as e:
+        print(f"Error in onbehalf_form: {str(e)}")
+        return redirect(url_for('home'))
+
+@app.route('/view_document/<filename>')
+def view_document(filename):
+    if 'user_id' not in session:
+        flash('Please login first', 'error')
+        return redirect(url_for('login'))
+        
+    try:
+        # Get the full path to the document
+        document_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        
+        # Check if file exists
+        if not os.path.exists(document_path):
+            flash('Document not found', 'error')
+            return redirect(url_for('profile'))
+            
+        # Send the file
+        return send_file(document_path)
+        
+    except Exception as e:
+        print(f"DEBUG: Error viewing document: {str(e)}")
+        flash('Error viewing document', 'error')
+        return redirect(url_for('profile'))
+
+@app.route('/chairperson_dashboard')
+def chairperson_dashboard():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+        
+    try:
+        # Get all complaints from the database
+        complaints = list(complaint_collection.find().sort('created_at', -1))
+        
+        # Format complaints for display
+        formatted_complaints = []
+        for complaint in complaints:
+            formatted_complaint = {
+                '_id': str(complaint['_id']),
+                'created_at': complaint.get('created_at', ''),
+                'status': complaint.get('status', 'pending'),
+                'details': complaint.get('details', {})
+            }
+            formatted_complaints.append(formatted_complaint)
+            
+        return render_template('commitee/chairpersonDashboard.html', 
+                            complaints=formatted_complaints)
+                            
+    except Exception as e:
+        print(f"Error in chairperson_dashboard: {str(e)}")
+        flash('An error occurred while loading the dashboard')
+        return render_template('commitee/chairpersonDashboard.html', complaints=[])
+
+@app.route('/chairperson/view_complaint/<complaint_id>')
+def chairperson_view_complaint(complaint_id):
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+        
+    try:
+        complaint = complaint_collection.find_one({'_id': ObjectId(complaint_id)})
+        if not complaint:
+            flash('Complaint not found')
+            return redirect(url_for('chairperson_dashboard'))
+            
+        return render_template('commitee/view_complaint.html', complaint=complaint)
+        
+    except Exception as e:
+        print(f"Error viewing complaint: {str(e)}")
+        flash('An error occurred while viewing the complaint')
+        return redirect(url_for('chairperson_dashboard'))
+
+@app.route('/download_file/<path:filename>')
+def download_file(filename):
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+        
+    try:
+        safe_path = safe_join(app.config['UPLOAD_FOLDER'], filename)
+        if not os.path.exists(safe_path):
+            flash('File not found')
+            return redirect(url_for('chairperson_dashboard'))
+            
+        return send_file(safe_path, as_attachment=True)
+        
+    except Exception as e:
+        print(f"Error downloading file: {str(e)}")
+        flash('An error occurred while downloading the file')
+        return redirect(url_for('chairperson_dashboard'))
+
+@app.route('/update_complaint_status/<complaint_id>', methods=['POST'])
+def update_complaint_status(complaint_id):
+    if 'user_id' not in session:
+        return jsonify({'success': False, 'message': 'Please login first'}), 401
+        
+    try:
+        data = request.get_json()
+        new_status = data.get('status')
+        remarks = data.get('remarks')
+        
+        if not new_status:
+            return jsonify({'success': False, 'message': 'Status is required'}), 400
+            
+        result = complaint_collection.update_one(
+            {'_id': ObjectId(complaint_id)},
+            {
+                '$set': {
+                    'status': new_status,
+                    'updated_at': datetime.now(pytz.timezone("Asia/Kolkata")).strftime("%Y-%m-%d %H:%M:%S"),
+                    'remarks': remarks
+                }
+            }
+        )
+        
+        if result.modified_count > 0:
+            return jsonify({'success': True, 'message': 'Status updated successfully'})
+        else:
+            return jsonify({'success': False, 'message': 'Complaint not found'}), 404
+            
+    except Exception as e:
+        print(f"Error updating complaint status: {str(e)}")
+        return jsonify({'success': False, 'message': str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)

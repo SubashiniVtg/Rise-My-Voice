@@ -363,21 +363,16 @@
         });
 
         const data = await response.json();
-        console.log("Server response:", data); // Debug log
-
-        if (!response.ok) {
-          throw new Error(data.message || 'Login failed');
-        }
 
         if (data.success) {
-          window.location.href = data.redirect || '/home';  // Use provided redirect URL
+          alert('Login successful! Redirecting to home page...');
+          window.location.href = data.redirect || '/home';
         } else {
-          throw new Error(data.message || 'Login failed');
+          alert(data.message || 'Login failed. Please try again.');
         }
-
       } catch (error) {
-        console.error('Error:', error);
-        alert(error.message || 'Login failed. Please try again.');
+        console.error('Login error:', error);
+        alert('Login failed. Please check your credentials and try again.');
       }
     });
 

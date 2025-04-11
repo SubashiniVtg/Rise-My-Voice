@@ -12,7 +12,8 @@
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Nunito:wght@600;700;800&display=swap"
+    <link
+        href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Nunito:wght@600;700;800&display=swap"
         rel="stylesheet">
 
     <!-- Icon Font Stylesheet -->
@@ -32,9 +33,12 @@
         /* Rotating Logo Styling */
         .rotating-logo {
             position: absolute;
-            top: 25px; /* Slightly moved up */
-            left: 890px; /* Move the logo to the left */
-            width: 250px; /* Increased size */
+            top: 25px;
+            /* Slightly moved up */
+            left: 890px;
+            /* Move the logo to the left */
+            width: 250px;
+            /* Increased size */
             height: 250px;
         }
 
@@ -42,18 +46,23 @@
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.4)); /* Subtle gradient */
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.4));
+            /* Subtle gradient */
             padding: 8px;
-            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.5); /* Enhanced shadow */
-            border: 3px solid rgba(128, 0, 128, 0.6); /* Dark Purple Border */
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.5);
+            /* Enhanced shadow */
+            border: 3px solid rgba(128, 0, 128, 0.6);
+            /* Dark Purple Border */
 
             animation: rotate360 4s linear infinite, glow 2s ease-in-out infinite alternate;
         }
+
         /* Rotation Effect */
         @keyframes rotate360 {
             from {
                 transform: rotateY(0deg);
             }
+
             to {
                 transform: rotateY(360deg);
             }
@@ -64,12 +73,12 @@
             from {
                 box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.5);
             }
+
             to {
-                box-shadow: 0px 15px 30px rgba(255, 20, 147, 0.8); /* Deep pink glow */
+                box-shadow: 0px 15px 30px rgba(255, 20, 147, 0.8);
+                /* Deep pink glow */
             }
         }
-
-
     </style>
 
 </head>
@@ -87,10 +96,10 @@
     <!-- Navbar Start -->
     <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
         <a href="{{ url_for('index') }}" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
-            <img src="{{ url_for('static', filename='img/icon.jpeg') }}" width="50px" height="50px" alt="logo" 
-            style="border-radius: 50%; box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3); padding: 5px; background-color: white;">
-            <p class="m-0 fw-bold" style="font-size: 35px; padding-left: 5px;">Raise My<span
-                    style="color: #db5299 ;"> Voice</span></p>
+            <img src="{{ url_for('static', filename='img/icon.jpeg') }}" width="50px" height="50px" alt="logo"
+                style="border-radius: 50%; box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3); padding: 5px; background-color: white;">
+            <p class="m-0 fw-bold" style="font-size: 35px; padding-left: 5px;">Raise My<span style="color: #db5299 ;">
+                    Voice</span></p>
         </a>
         <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
             <span class="navbar-toggler-icon"></span>
@@ -101,6 +110,18 @@
                 <a href="{{ url_for('about') }}" class="nav-item nav-link">About Us</a>
                 <a href="{{ url_for('laws') }}" class="nav-item nav-link">Laws And Regulations</a>
                 <a href="{{ url_for('contact') }}" class="nav-item nav-link">Contact Us</a>
+                {% if session.user_id %}
+                <div class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                        <i class="fa fa-user"></i>
+                    </a>
+                    <div class="dropdown-menu fade-down m-0">
+                        <a href="{{ url_for('home') }}" class="dropdown-item">Dashboard</a>
+                        <a href="{{ url_for('profile') }}" class="dropdown-item">Profile</a>
+                        <a href="{{ url_for('logout') }}" class="dropdown-item">Logout</a>
+                    </div>
+                </div>
+                {% else %}
                 <div class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                         <i class="fa fa-user"></i>
@@ -110,15 +131,15 @@
                         <a href="{{ url_for('signup') }}" class="dropdown-item">Sign up</a>
                     </div>
                 </div>
+                {% endif %}
             </div>
         </div>
-       
     </nav>
     <!-- Navbar End -->
     <div class="rotating-logo">
         <img src="{{ url_for('static', filename='img/icon.jpeg') }}" alt="Rotating Logo">
     </div>
-    
+
     <!-- Carousel Start -->
     <div class="container-fluid p-0 mb-4">
         <div class="owl-carousel header-carousel position-relative">
@@ -132,22 +153,27 @@
                                 <h1 class="text-uppercase mb-3 display-7 animated slideInDown" style="color: #db5299 ;">
                                     IF YOU ARE FACING SEXUAL HARASSMENT AT WORKPLACE</h1>
                                 <p class="text-white mb-4 pb-2">
-                                    Raise My Voice is an initiative by the Government of India to provide a single 
-                                    window for women, regardless of their work status, to register complaints related to sexual harassment 
-                                    at the workplace. However, to file a complaint, users must first log in or register on the portal.
-                                    This platform is available for all women, whether employed in the 
+                                    Raise My Voice is an initiative by the Government of India to provide a single
+                                    window for women, regardless of their work status, to register complaints related to
+                                    sexual harassment
+                                    at the workplace. However, to file a complaint, users must first log in or register
+                                    on the portal.
+                                    This platform is available for all women, whether employed in the
                                     organised or unorganised, private or public sectors.</p>
                                 <div class="d-flex justify-content-start flex-wrap">
-                                    <a href="#" class="btn btn-primary py-3 px-4 py-md-3 px-md-5 me-md-3 mb-3 mb-md-0 animated slideInLeft" 
-                                    data-bs-toggle="modal" data-bs-target="#registerModal">
-                                    Register Your Complaint
+                                    <a href="#"
+                                        class="btn btn-primary py-3 px-4 py-md-3 px-md-5 me-md-3 mb-3 mb-md-0 animated slideInLeft"
+                                        data-bs-toggle="modal" data-bs-target="#registerModal">
+                                        Register Your Complaint
                                     </a>
 
-                                    <a href="#" class="btn btn-light py-3 px-4 py-md-3 px-md-5 me-md-3 mb-3 mb-md-0 animated slideInLeft">
-                                        Workplace/Nodal Officer Registration
+                                    <a href="#"
+                                        class="btn btn-light py-3 px-4 py-md-3 px-md-5 me-md-3 mb-3 mb-md-0 animated slideInLeft">
+                                        Chair Person/ Commitee Member
                                     </a>
-                                    <a href="#" class="btn btn-light py-3 px-4 py-md-3 px-md-5 mb-3 mb-md-0 mt-1 animated slideInLeft">
-                                        Private Head Office Registration
+                                    <a href="#"
+                                        class="btn btn-light py-3 px-4 py-md-3 px-md-5 mb-3 mb-md-0 mt-1 animated slideInLeft">
+                                        Admin
                                     </a>
                                 </div>
                             </div>
@@ -160,41 +186,42 @@
             </div>
         </div>
 
-        </div>
+    </div>
     </div>
     <!-- Carousel End -->
 
-<!-- Modal Start -->
-<div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="registerModalLabel">Confirm Registration</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                 Kindly review the following disclaimer before continuing:
-                 <br>
-                 Raise My Voice is an initiative by the Government of India to provide 
-                 a single window for women, regardless of their work status, to register 
-                 complaints related to sexual harassment at the workplace. 
-                 However, to file a complaint, users must first log in or register 
-                 on the portal. This platform is available for all women, whether
-                 employed in the organised or unorganised, private or public sectors.
-                 <br>
-                 <br>
-                 Are you certain you want to submit your complaint?
-            </div>
-            <div class="modal-footer">
-                <!-- Fixed onclick handlers to properly handle navigation -->
-                <button type="button" class="btn btn-secondary" onclick="event.preventDefault(); window.location.href='{{ url_for('signup') }}';">Sign Up</button>
-                <button type="button" class="btn btn-secondary" onclick="event.preventDefault(); window.location.href='{{ url_for('login') }}';">Login</button>
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancel</button>
+    <!-- Modal Start -->
+    <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="registerModalLabel">Confirm Registration</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Kindly review the following disclaimer before continuing:
+                    <br>
+                    Raise My Voice is an initiative by the Government of India to provide
+                    a single window for women, regardless of their work status, to register
+                    complaints related to sexual harassment at the workplace.
+                    However, to file a complaint, users must first log in or register
+                    on the portal. This platform is available for all women, whether
+                    employed in the organised or unorganised, private or public sectors.
+                    <br>
+                    <br>
+                    Are you certain you want to submit your complaint?
+                </div>
+                <div class="modal-footer">
+                    <!-- Fixed onclick handlers to properly handle navigation -->
+                    <button type="button" class="btn btn-secondary" onclick="handleOk()">Sign
+                        Up</button>
+                    <button type="button" class="btn btn-secondary" onclick="handleOk1()">Login</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancel</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<!-- Modal End -->
+    <!-- Modal End -->
     <!-- Service Start -->
     <div class="container-xxl py-5">
         <div class="container">
@@ -207,12 +234,13 @@
                 <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
                     <div class="service-item text-center pt-3 shadow">
                         <div class="p-4">
-                            <img src="{{ url_for('static', filename='img/icon1.png') }}" alt="" width="60px" class="mb-4">
+                            <img src="{{ url_for('static', filename='img/icon1.png') }}" alt="" width="60px"
+                                class="mb-4">
                             <h5 class="mb-3">Ministries/Department</h5>
-                            <p>As a nodal Ministry for the advancement of women 
+                            <p>As a nodal Ministry for the advancement of women
                                 and children, the Ministry formulates plans, policies
-                                 and programmes; enacts/ amends legislation, guides and 
-                                 coordinates the efforts of both governmental and non-governmental organisations 
+                                and programmes; enacts/ amends legislation, guides and
+                                coordinates the efforts of both governmental and non-governmental organisations
                                 working in the field of Women and Child Development.</p>
                         </div>
                     </div>
@@ -220,10 +248,12 @@
                 <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.3s">
                     <div class="service-item text-center pt-3 shadow">
                         <div class="p-4">
-                            <img src="{{ url_for('static', filename='img/icon2.jpeg') }}" alt="" width="60px" class="mb-4">
+                            <img src="{{ url_for('static', filename='img/icon2.jpeg') }}" alt="" width="60px"
+                                class="mb-4">
                             <h5 class="mb-3">IC Registered</h5>
-                            <p>To ensure the implementation of the policy in 
-                                letter and spirit through proper reporting of the complaints and their follow-up procedures. To uphold the commitment of the Institute to 
+                            <p>To ensure the implementation of the policy in
+                                letter and spirit through proper reporting of the complaints and their follow-up
+                                procedures. To uphold the commitment of the Institute to
                                 provide an environment free of gender based discrimination.</p>
                         </div>
                     </div>
@@ -231,13 +261,14 @@
                 <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.5s">
                     <div class="service-item text-center pt-3 shadow">
                         <div class="p-4">
-                            <img src="{{ url_for('static', filename='img/icon3.webp') }}" alt="" width="60px" class="mb-4">
+                            <img src="{{ url_for('static', filename='img/icon3.webp') }}" alt="" width="60px"
+                                class="mb-4">
                             <h5 class="mb-3">LC Registered</h5>
-                            <p>The Local Complaints Committee is formed to 
-                                ensure protection against sexual harassment for women 
+                            <p>The Local Complaints Committee is formed to
+                                ensure protection against sexual harassment for women
                                 employees working in organizations that have less than
-                                 10 employees. This blog gives a detailed
-                                 information about the formation of LCC and its working.
+                                10 employees. This blog gives a detailed
+                                information about the formation of LCC and its working.
                             </p>
                         </div>
                     </div>
@@ -245,13 +276,14 @@
                 <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
                     <div class="service-item text-center pt-3 shadow">
                         <div class="p-4">
-                            <img src="{{ url_for('static', filename='img/icon4.jpeg') }}" alt="" width="60px" class="mb-4">
+                            <img src="{{ url_for('static', filename='img/icon4.jpeg') }}" alt="" width="60px"
+                                class="mb-4">
                             <h5 class="mb-3">Complaints Registered</h5>
-                            <p>Any aggrieved woman, or on account of her 
-                                physical or mental incapacity or death or otherwise, 
+                            <p>Any aggrieved woman, or on account of her
+                                physical or mental incapacity or death or otherwise,
                                 her legal heir or such other person as may be prescribed,
-                                 may make, in writing, a complaint of Sexual harassment at 
-                                 workplace within a period of three months from the date of 
+                                may make, in writing, a complaint of Sexual harassment at
+                                workplace within a period of three months from the date of
                                 incident or in case of a series of incidents</p>
                         </div>
                     </div>
@@ -266,20 +298,22 @@
             <div class="row g-5">
                 <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s" style="min-height: 400px;">
                     <div class="position-relative h-100">
-                        <img class="img-fluid position-absolute w-100 h-100" src="{{ url_for('static', filename='img/about.png') }}" alt=""
-                            style="object-fit: cover;">
+                        <img class="img-fluid position-absolute w-100 h-100"
+                            src="{{ url_for('static', filename='img/about.png') }}" alt="" style="object-fit: cover;">
                     </div>
                 </div>
                 <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.3s">
                     <h6 class="section-title bg-white text-start pe-3">About Us</h6>
                     <h1 class="mb-4" style="color: #db5299 ;">Raise My Voice</h1>
-                    <p class="mb-4">The Government of India (GoI) has enacted The Sexual Harassment of Women at 
+                    <p class="mb-4">The Government of India (GoI) has enacted The Sexual Harassment of Women at
                         Workplace (Prevention, Prohibition and Redressal) Act, 2013 with the objective to create a
-                        safe and secure workplace for women free from sexual harassment. This Act caters to women working
-                         both in organised and unorganised sector and establishes 
+                        safe and secure workplace for women free from sexual harassment. This Act caters to women
+                        working
+                        both in organised and unorganised sector and establishes
                         a redressal mechanism for the disposal of their complaints.</p>
-                    <p class="mb-4">This Act is unique in its broad coverage which includes all women irrespective of their work status, whether working
-                         in organised or unorganised, public or private sectors, regardless of hierarchy.</p>
+                    <p class="mb-4">This Act is unique in its broad coverage which includes all women irrespective of
+                        their work status, whether working
+                        in organised or unorganised, public or private sectors, regardless of hierarchy.</p>
                     <a class="btn text-light py-3 px-5 mt-2" href="{{url_for('about') }}">Read More</a>
                 </div>
             </div>
@@ -292,7 +326,8 @@
             <div class="copyright">
                 <div class="row">
                     <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                        &copy; <a class="border-bottom" href="{{ url_for('index') }}">Raise My Voice</a>, All Right Reserved.
+                        &copy; <a class="border-bottom" href="{{ url_for('index') }}">Raise My Voice</a>, All Right
+                        Reserved.
 
                     </div>
                 </div>
@@ -317,23 +352,24 @@
     <script>
         function handleOk() {
             // Close the modal manually
-            var modal = bootstrap.Modal.getInstance(document.getElementById('registerModal')); 
+            var modal = bootstrap.Modal.getInstance(document.getElementById('registerModal'));
             modal.hide();
-    
-            
-            window.location.href = "/signup";
+
+            // Navigate to signup page using Flask's url_for
+            window.location.href = "{{ url_for('signup') }}";
         }
+
         function handleOk1() {
             // Close the modal manually
-            var modal = bootstrap.Modal.getInstance(document.getElementById('registerModal')); 
+            var modal = bootstrap.Modal.getInstance(document.getElementById('registerModal'));
             modal.hide();
-    
-            
-            window.location.href = "/login";
+
+            // Navigate to login page using Flask's url_for
+            window.location.href = "{{ url_for('login') }}";
         }
     </script>
-    
-    
+
+
 </body>
 
 
